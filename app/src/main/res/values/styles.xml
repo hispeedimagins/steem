@@ -76,6 +76,7 @@
 
         <item name="cardBackgroundColor">@color/background_light</item>
         <item name="textColorMine">@color/text_primary_dark</item>
+        <item name="textColorMineInverse">@color/background_light</item>
         <item name="android:textColorPrimary">@color/text_primary_dark</item>
         <!--<item name="android:navigationBarColor">@color/primary_super_dark</item>
         <item name="android:statusBarColor">@color/background_super_dark</item>
@@ -98,6 +99,7 @@
         <item name="android:textColor">@color/text_primary_light</item>
         <item name="cardBackgroundColor">@color/accback</item>
         <item name="textColorMine">@color/text_primary_light</item>
+        <item name="textColorMineInverse">@color/text_primary_dark</item>
         <item name="android:textColorPrimary">@color/text_primary_light</item>
 
         <!--<item name="android:navigationBarColor">@color/primary_super_dark</item>
@@ -107,7 +109,7 @@
         <item name="android:windowSharedElementsUseOverlay">false</item>-->
     </style>
 
-    <style name="Plaid.Home">
+    <style name="Plaid.Home" parent="Plaid">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>

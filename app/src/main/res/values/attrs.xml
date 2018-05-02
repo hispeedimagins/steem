@@ -7,6 +7,7 @@
         <attr name="startHeight" format="dimension"/>
         <attr name="finalHeight" format="dimension"/>
     </declare-styleable>
-  <attr name="cardBackgroundColor" format="color" />
+   <attr name="cardBackgroundColor" format="color" />
     <attr name="textColorMine" format="color" />
+    <attr name="textColorMineInverse" format="color" />
 </resources>

@@ -137,7 +137,7 @@
                                 app:cardUseCompatPadding="true"
                                 app:cardPreventCornerOverlap="true"
                                 contentPadding="1dp"
-                                app:cardBackgroundColor="?attr/textColorMine"
+                                app:cardBackgroundColor="?attr/textColorMineInverse"
                                 android:layout_gravity="center_horizontal"
                                 >
 
@@ -163,7 +163,7 @@
                                 app:cardUseCompatPadding="true"
                                 app:cardPreventCornerOverlap="true"
                                 contentPadding="1dp"
-                                app:cardBackgroundColor="@color/white"
+                                app:cardBackgroundColor="?attr/textColorMineInverse"
                                 android:layout_gravity="center_horizontal"
                                 >
                                 <TextView
@@ -189,7 +189,7 @@
                                 app:cardUseCompatPadding="true"
                                 app:cardPreventCornerOverlap="true"
                                 contentPadding="1dp"
-                                app:cardBackgroundColor="@color/white"
+                                app:cardBackgroundColor="?attr/textColorMineInverse"
                                 android:layout_gravity="center_horizontal"
                                 >
                                 <TextView
@@ -223,7 +223,7 @@
                                 app:cardUseCompatPadding="true"
                                 app:cardPreventCornerOverlap="true"
                                 contentPadding="1dp"
-                                app:cardBackgroundColor="@color/white"
+                                app:cardBackgroundColor="?attr/textColorMineInverse"
                                 android:layout_gravity="center_horizontal"
                                 >
                                 <TextView
@@ -262,7 +262,7 @@
                                 app:cardUseCompatPadding="true"
                                 app:cardPreventCornerOverlap="true"
                                 contentPadding="1dp"
-                                app:cardBackgroundColor="@color/white"
+                                app:cardBackgroundColor="?attr/textColorMineInverse"
                                 android:layout_gravity="center_horizontal"
                                 >
                                 <TextView
@@ -289,7 +289,7 @@
                             app:cardUseCompatPadding="true"
                             app:cardPreventCornerOverlap="true"
                             contentPadding="1dp"
-
+                            app:cardBackgroundColor="@color/accback"
                             android:layout_gravity="center_horizontal"
                             >
                             <TextView

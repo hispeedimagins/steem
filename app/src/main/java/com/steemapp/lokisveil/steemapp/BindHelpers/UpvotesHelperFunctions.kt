@@ -52,7 +52,10 @@ class UpvotesHelperFunctions(context : Context, username:String?, adapter: AllRe
             name = sharedpref.getString(CentralConstants.username,null)
         }
     }
-   // val globallist = ArrayList<Any>()
+
+
+
+    // val globallist = ArrayList<Any>()
 
     public fun Bind(mholder: RecyclerView.ViewHolder, position:Int){
         mholder.itemView.setSelected(selectedPos == position)

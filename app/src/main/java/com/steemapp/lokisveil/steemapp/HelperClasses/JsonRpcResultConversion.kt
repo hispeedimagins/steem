@@ -239,26 +239,37 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
         }.type
         var ls = gson.fromJson<List<String>>(rpb.toString(),collectionType)
 
-        var st : String = commstr.getString("body")
+        //var st : String = commstr.getString("body")
+        var st : String = ""
         var builder = StringBuilder()
         if(!bodyasis){
-            if(st?.length != null && st?.length > 1000){
-                st = st.substring(0,1000)
+            try{
+                st = commstr.getString("body").substring(IntRange(0,400))
             }
+            catch(ex : StringIndexOutOfBoundsException){
+                st = commstr.getString("body")
+            }
+
+            /*if(st?.length != null && st?.length > 1000){
+                st = st.substring(0,1000)
+            }*/
             /*if(st?.length != null && st?.length > 600){
                 st = st.substring(0,600)
             }*/
-            st = StripMarkDown.stripMd(st,StripMarkDown.Companion.mdOptions()).toString()
-            var splitstring : List<String> = st.split("\n")
+            st = StripMarkDown.stripMd(st,StripMarkDown.Companion.mdOptions()).trim()
+            /*var splitstring : List<String> = st.split("\n")
 
             if(splitstring != null){
 
                 for (x in splitstring){
                     builder.append("${x.trim()} ")
                 }
-            }
+            }*/
 
 
+        }
+        else{
+            st  = commstr.getString("body")
         }
 
         var autho = "$author (${StaticMethodsMisc.CalculateRepScore(commstr.getString("author_reputation"))})"
@@ -287,8 +298,8 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
                 entryId = if(commstr.has("entry_id")) commstr.getInt("entry_id") else 0 ,
                 active =  commstr.getString("active"),
                 author = author,
-                body = if(bodyasis) st else builder.toString(),
-                //body = st,
+                //body = if(bodyasis) st else builder.toString(),
+                body = st,
                 cashoutTime = commstr.getString("cashout_time"),
                 category = commstr.getString("category"),
                 children = commstr.getInt("children"),

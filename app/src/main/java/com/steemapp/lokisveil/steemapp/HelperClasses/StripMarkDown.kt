@@ -19,8 +19,8 @@ class StripMarkDown {
 
             //output = output.replace("^([\\s\t]*)([\\*\\-\\+]|\\d+\\.)\\s+", {mr -> mr.}  )
 
-            val check = "[^!?]\\[([-a-zA-Z0-9+&@#\\[\\]_\\-.!:,' ]*| |.)\\]\\((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|]\\)"
-            val newtegex = "[!]\\[([-a-zA-Z0-9+&@#\\[\\]_. ]*(.\\w+)| |)]\\((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|]\\)"
+            //val check = "[^!?]\\[([-a-zA-Z0-9+&@#\\[\\]_\\-.!:,' ]*| |.)]\\((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]\\)"
+            //val newtegex = "[!]\\[([-a-zA-Z0-9+&@#\\[\\]_. ]*(.\\w+)| |)]\\((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]\\)"
             //String regexmatch = "!\\[[\\w\\W]]\\([\\w\\W]\\)";
             // Remove horizontal rules (stripListHeaders conflict with this rule, which is why it has been moved to the top)
             output = output.replace("^(-\\s*?|\\*\\s*?|_\\s*?){3,}\\s*$".toRegex(), "")
@@ -28,16 +28,16 @@ class StripMarkDown {
             try {
                 if (options.stripListLeaders) {
                     if (options.listUnicodeChar != "")
-                        output = output.replace("^([\\s\t]*)([\\*\\-\\+]|\\d+\\.)\\s+".toRegex(), options.listUnicodeChar + " ")
+                        output = output.replace("^([\\s\t]*)([*\\-+]|\\d+\\.)\\s+".toRegex(), options.listUnicodeChar + " ")
                         //output = output.replace("^([\\s\t]*)([\\*\\-\\+]|\\d+\\.)\\s+", options.listUnicodeChar + " $1")
                     else
                     //output = output.replace("/^([\\s\t]*)([\\*\\-\\+]|\\d+\\.)\\s+/gm", "$1")
-                    output = output.replace("/^([\\s\t]*)([\\*\\-\\+]|\\d+\\.)\\s+/gm".toRegex(), " ")
+                    output = output.replace("/^([\\s\t]*)([*\\-+]|\\d+\\.)\\s+/gm".toRegex(), " ")
                 }
                 if (options.gfm) {
                     output = output
                             // Header
-                            .replace("\n={2,}".toRegex(), "\n")
+                            //.replace("\n={2,}".toRegex(), "\n")
                     // Fenced codeblocks
                     .replace("~{3}.*\n".toRegex(), "")
                     // Strikethrough
@@ -49,35 +49,35 @@ class StripMarkDown {
                         // Remove HTML tags
                         .replace("<[^>]*>".toRegex(), "")
                 // Remove setext-style headers
-                .replace("/^[=\\-]{2,}\\s*$".toRegex(), "")
+                //.replace("/^[=\\-]{2,}\\s*$".toRegex(), "")
                 // Remove footnotes?
-                .replace("\\[\\^.+?\\](\\: .*?$)?".toRegex(), "")
-                .replace("\\s{0,2}\\[.*?\\]: .*?$".toRegex(), "")
+                //.replace("\\[\\^.+?](: .*?$)?".toRegex(), "")
+                //.replace("\\s{0,2}\\[.*?]: .*?$".toRegex(), "")
                 // Remove images
-                .replace("\\!\\[.*?\\][\\[\\(].*?[\\]\\)]".toRegex(), "")
+                .replace("!\\[.*?][\\[(].*?[])]".toRegex(), "")
                 // Remove inline links
-                .replace("\\[(.*?)\\][\\[\\(].*?[\\]\\)]".toRegex(), "")
+                .replace("\\[(.*?)][\\[(].*?[])]".toRegex(), "")
                 //.replace("\\[(.*?)\\][\\[\\(].*?[\\]\\)]", "$1")
                 // Remove blockquotes
-                .replace("^\\s{0,3}>\\s?".toRegex(), "")
+                //.replace("^\\s{0,3}>\\s?".toRegex(), "")
                 // Remove reference-style links?
                 //.replace("^\\s{1,2}\\[(.*?)\\]: (\\S+)( ".*?")?\\s*$", "")
                 // Remove atx-style headers
-                .replace("^(\n)?\\s{0,}#{1,6}\\s+| {0,}(\n)?\\s{0,}#{0,} {0,}(\n)?\\s{0,}$".toRegex(), "")
+                //.replace("^(\n)?\\s*#{1,6}\\s+| *(\n)?\\s*#* *(\n)?\\s*$".toRegex(), "")
                 //.replace("^(\n)?\\s{0,}#{1,6}\\s+| {0,}(\n)?\\s{0,}#{0,} {0,}(\n)?\\s{0,}$", "$1$2$3")
                 // Remove emphasis (repeat the line to remove double emphasis)
-                .replace("([\\*_]{1,3})(\\S.*?\\S{0,1})\\1".toRegex(), "")
+                .replace("([*_]{1,3})(\\S.*?\\S?)\\1".toRegex(), "")
                 //.replace("([\\*_]{1,3})(\\S.*?\\S{0,1})\\1", "$2")
-                .replace("([\\*_]{1,3})(\\S.*?\\S{0,1})\\1".toRegex(), "")
+                .replace("([*_]{1,3})(\\S.*?\\S?)\\1".toRegex(), "")
                 //.replace("([\\*_]{1,3})(\\S.*?\\S{0,1})\\1", "$2")
                 // Remove code blocks
-                .replace("(`{3,})(.*?)\\1".toRegex(), "$2")
+                //.replace("(`{3,})(.*?)\\1".toRegex(), "$2")
                 // Remove inline code
-                .replace("`(.+?)`".toRegex(), "$1")
+                //.replace("`(.+?)`".toRegex(), "$1")
                 // Replace two or more newlines with exactly two? Not entirely sure this belongs here...
-                .replace("\n{2,}".toRegex(), "\n\n")
-                .replace(check.toRegex()," ")
-                .replace(newtegex.toRegex()," ")
+                //.replace("\n{2,}".toRegex(), "\n\n")
+                //.replace(check.toRegex()," ")
+                //.replace(newtegex.toRegex()," ")
             } catch(e:Exception) {
                 //console.error(e);
                 return md
