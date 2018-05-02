@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/research"
+        android:icon="@drawable/ic_find_replace_white_24px"
+        android:title="RE-Make request"
+        app:showAsAction="always"
+        />
+</menu>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list"
+    android:name="com.steemapp.lokisveil.steemapp.Fragments.PreviewPost"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+
+    tools:context=".Fragments.PreviewPost"
+    tools:listitem="@layout/fragment_item2" />-->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+    android:layout_width="match_parent"
+
+    android:layout_height="wrap_content"
+    android:id="@+id/design_bottom_sheet"
+    android:clipToPadding="true"
+    app:behavior_hideable="true"
+
+
+
+
+
+    >
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:markdown="http://schemas.android.com/apk/res-auto"
+
+        app:cardUseCompatPadding="true"
+        app:cardPreventCornerOverlap="true"
+        contentPadding="1dp"
+
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/cardviewchat"
+        >
+
+        <LinearLayout android:id="@+id/openarticlemain"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+            <TextView
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/article_title"
+                android:text="tag"
+
+                android:maxLines="2"
+                android:textStyle="bold"
+                />
+        <LinearLayout android:id="@+id/openarticle"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+        </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</ScrollView>
+
+

@@ -1,0 +1,56 @@
+
+<android.support.design.widget.CoordinatorLayout
+
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+<!-- <include layout="@layout/layoutemptyfile"></include>-->
+
+
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/activity_feed_swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/feedFragment"
+        android:name="ccom.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment"
+
+
+        android:scrollbarStyle="insideOverlay"
+        tools:listitem="@layout/article_preview"
+        />
+
+
+
+</android.support.v4.widget.SwipeRefreshLayout>
+<!--<include layout="@layout/dateholderandanimator" />-->
+
+
+<!--<android.support.design.widget.FloatingActionButton
+    android:id="@+id/addaquestionfabmine"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="@dimen/fab_margin"
+    android:elevation="5dp"
+    android:src="@drawable/ic_add_white"
+    app:layout_anchor="@id/questionListFragment"
+    app:layout_anchorGravity="end|bottom"
+    />-->
+
+
+
+</android.support.design.widget.CoordinatorLayout>

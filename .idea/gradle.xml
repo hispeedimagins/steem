@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/anddown" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/bcpkix-jdk15on-1.58.0.0" />
+            <option value="$PROJECT_DIR$/core-1.58.0.0" />
+            <option value="$PROJECT_DIR$/lib100" />
+            <option value="$PROJECT_DIR$/mint-5.0.0" />
+            <option value="$PROJECT_DIR$/mint-5.2.2" />
+            <option value="$PROJECT_DIR$/prov-1.58.0.0" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
