@@ -376,10 +376,12 @@ class ArticleFragment : Fragment() , GlobalInterface {
             s  = and.markdownToHtml(bod, AndDown.HOEDOWN_EXT_AUTOLINK, 0)
         }
 
-        s = StaticMethodsMisc.CorrectAfterMainImages(s)
+        //s = StaticMethodsMisc.CorrectAfterMainImages(s)
         //s = StaticMethodsMisc.CorrectBeforeMainLinks(s,holder.article?.links)
         s = StaticMethodsMisc.CorrectMarkDownUsers(s,holder.article?.users)
-        s = StaticMethodsMisc.CorrectNewLine(s)
+
+
+        //s = StaticMethodsMisc.CorrectNewLine(s)
         /*s += "<style>*{max-width:100%}</style>"
         s += "<script type=\"text/javascript\">\n" +
                 "    function UserClicked(user) {\n" +
@@ -456,11 +458,33 @@ class ArticleFragment : Fragment() , GlobalInterface {
         //setWebView(s)
 
         s += "<script type=\"text/javascript\">\n" +
-                "    function UserClicked(user) {\n" +
-                "        Android.UserClicked(user);\n" +
+                "var contents = document.getElementsByClassName(\"mylink\");\n" +
+                "for(var i = 0; i < contents.length; i++){\n"+
+                "    contents[i].addEventListener(\"click\", ContentClick, false);}\n" +
+                "function ContentClick(event) {\n"+
+                "console.log(event.defaultPrevented);\n" +
+                "      if(event.target.href.search(\"steemer\") != -1){\n" +
+                "       Android.UserClicked(event.target.href.split(\"@\")[1]);\n event.preventDefault(); }\n" +
+                "      if(event.target.href.search(\"https://steemit.com\") != -1 || event.target.href.search(\"https://busy.org\") != -1){\n"+
+                "            event.preventDefault();Android.LinkClicked(event.target.href);}}\n" +
+                /*" \$(document).ready(function(){\n" +
+                "    \$(\".mylink\").click(function(event){\n" +
+                "        console.log(this.href);\n" +
+                "        console.log(this.href);\n" +
+                "console.log(this.href.toString().search(\"steemer\"))\n" +
+                "        if(this.href.toString().search(\"steemer\" != -1)){\n" +
+                //"console.log(Android);\n" +
+                "                  event.preventDefault();  console.log(this.href);\n Android.UserClicked(this.href.split(\"@\")[1]);\n    }\n" +
+                "         if(this.href.toString().includes(\"https://steemit.com\") || this.href.toString().includes(\"https://busy.org\")){\n" +
+                "                            event.preventDefault();Android.LinkClicked(user);}\n" +
+
+                "    });\n" +
+                "});" +*/
+                "    function UserClickedK(user) {\n" +
+                "         Android.UserClicked(user);\n" +
                 "    }\n" +
                 "</script>"
-        s += "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>"
+        //s += "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>"
         var css =  Github()
         //css.addFontFace("MyFont", "condensed", "italic", "bold", "url('myfont.ttf')");
         /*css.addMedia("screen and (min-width: 1281px)");
@@ -468,8 +492,9 @@ class ArticleFragment : Fragment() , GlobalInterface {
         css.endMedia();*/
         css.addRule("body", "padding: 0 !important")
         holder.markdownView.addStyleSheet( css)
-        holder.markdownView.loadMarkdown(s)
         holder.markdownView.addJavascriptInterface(WebAppInterface(articleActivityInterface), "Android")
+        holder.markdownView.loadMarkdown(s)
+
 
         /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
            // tvDocument.setText(Html.fromHtml(bodyData,Html.FROM_HTML_MODE_LEGACY))

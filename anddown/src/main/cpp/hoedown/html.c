@@ -63,7 +63,7 @@ rndr_autolink(hoedown_buffer *ob, const hoedown_buffer *link, hoedown_autolink_t
 	if (!link || !link->size)
 		return 0;
 
-	HOEDOWN_BUFPUTSL(ob, "<a style=\"max-width: 100%;\"  href=\"");
+	HOEDOWN_BUFPUTSL(ob, "<a class=\"mylink\" style=\"max-width: 100%;\"  href=\"");
 	if (type == HOEDOWN_AUTOLINK_EMAIL)
 		HOEDOWN_BUFPUTSL(ob, "mailto:");
 	escape_href(ob, link->data, link->size);
@@ -233,7 +233,7 @@ rndr_link(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_buffe
 {
 	hoedown_html_renderer_state *state = data->opaque;
 
-	HOEDOWN_BUFPUTSL(ob, "<a style=\"max-width: 100%;\"  href=\"");
+	HOEDOWN_BUFPUTSL(ob, "<a class=\"mylink\" style=\"max-width: 100%;\"  href=\"");
 
 	if (link && link->size)
 		escape_href(ob, link->data, link->size);
@@ -532,7 +532,7 @@ rndr_footnote_def(hoedown_buffer *ob, const hoedown_buffer *content, unsigned in
 	hoedown_buffer_printf(ob, "\n<li id=\"fn%d\">\n", num);
 	if (pfound) {
 		hoedown_buffer_put(ob, content->data, i);
-		hoedown_buffer_printf(ob, "&nbsp;<a href=\"#fnref%d\" rev=\"footnote\">&#8617;</a>", num);
+		hoedown_buffer_printf(ob, "&nbsp;<a class=\"mylink\" href=\"#fnref%d\" rev=\"footnote\">&#8617;</a>", num);
 		hoedown_buffer_put(ob, content->data + i, content->size - i);
 	} else if (content) {
 		hoedown_buffer_put(ob, content->data, content->size);
@@ -543,7 +543,7 @@ rndr_footnote_def(hoedown_buffer *ob, const hoedown_buffer *content, unsigned in
 static int
 rndr_footnote_ref(hoedown_buffer *ob, unsigned int num, const hoedown_renderer_data *data)
 {
-	hoedown_buffer_printf(ob, "<sup id=\"fnref%d\"><a href=\"#fn%d\" rel=\"footnote\">%d</a></sup>", num, num, num);
+	hoedown_buffer_printf(ob, "<sup id=\"fnref%d\"><a class=\"mylink\" href=\"#fn%d\" rel=\"footnote\">%d</a></sup>", num, num, num);
 	return 1;
 }
 
@@ -585,7 +585,7 @@ toc_header(hoedown_buffer *ob, const hoedown_buffer *content, int level, const h
 			HOEDOWN_BUFPUTSL(ob,"</li>\n<li>\n");
 		}
 
-		hoedown_buffer_printf(ob, "<a href=\"#toc_%d\">", state->toc_data.header_count++);
+		hoedown_buffer_printf(ob, "<a class=\"mylink\" href=\"#toc_%d\">", state->toc_data.header_count++);
 		if (content) hoedown_buffer_put(ob, content->data, content->size);
 		HOEDOWN_BUFPUTSL(ob, "</a>\n");
 	}

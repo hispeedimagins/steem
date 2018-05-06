@@ -10,5 +10,6 @@ interface ArticleActivityInterface {
     fun UserClicked(name : String)
     fun ReloadData()
     fun getContextMine(): Context
+    fun linkClicked(tag:String,name:String,link:String)
     //fun GetDisplayMetrics() : DisplayMetrics
 }

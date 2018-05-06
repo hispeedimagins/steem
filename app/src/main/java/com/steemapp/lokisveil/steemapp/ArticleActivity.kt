@@ -43,6 +43,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
+    override fun linkClicked(tag: String, name: String, link: String) {
+        val myIntent = Intent(this@ArticleActivity, ArticleActivity::class.java)
+        myIntent.putExtra("username", name)
+        myIntent.putExtra("tag", tag)
+        myIntent.putExtra("permlink", link)
+        //if(adaptype == AdapterToUseFor.commentNoti || adaptype == AdapterToUseFor.replyNoti) myIntent.putExtra("permlinkToFind",holder.article?.permlink)
+        this@ArticleActivity.startActivity(myIntent)
+    }
+
     override fun getContextMine(): Context {
         return this@ArticleActivity
     }
@@ -56,9 +65,9 @@ class ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
     }*/
 
     override fun UserClicked(name: String) {
-        val i = Intent(applicationContext, OpenOtherGuyBlog::class.java)
+        val i = Intent(this@ArticleActivity, OpenOtherGuyBlog::class.java)
         i.putExtra(CentralConstants.OtherGuyNamePasser, name)
-        applicationContext.startActivity(i)
+        this@ArticleActivity.startActivity(i)
     }
 
     var username: String? = null

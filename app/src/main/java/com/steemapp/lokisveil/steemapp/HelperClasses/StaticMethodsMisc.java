@@ -82,7 +82,7 @@ public class StaticMethodsMisc {
             for(int i = 0; i < links.size(); i++){
                 //String perms = "(-\\d{8}t\\d{9}z)";
                 //String check = "[^!?]\\[([-a-zA-Z0-9+&@# ]*)\\]\\(("+links.get(i).replace("/","\\/")+")\\)";
-                String check = "[^!]\\[(.*)\\]\\((.*)\\)";
+                String check = "[^!]\\[(.*)]\\((.*)\\)";
                 //String check = "[^!?]\\[([-a-zA-Z0-9+&@#\\[\\]_\\-.!:,' ]*| |.)\\]\\(("+links.get(i).replace("/","\\/")+")\\)";
 
                 /*Pattern pattern = Pattern.compile(
@@ -136,8 +136,11 @@ public class StaticMethodsMisc {
                 String remcheck = "[>]("+"@" + users.get(i)+")[<]";
                 String remcheckL = "[>]("+"@" + users.get(i)+")";
                 String remcheckR = "("+"@" + users.get(i)+")[<]";
-                //String reps = " <a onClick=\"UserClicked(\'"+users.get(i)+"\')\"  class=\"users\" href=\"steemer://@"+users.get(i)+"\" >"+"@"+users.get(i)+"</a> ";
-                String reps = " <a onClick=\"UserClicked(\'"+users.get(i)+"\')\"  class=\"users\" href=\"#\" >"+"@"+users.get(i)+"</a> ";
+                //String reps = " <a onClick=\"UserClickedK(\'"+users.get(i)+"\')\"  class=\"users\" href=\"steemer://@"+users.get(i)+"\" >"+"@"+users.get(i)+"</a> ";
+                String reps = " <a class=\"mylink\" href=\"steemer://@"+users.get(i)+"\" >"+"@"+users.get(i)+"</a> ";
+                //String reps = " <a onClick=\"UserClickedK(\'"+users.get(i)+"\')\"  class=\"users\" href=\"#\" >"+"@"+users.get(i)+"</a> ";
+                //String reps = " <a onClick=\"UserClickedK(\'"+users.get(i)+"\')\"  class=\"users\" href=\"#\" >"+"@"+users.get(i)+"</a> ";
+                //String reps = " <a class=\"mylink\" href=\""+users.get(i)+"\" >"+"@"+users.get(i)+"</a> ";
                 //String reps = " <a onClick=\""+users.get(i)+"\"  class=\"users\" href=\"#\" >"+"@"+users.get(i)+"</a> ";
                 value = value.replaceAll(remcheck, "> @"+users.get(i)+" <");
                 value = value.replaceAll(remcheckL, "> @"+users.get(i));
