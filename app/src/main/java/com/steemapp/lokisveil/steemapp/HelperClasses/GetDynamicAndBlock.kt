@@ -279,6 +279,11 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
                         }
 
                     }
+                    else if(results.contains("unknown key:unknown key:")){
+                        Toast.makeText(applicationContext,"Cannot be edited with this key.", Toast.LENGTH_LONG).show()
+                        globalInterfaces?.notifyRequestMadeError()
+                        mglobalInterfaces?.notifyRequestMadeError()
+                    }
                     else{
                         globalInterfaces?.notifyRequestMadeError()
                         mglobalInterfaces?.notifyRequestMadeError()

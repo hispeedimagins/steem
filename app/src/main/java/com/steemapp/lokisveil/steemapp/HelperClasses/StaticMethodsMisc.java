@@ -36,11 +36,13 @@ public class StaticMethodsMisc {
                     spiliatzerozero =  spiliatzerozeroarr[1];
                 }
                 if(value != null && spiliatzerozero == null && !(value.contains(htmlCheck)) && !(value.contains(check))){
-                    String reps = "![name]"+check;
+                    String[] spl = images.get(i).split("/");
+                    String reps = "!["+spl[spl.length - 1 ]+"]"+check;
                     value = value.replace(images.get(i),reps);
                 }
                 else if(value != null && spiliatzerozero != null && !value.contains("("+spiliatzerozero+")")){
-                    String reps = "![name]"+"("+spiliatzerozero+")";
+                    String[] spl = spiliatzerozero.split("/");
+                    String reps = "!["+spl[spl.length - 1 ]+"]"+"("+spiliatzerozero+")";
                     value = value.replace(spiliatzerozero,reps);
                 }
             }
@@ -50,6 +52,34 @@ public class StaticMethodsMisc {
 
         return value;
     }
+
+
+    /*public static String CorrectMarkDownAfter(String value,List<String> images){
+        if(images != null){
+            for(int i = 0; i < images.size(); i++){
+                String check = "("+images.get(i)+")";
+                String htmlCheck = "src=\""+images.get(i)+"\"";
+                String[] spiliatzerozeroarr = images.get(i).split("/0x0/");
+                String spiliatzerozero = null;
+                if(spiliatzerozeroarr != null && spiliatzerozeroarr.length == 2){
+                    spiliatzerozero =  spiliatzerozeroarr[1];
+                }
+                if(value != null && spiliatzerozero == null && !(value.contains(htmlCheck)) && !(value.contains(check))){
+                    String reps = "<img src=\""+images.get(i)+"\"/>";
+                    value = value.replace(images.get(i),reps);
+                }
+                else if(value != null && spiliatzerozero != null && !value.contains("("+spiliatzerozero+")")){
+                    //String reps = "![name]"+"("+spiliatzerozero+")";
+                    String reps = "<img src=\""+spiliatzerozero+"\"/>";
+                    value = value.replace(spiliatzerozero,reps);
+                }
+            }
+
+            return value;
+        }
+
+        return value;
+    }*/
 
     public static String CorrectNewLine(String value){
         return value.replaceAll("[\\r\\n]|\\r\\n","<br/>");
@@ -155,6 +185,10 @@ public class StaticMethodsMisc {
             return value;
         }
         return value;
+    }
+
+    public static String CorrectBr(String value){
+        return value.replaceAll("<br>","<br/>");
     }
 
     public static String CorrectAfterMainImages(String value){

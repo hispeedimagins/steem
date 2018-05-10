@@ -35,6 +35,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import br.tiagohm.markdownview.css.styles.Bootstrap
 import br.tiagohm.markdownview.css.styles.Github
 import com.android.volley.Request
 import com.android.volley.Response
@@ -379,7 +380,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
         //s = StaticMethodsMisc.CorrectAfterMainImages(s)
         //s = StaticMethodsMisc.CorrectBeforeMainLinks(s,holder.article?.links)
         s = StaticMethodsMisc.CorrectMarkDownUsers(s,holder.article?.users)
-
+        s = StaticMethodsMisc.CorrectBr(s)
 
         //s = StaticMethodsMisc.CorrectNewLine(s)
         /*s += "<style>*{max-width:100%}</style>"
@@ -444,7 +445,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
             var list  = ArrayList<Operation>()
             list.add(cus)
             //var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,mholder,null,cus,obs,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog)
-            var bloc = GetDynamicAndBlock(context as Context ,null, 0,list,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog)
+            var bloc = GetDynamicAndBlock(context as Context ,null, 0,list,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog,holder.progressbar,null)
             bloc.GetDynamicGlobalProperties()
             /*globallist.add(bloc)
             Log.d("buttonclick",globallist.toString())*/
@@ -485,15 +486,19 @@ class ArticleFragment : Fragment() , GlobalInterface {
                 "    }\n" +
                 "</script>"
         //s += "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>"
+        //var css =  Github()
         var css =  Github()
         //css.addFontFace("MyFont", "condensed", "italic", "bold", "url('myfont.ttf')");
         /*css.addMedia("screen and (min-width: 1281px)");
         css.addRule("h1", "color: orange");
         css.endMedia();*/
         css.addRule("body", "padding: 0 !important")
+        //"sub", "position: relative", "font-size: 75%", "line-height: 0", "vertical-align: baseline", "bottom: -0.25em"
+        //css.addRule("sub","vertical-align: sub","font-size: smaller","bottom:-0.5em")
+        css.addRule("sub","bottom:-1em","line-height: 1")
         holder.markdownView.addStyleSheet( css)
         holder.markdownView.addJavascriptInterface(WebAppInterface(articleActivityInterface), "Android")
-        holder.markdownView.loadMarkdown(s)
+            holder.markdownView.loadMarkdown(s)
 
 
         /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
