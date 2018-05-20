@@ -15,9 +15,9 @@
     -->
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/myiclauncher"
+        android:icon="@mipmap/steemergg"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/myiclauncher"
+        android:roundIcon="@mipmap/steemergg"
         android:supportsRtl="true"
         android:theme="@style/Plaid">
         <activity
@@ -214,7 +214,9 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Plaid.Home"
+            />
         <activity
             android:name=".OpenOtherGuyBlog"
             android:label="@string/title_activity_open_other_guy_blog"
@@ -269,7 +271,7 @@
         <activity
             android:name=".NotificationsBusyD"
             android:label="@string/title_activity_notifications_busy_d"
-            android:theme="@style/Plaid.Translucent.DesignerNewsStory"></activity>
+            android:theme="@style/Plaid.Translucent.DesignerNewsStory" />
     </application>
 
 </manifest>
