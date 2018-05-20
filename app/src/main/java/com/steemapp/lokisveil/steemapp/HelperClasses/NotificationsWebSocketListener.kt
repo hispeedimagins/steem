@@ -36,9 +36,13 @@ import java.util.*
 class NotificationsWebSocketListener(username:String?,context:Context?) : WebSocketListener() {
     private val NORMAL_CLOSURE_STATUS = 1000
     private var context : Context? = context
-    private var notificationsInterface: NotificationsInterface? = if(context is NotificationsInterface) context else null
+    private var notificationsInterface: NotificationsInterface? = null
     private val name = username
     var db: NotificationsBusyDb? = null
+
+    init {
+        notificationsInterface = if(context is NotificationsInterface) context else null
+    }
 
 
 
@@ -80,6 +84,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
                             resultIntent.putExtra(CentralConstants.ArticleBlockPasser,x.block)
                             resultIntent.putExtra(CentralConstants.ArticleUsernameToState,x.author)
                             resultIntent.setAction(System.currentTimeMillis().toString())
+                            resultIntent.putExtra(CentralConstants.ArticleNotiType,x.type.toString())
                             title = "${x.author} replied to your post"
                             body = x.parentPermlink?.replace("-"," ") as String
                         }
@@ -89,6 +94,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
                             resultIntent.putExtra(CentralConstants.ArticleBlockPasser,x.block)
                             resultIntent.putExtra(CentralConstants.ArticleUsernameToState,x.author)
                             resultIntent.setAction(System.currentTimeMillis().toString())
+                            resultIntent.putExtra(CentralConstants.ArticleNotiType,x.type.toString())
                             title = "${x.author} mentioned you"
                             body = x.permlink?.replace("-"," ") as String
                         }
@@ -98,6 +104,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
                             resultIntent.putExtra(CentralConstants.ArticleBlockPasser,x.block)
                             resultIntent.putExtra(CentralConstants.ArticleUsernameToState,x.account)
                             resultIntent.setAction(System.currentTimeMillis().toString())
+                            resultIntent.putExtra(CentralConstants.ArticleNotiType,x.type.toString())
                             title = "${x.account} reblogged your post"
                             body = x.permlink?.replace("-"," ") as String
                         }
@@ -106,11 +113,23 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
                             title = "${x.follower} followed you"
                             resultIntent.putExtra(CentralConstants.OtherGuyNamePasser,x.follower)
                             resultIntent.setAction(System.currentTimeMillis().toString())
+                            resultIntent.putExtra(CentralConstants.ArticleNotiType,x.type.toString())
                             body = ""
                         }
                         NotificationType.transfer->{
                             title = "From ${x.from} ${x.amount}"
                             body = "${x.memo}"
+                        }
+                        NotificationType.vote -> {
+                            resultIntent = Intent(context, ArticleActivity::class.java)
+                            resultIntent.putExtra("permlinkToFind", x?.permlink)
+                            resultIntent.putExtra(CentralConstants.ArticleBlockPasser, x.block)
+                            resultIntent.putExtra(CentralConstants.ArticleUsernameToState, x.voter)
+                            resultIntent.putExtra(CentralConstants.ArticleNotiType,x.type.toString())
+                            //title = "${holder.article?.author} replied to your post"
+                            title = "${x.voter} voted on your post"
+                            body = x.permlink?.replace("-", " ") as String
+                            //body = holder.article?.author as String
                         }
                     }
 
@@ -120,6 +139,8 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
             }
 
         }
+        db?.close()
+        db = null
         notificationsInterface?.dbLoaded()
         webSocket?.close(NORMAL_CLOSURE_STATUS,null)
     }
@@ -167,7 +188,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
 
         val mBuilder = NotificationCompat.Builder(appcon,stack.name)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.drawable.ic_all_inclusive_black_24px)
+                .setSmallIcon(R.drawable.ic_steemerggsv)
                 .setContentTitle(notificationtitle)
                 .setContentText(notificationmaintext)
                 .setAutoCancel(true)
@@ -195,10 +216,12 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
                 intent.putExtra("usequestion", true)
             }
             NotificationType.mention ->{
-
+                stackBuilder.addParentStack(MainActivity::class.java!!)
+                intent.putExtra("usechatpage", true)
             }
             NotificationType.reply ->{
-
+                stackBuilder.addParentStack(MainActivity::class.java!!)
+                intent.putExtra("usechatpage", true)
             }
         }
 

@@ -5,5 +5,6 @@ enum class NotificationType {
     mention,
     transfer,
     reblog,
-    follow
+    follow,
+    vote
 }

@@ -1,5 +1,6 @@
 package com.steemapp.lokisveil.steemapp.BindHelpers
 
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -87,6 +88,7 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
                 resultIntent.putExtra("permlinkToFind", holder.article?.permlink)
                 resultIntent.putExtra(CentralConstants.ArticleBlockPasser, holder.article?.block)
                 resultIntent.putExtra(CentralConstants.ArticleUsernameToState, holder.article?.author)
+                resultIntent.putExtra(CentralConstants.ArticleNotiType,holder.article?.type.toString())
                 //title = "${holder.article?.author} replied to your post"
                 title = "replied to your post"
                 body = holder.article?.parentPermlink?.replace("-", " ") as String
@@ -97,6 +99,7 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
                 resultIntent.putExtra("permlinkToFind", holder.article?.permlink)
                 resultIntent.putExtra(CentralConstants.ArticleBlockPasser, holder.article?.block)
                 resultIntent.putExtra(CentralConstants.ArticleUsernameToState, holder.article?.author)
+                resultIntent.putExtra(CentralConstants.ArticleNotiType,holder.article?.type.toString())
                 //title = "${holder.article?.author} mentioned you"
                 title = "mentioned you"
                 author = holder.article?.author as String
@@ -107,6 +110,7 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
                 resultIntent.putExtra("permlinkToFind", holder.article?.permlink)
                 resultIntent.putExtra(CentralConstants.ArticleBlockPasser, holder.article?.block)
                 resultIntent.putExtra(CentralConstants.ArticleUsernameToState, holder.article?.account)
+                resultIntent.putExtra(CentralConstants.ArticleNotiType,holder.article?.type.toString())
                 //title = "${holder.article?.account} reblogged your post"
                 title = "reblogged your post"
                 author = holder.article?.account as String
@@ -114,6 +118,7 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
             }
             NotificationType.follow -> {
                 resultIntent = Intent(con, OpenOtherGuyBlog::class.java)
+                resultIntent.putExtra(CentralConstants.ArticleNotiType,holder.article?.type.toString())
                 //title = "${holder.article?.follower} followed you"
                 title = "followed you"
                 author = holder.article?.follower as String
@@ -125,6 +130,17 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
                 title = "Sent you ${holder.article?.amount}"
                 author = holder.article?.from as String
                 body = "${holder.article?.memo}"
+            }
+            NotificationType.vote -> {
+                resultIntent = Intent(con, ArticleActivity::class.java)
+                resultIntent.putExtra("permlinkToFind", holder.article?.permlink)
+                resultIntent.putExtra(CentralConstants.ArticleBlockPasser, holder.article?.block)
+                resultIntent.putExtra(CentralConstants.ArticleUsernameToState, holder.article?.voter)
+                resultIntent.putExtra(CentralConstants.ArticleNotiType,holder.article?.type.toString())
+                //title = "${holder.article?.author} replied to your post"
+                title = "Voted on your post"
+                body = holder.article?.permlink?.replace("-", " ") as String
+                author = holder.article?.voter as String
             }
         }
 

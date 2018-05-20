@@ -16,7 +16,7 @@ import java.util.*
 class NotificationsBusyDb (context : Context) : SQLiteOpenHelper(context, DatabaseName,null, DatabaseVersion) {
     companion object {
         val DatabaseName:String = "notificationsbusy"
-        val DatabaseVersion:Int = 1
+        val DatabaseVersion:Int = 2
     }
     val DatabaseTableName = "notifications"
     val DatabaseColoumnId = "Id"
@@ -35,6 +35,7 @@ class NotificationsBusyDb (context : Context) : SQLiteOpenHelper(context, Databa
     /*val DatabaseColoumnReputation = "reputation"
     val DatabaseColoumnNetVoted = "netvotes"*/
     val DatabaseColoumnIsRootPost = "isRootPost"
+    val DatabaseColoumnVoter = "voter"
     val context = context
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -51,6 +52,7 @@ class NotificationsBusyDb (context : Context) : SQLiteOpenHelper(context, Databa
                 DatabaseColoumnAuthor + " text, " +
 
                 DatabaseColoumnFollower + " text, " +
+                DatabaseColoumnVoter + " text, "+
                 DatabaseColoumnUserFrom + " text, " +
                 DatabaseColoumnCommentAmount + " text, " +
 
@@ -81,6 +83,7 @@ class NotificationsBusyDb (context : Context) : SQLiteOpenHelper(context, Databa
         //values.put(DatabaseColoumnRebloggedBy, if(!lite.reblogBy?.isEmpty()!!) lite.reblogBy?.first() else "")
         //values.put(DatabaseColoumnImage, if(!lite.image?.isEmpty()!!) lite.image?.first() else "")
         values.put(DatabaseColoumnFollower, lite.follower)
+        values.put(DatabaseColoumnVoter,lite.voter)
         values.put(DatabaseColoumnUserFrom, lite.from)
         values.put(DatabaseColoumnCommentAmount, lite.amount)
         var ins = 0
@@ -167,7 +170,7 @@ class NotificationsBusyDb (context : Context) : SQLiteOpenHelper(context, Databa
                     amount = cursor.getString(cursor.getColumnIndex(DatabaseColoumnCommentAmount)),
                     block = cursor.getInt(cursor.getColumnIndex(DatabaseColoumnBlock)),
                     follower = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollower)),
-
+                    voter = cursor.getString(cursor.getColumnIndex(DatabaseColoumnVoter)),
                     from = cursor.getString(cursor.getColumnIndex(DatabaseColoumnUserFrom)),
                     permlink = cursor.getString(cursor.getColumnIndex(DatabaseColoumnPermlink)),
 
