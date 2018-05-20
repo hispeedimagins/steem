@@ -313,7 +313,8 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
         }
         else if(commentViewHolder != null){
             MakeOperationsMine mine = new MakeOperationsMine();
-            List<Operation> ops = mine.updateComment(new AccountName(username),new AccountName(commentViewHolder.getAuthor()),new Permlink(articlepermlink ),new Permlink(commentViewHolder.getPermlink()),content,tags);
+            //List<Operation> ops = mine.updateComment(new AccountName(username),new AccountName(commentViewHolder.getAuthor()),new Permlink(articlepermlink ),new Permlink(commentViewHolder.getPermlink()),content,tags);
+            List<Operation> ops = mine.updateComment(new AccountName(username),new AccountName(parentau),new Permlink(articlepermlink ),new Permlink(commentViewHolder.getPermlink()),content,tags);
             /*Gson gson = new Gson();
             String json = gson.toJson(ops);*/
             GetDynamicAndBlock block = new GetDynamicAndBlock(context,null,0,ops,"Edited " +commentViewHolder.getAuthor() , MyOperationTypes.edit_comment,progressBar,globalInterface);

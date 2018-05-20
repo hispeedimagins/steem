@@ -205,7 +205,7 @@ public class MakeOperationsMine {
     public ArrayList<Operation> updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
                                        String title, String content, String[] tags)
              {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
+        if (tags == null || tags.length < 1 || tags.length > 10) {
             throw new InvalidParameterException(SteemJConfig.TAG_ERROR_MESSAGE);
         }
 
