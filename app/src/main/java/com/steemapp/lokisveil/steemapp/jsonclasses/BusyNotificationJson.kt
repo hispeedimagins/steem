@@ -18,6 +18,7 @@ data class Result(
 		@SerializedName("timestamp") val timestamp: Int?,
 		@SerializedName("block") val block: Int?,
         @SerializedName("follower") val follower : String?,
+		@SerializedName("voter") val voter : String?,
 
         @SerializedName("from") val from : String?,
         @SerializedName("amount") val amount : String?,

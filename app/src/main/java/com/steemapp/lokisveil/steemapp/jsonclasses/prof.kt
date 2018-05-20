@@ -36,7 +36,7 @@ data class profile(
 		@SerializedName("lifetime_vote_count") val lifetimeVoteCount: Int, //0
 		@SerializedName("post_count") val postCount: Int, //67
 		@SerializedName("can_vote") val canVote: Boolean, //true
-		@SerializedName("voting_power") val votingPower: Int, //9659
+		@SerializedName("voting_power") var votingPower: Int, //9659
 		@SerializedName("last_vote_time") val lastVoteTime: String, //2018-02-01T16:43:06
 		@SerializedName("balance") val balance: String, //0.001 STEEM
 		@SerializedName("savings_balance") val savingsBalance: String, //0.000 STEEM
@@ -82,7 +82,8 @@ data class profile(
 		@SerializedName("other_history") val otherHistory: List<Any>,
 		@SerializedName("witness_votes") val witnessVotes: List<String>,
 		@SerializedName("tags_usage") val tagsUsage: List<Any>,
-		@SerializedName("guest_bloggers") val guestBloggers: List<Any>
+		@SerializedName("guest_bloggers") val guestBloggers: List<Any>,
+		var lastVoteTimeLong:Long = 0
 )
 
 data class Active(

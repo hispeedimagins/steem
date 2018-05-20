@@ -274,11 +274,26 @@ public class StaticMethodsMisc {
         return String.valueOf( addtf.intValue());
     }
 
-
-    public static long CalculateVotingPower(int votingpower,String lastvotetimes){
+    /**
+     *
+     * @param date string yyyy-MM-dd'T'hh:mm:ss
+     * @return java date
+     */
+    public static Date ConvertSteemDateToDate(String date){
         try{
-            Date lastvotetime  = (new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(lastvotetimes) );
-            long sub = (new Date().getTime() - lastvotetime.getTime()) / 1000;
+            return (new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(date) );
+        }
+        catch (ParseException ex){
+
+        }
+        return null;
+    }
+
+    public static long CalculateVotingPower(int votingpower,long lastvotetimes){
+        /*try{
+
+            //Date lastvotetime  = (new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(lastvotetimes) );
+            long sub = (new Date().getTime() - lastvotetimes) / 1000;
            // long subf = sub / CentralConstants.FiveDaysInSeconds;
             long subm = (sub / CentralConstants.FiveDaysInSeconds) * 10000;
             long subff = votingpower + subm;
@@ -289,8 +304,17 @@ public class StaticMethodsMisc {
         }
         catch (ParseException ex){
 
+        }*/
+        //Date lastvotetime  = (new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(lastvotetimes) );
+        long sub = (new Date().getTime() - lastvotetimes) / 1000;
+        // long subf = sub / CentralConstants.FiveDaysInSeconds;
+        long subm = (sub / CentralConstants.FiveDaysInSeconds) * 10000;
+        long subff = votingpower + subm;
+        if(subff > CentralConstants.SteemFullVote){
+            return CentralConstants.SteemFullVote;
         }
-        return votingpower;
+        return subff;
+        //return votingpower;
     }
 
     public static String FormatVotingValueToSBD(Double sbshare){
