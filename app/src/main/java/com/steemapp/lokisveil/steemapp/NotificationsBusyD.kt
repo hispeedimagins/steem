@@ -47,8 +47,12 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
     }
 
     override fun dbLoaded() {
-        val db = NotificationsBusyDb(applicationContext)
-        adapter?.notificationsBusyHelperFunctions?.add(db.GetAllQuestions().reversed())
+        client = null
+        val db = NotificationsBusyDb(this@NotificationsBusyD)
+
+        //adapter?.notificationsBusyHelperFunctions?.add(db.GetAllQuestions().reversed())
+        adapter?.notificationsBusyHelperFunctions?.add(sortList(db.GetAllQuestions()))
+        adapter?.notifyDataSetChanged()
         sw?.makeswipestop()
     }
 
@@ -59,6 +63,7 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
     //internal var recyclerView: RecyclerView? = null
     var username : String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyThemeArticle(this@NotificationsBusyD)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications_busy_d)
         setSupportActionBar(toolbar)
@@ -84,13 +89,23 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
         //display(CentralConstantsOfSteem.getInstance().jsonArray)
 
 
-        adapter?.notificationsBusyHelperFunctions?.add(db.GetAllQuestions().reversed())
+        //adapter?.notificationsBusyHelperFunctions?.add(db.GetAllQuestions().reversed())
+        //var sor = db.GetAllQuestions().sortedWith(compareBy({it.timestamp}))
+        adapter?.notificationsBusyHelperFunctions?.add(sortList(db.GetAllQuestions()))
+    }
+
+    /**
+     * @param data list with notifications to sort
+     * returns sorted according to timestamp
+     */
+    private fun sortList(data:List<BusyNotificationJson.Result>):List<BusyNotificationJson.Result>{
+        return data.sortedWith(compareBy({it.timestamp})).reversed()
     }
 
 
     private fun start() {
         val request = Request.Builder().url("wss://api.busy.org/").build()
-        val listener = NotificationsWebSocketListener(username,applicationContext)
+        val listener = NotificationsWebSocketListener(username,this@NotificationsBusyD)
         val ws = client?.newWebSocket(request, listener)
 
 
@@ -104,7 +119,7 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
 
         var obs = ob.toString()
         ws?.send(obs)
-
+        adapter?.clear()
         //client?.dispatcher()?.executorService()?.shutdown()
     }
 
