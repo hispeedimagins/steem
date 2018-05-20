@@ -1,5 +1,6 @@
 package com.steemapp.lokisveil.steemapp
 
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.google.gson.JsonObject
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.Enums.NotificationType
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.Fragments.ArticleFragment
 import com.steemapp.lokisveil.steemapp.Fragments.CommentsFragment
@@ -84,9 +86,11 @@ class ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
     internal var permlinkToFind:String? = ""
     internal var blockNumberToFind:Int = 0
     internal var usernameToState:String? = ""
+    var notifitype: NotificationType? = null
     internal var result : List<feed.Comment>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyThemeArticle(this@ArticleActivity)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article)
         setSupportActionBar(toolbar)
@@ -118,6 +122,10 @@ class ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
             permlinkToFind = extras.getString("permlinkToFind","")
             blockNumberToFind = extras.getInt(CentralConstants.ArticleBlockPasser,0)
             usernameToState = extras.getString(CentralConstants.ArticleUsernameToState,"")
+            var notistr = extras.getString(CentralConstants.ArticleNotiType,null)
+            if(notistr != null){
+                notifitype = NotificationType.valueOf(notistr)
+            }
             supportActionBar?.title = articlepermlink?.replace("-"," ")
             //toolbar.title = articlepermlink
         }
@@ -129,12 +137,39 @@ class ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
         }
 
         mysetup()
-        if(blockNumberToFind == 0){
+        if(notifitype != null){
+            when(notifitype){
+                NotificationType.vote -> {
+                    //GetBlock(blockNumberToFind)
+                    GetContent(username!!,permlinkToFind!!)
+                }
+                NotificationType.transfer -> {
+
+                }
+                NotificationType.follow -> {
+
+                }
+                NotificationType.reblog ->{
+                    //GetBlock(blockNumberToFind)
+                    GetContent(username!!,permlinkToFind!!)
+                }
+                NotificationType.mention ->{
+                    GetContent(usernameToState!!,permlinkToFind!!)
+                }
+                NotificationType.reply ->{
+                    GetContent(usernameToState!!,permlinkToFind!!)
+                }
+            }
+        }
+        else{
+            GetFeed(articletag as String,articleuser as String,articlepermlink as String)
+        }
+        /*if(blockNumberToFind == 0){
             GetFeed(articletag as String,articleuser as String,articlepermlink as String)
         }
         else{
             GetBlock(blockNumberToFind)
-        }
+        }*/
     }
 
 
@@ -367,6 +402,48 @@ class ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
         volleyre.addToRequestQueue(stringRequest)
     }*/
 
+    /**
+     * Function to use get_content api to fetch the post for getting root author,permlin.tag attributes
+     * @param username username of the person who wrote the post/comment
+     * @param permlink permlink of the post/comment
+     * This method will redirect to the GetFeed method
+     *
+     */
+    fun GetContent(username:String,permlink:String){
+//val queue = Volley.newRequestQueue(context)
+        //commentsFragment?.swipecommonactionsclass?.makeswiperun()
+        //swipecommonactionsclass?.makeswiperun()
+
+        val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
+        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
+        val url = CentralConstants.baseUrl
+        val d = MakeJsonRpc.getInstance()
+
+        val s = JsonObjectRequest(Request.Method.POST,url,d.getContent(username,permlink),
+                Response.Listener { response ->
+                    if(response.getJSONObject("result") != null){
+                        var resul = response.getJSONObject("result")
+                        var rooau = resul.getString("root_author")
+                        var rootper = resul.getString("root_permlink")
+                        var roottag = resul.getString("category")
+
+                        articletag = roottag
+                        articleuser = rooau
+                        articlepermlink = rootper
+                        supportActionBar?.title = articlepermlink?.replace("-"," ")
+                        GetFeed(articletag as String,articleuser as String,articlepermlink as String)
+                    }
+
+
+                }, Response.ErrorListener {
+            //swipecommonactionsclassT.makeswipestop()
+            //mTextView.setText("That didn't work!");
+        }
+
+        )
+        //queue.add(s)
+        volleyre.addToRequestQueue(s)
+    }
 
 
     fun GetBlock(blocknumber : Int){
@@ -393,8 +470,21 @@ class ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
                                     }
                                     else{
                                         var co = x as LinkedTreeMap<*, *>
+                                        if(notifitype != null){
+                                            when(notifitype){
+                                                NotificationType.vote -> {
+                                                    var auth : String = co["author"].toString()
+                                                    if(usernameToState == "findvoter") usernameToState = auth
+                                                }
+                                                NotificationType.reblog ->{
+                                                    //if(co["id"])
+                                                }
+                                            }
+                                        }
                                         if(co.contains("permlink")){
                                             if(co.get("permlink") == permlinkToFind){
+                                                /*var auth : String = co["author"].toString()
+                                                if(usernameToState == "findvoter") usernameToState = auth*/
                                                 var jsonMetadata = gson.fromJson<feed.JsonMetadataInner>(co["json_metadata"].toString(),feed.JsonMetadataInner::class.java)
                                                 if(jsonMetadata != null){
                                                      GetMiddleState("${jsonMetadata.tags?.get(0)}/@$usernameToState/$permlinkToFind","$usernameToState/$permlinkToFind")

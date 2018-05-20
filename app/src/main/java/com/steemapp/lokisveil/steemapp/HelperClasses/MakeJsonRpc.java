@@ -65,6 +65,14 @@ public class MakeJsonRpc {
         return object;
     }
 
+    public JSONObject getContent(String username,String page) throws JSONException{
+        JSONObject object = new JSONObject(
+                "{\"id\":\""+id+"\",\"jsonrpc\":\"2.0\",\"method\":\"get_content\",\"params\":[\""+username+"\",\""+page+"\"]}"
+        );
+        id++;
+        return object;
+    }
+
     public JSONObject getFeedJ(String username,String page) throws JSONException{
         JSONObject object = new JSONObject(
                 "{\"id\":\""+id+"\",\"jsonrpc\":\"2.0\",\"method\":\"call\",\"params\":[\"database_api\",\"get_state\", [\"/@"+username+"/"+page+"\"]]}"
