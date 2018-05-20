@@ -9,21 +9,18 @@ import android.support.v7.widget.PopupMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import com.steemapp.lokisveil.steemapp.CentralConstants
-import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem
+import com.steemapp.lokisveil.steemapp.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.FavouritesDatabase
 import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
-import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.FollowType
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.CustomJsonOperation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.FollowOperation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
-import com.steemapp.lokisveil.steemapp.UserUpvoteActivity
 import org.json.JSONArray
 
 /**
@@ -90,7 +87,8 @@ class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shar
 
     fun setup(){
         view?.setOnClickListener(View.OnClickListener {
-            val popup = PopupMenu(context,view)
+            var semcon = MiscConstants.ApplyMyThemePopUp(context)
+            val popup = PopupMenu(semcon,view)
             //inflating menu from xml resource
             popup.inflate(R.menu.article_dialog_menu)
 

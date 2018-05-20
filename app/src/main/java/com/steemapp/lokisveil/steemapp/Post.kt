@@ -84,7 +84,11 @@ class Post : AppCompatActivity() , GlobalInterface {
     val PICK_IMAGE_REQUEST = 1
     var filePath: String? = null
     var dbid : Int = -1
+    var edittitle:String? = null
+    var edittags :String? = null
+    var editpost:String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyTheme(this@Post)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post)
         setSupportActionBar(toolbar)
@@ -137,6 +141,7 @@ class Post : AppCompatActivity() , GlobalInterface {
 
         if(intent != null && intent.extras != null){
             dbid = intent.extras.getInt("db",-1)
+            //edittitle =
             //useOtherGuy = intent.extras.getBoolean(CentralConstants.OtherGuyUseOtherGuyOnly,false)
         }
 

@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem
 import com.steemapp.lokisveil.steemapp.Interfaces.TagsInterface
+import com.steemapp.lokisveil.steemapp.MiscConstants
 import com.steemapp.lokisveil.steemapp.R
 import kotlinx.android.synthetic.main.dialog_trending_select.view.*
 
@@ -22,7 +23,8 @@ class TagRequestHelper(context: Context,activity:Activity) {
     var alertDialog : android.support.v7.app.AlertDialog? = null
 
     init {
-        val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(context)
+        //val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(context)
+        val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(context))
         alertDialogBuilder.setTitle("Go to trending")
         val inflater = activity.layoutInflater
 

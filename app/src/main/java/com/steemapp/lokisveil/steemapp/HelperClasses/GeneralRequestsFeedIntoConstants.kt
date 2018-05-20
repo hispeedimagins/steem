@@ -48,6 +48,12 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
         GetPriceFeed()
     }
 
+
+
+
+
+
+
     fun GetDynamicGlobalProperties(){
         //val queue = Volley.newRequestQueue(context)
 

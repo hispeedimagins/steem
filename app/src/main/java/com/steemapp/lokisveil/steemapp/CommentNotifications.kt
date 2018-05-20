@@ -23,6 +23,7 @@ class CommentNotifications : AppCompatActivity() {
     internal var repliesNotificationsFragment : RepliesNotificationsFragment? = null
     internal var viewPagerAdapteradapter: ViewPagerAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyThemeArticle(this@CommentNotifications)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment_notifications)
         setSupportActionBar(toolbar)

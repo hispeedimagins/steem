@@ -47,6 +47,7 @@ class FollowDisplay : AppCompatActivity() , GetFollowListsBack {
     var useOtherGuy:Boolean = false
     var key: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyTheme(this@FollowDisplay)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_follow_display)
         setSupportActionBar(toolbar)

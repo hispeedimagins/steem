@@ -26,6 +26,7 @@ class FavouritesActivity : AppCompatActivity() {
     var key : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyTheme(this@FavouritesActivity)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favourites)
         setSupportActionBar(toolbar)

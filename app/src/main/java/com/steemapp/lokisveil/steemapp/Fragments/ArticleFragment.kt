@@ -123,6 +123,8 @@ class ArticleFragment : Fragment() , GlobalInterface {
     private var articleActivityInterface : ArticleActivityInterface? = null
     var univBody:String?=null
     var metrics : DisplayMetrics = DisplayMetrics()
+    var texcolormine : Int? = 0
+    var cardbackground : Int? = 0
 
     private var adapter: AllRecyclerViewAdapter? = null
 
@@ -149,7 +151,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
         //view = inflater!!.inflate(R.layout.fragment_article, container, false)
         view = inflater!!.inflate(R.layout.fragment_article, container, false)
-
+        
         /*if(view == null){
             view = inflater!!.inflate(R.layout.fragment_article, container, false)
             recyclerView = view?.findViewById(R.id.list)
@@ -159,6 +161,15 @@ class ArticleFragment : Fragment() , GlobalInterface {
             recyclerView?.setItemAnimator(DefaultItemAnimator())
             recyclerView?.setAdapter(adapter)
         }*/
+        var attrs  = intArrayOf(R.attr.textColorMine,R.attr.cardBackgroundColor)
+        var ta = context?.obtainStyledAttributes(attrs)
+        texcolormine  = ta?.getResourceId(0, android.R.color.black)
+        cardbackground = ta?.getResourceId(attrs.size - 1,android.R.color.white)
+
+        ta?.recycle()
+        texcolormine = ContextCompat.getColor(context!!,texcolormine!!)
+        cardbackground = ContextCompat.getColor(context!!,cardbackground!!)
+        //val hexColor = String.format("#%06X", 0xFFFFFF and texcol)
         activity = getActivity()?.applicationContext
         val sharedPreferences = context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
         username = sharedPreferences?.getString(CentralConstants.username, null)
@@ -307,7 +318,9 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
         if(holder.article?.uservoted != null && holder.article?.uservoted as Boolean == true){
             holder.article_likes?.setTextColor(ContextCompat.getColor(activity as Context, R.color.colorAccent))
+            holder.article_likes?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumb_up_likeint_24px,0,0,0)
         }
+
         holder.article_likes?.text = holder.article?.netVotes.toString()
         //holder.article_name?.text = holder.article?.author
         holder.article_name?.text = "${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
@@ -492,13 +505,16 @@ class ArticleFragment : Fragment() , GlobalInterface {
         /*css.addMedia("screen and (min-width: 1281px)");
         css.addRule("h1", "color: orange");
         css.endMedia();*/
+        var texcolin = String.format("#%06X", 0xFFFFFF and texcolormine!!)
+        var cardcolin = String.format("#%06X", 0xFFFFFF and cardbackground!!)
         css.addRule("body", "padding: 0 !important")
+        css.addRule("*", "color:$texcolin","background:$cardcolin")
         //"sub", "position: relative", "font-size: 75%", "line-height: 0", "vertical-align: baseline", "bottom: -0.25em"
         //css.addRule("sub","vertical-align: sub","font-size: smaller","bottom:-0.5em")
         css.addRule("sub","bottom:-1em","line-height: 1")
         holder.markdownView.addStyleSheet( css)
         holder.markdownView.addJavascriptInterface(WebAppInterface(articleActivityInterface), "Android")
-            holder.markdownView.loadMarkdown(s)
+        holder.markdownView.loadMarkdown(s)
 
 
         /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {

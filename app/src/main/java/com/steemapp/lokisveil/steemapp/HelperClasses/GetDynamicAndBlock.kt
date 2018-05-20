@@ -75,7 +75,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
     var key = sharedpref.getString(CentralConstants.key,null)
     /*val listner = listner*/
     val toastString = toastString
-
+    val votefullper = 2
 
 
     fun GetDynamicGlobalProperties(){
@@ -382,6 +382,8 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
         }
         return null
     }
+
+
 
 
 

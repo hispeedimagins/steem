@@ -23,6 +23,7 @@ class DraftActivity : AppCompatActivity() {
     var username : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyTheme(this@DraftActivity)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_draft)
         setSupportActionBar(toolbar)

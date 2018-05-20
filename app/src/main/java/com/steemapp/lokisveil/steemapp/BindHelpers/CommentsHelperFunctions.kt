@@ -276,7 +276,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
             for(x in objects){
                 if(x is String){
                     var tx = TextView(con)
-                    tx.setTextColor(ContextCompat.getColor(con,R.color.black))
+                    //tx.setTextColor(ContextCompat.getColor(con,R.color.black))
                     lparams.setMargins(GetPx(5f),0,GetPx(5f),0)
                     tx.layoutParams = lparams
                     tx.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15.0f)

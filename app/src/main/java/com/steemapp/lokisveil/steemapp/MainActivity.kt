@@ -91,9 +91,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     internal var viewPagerAdapteradapter: ViewPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        var sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        //var sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         //var themval = sharedPref.getInt("theme_list_value",100)
-        var themname = sharedPref.getString("theme_list","1")
+        /*var themname = sharedPref.getString("theme_list","1")
         when(themname){
             "0" ->{
                 setTheme(R.style.Plaid_Home_Dark)
@@ -101,7 +101,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             "1" ->{
                 setTheme(R.style.Plaid_Home)
             }
-        }
+        }*/
+        MiscConstants.ApplyMyTheme(this@MainActivity)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -272,11 +273,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_open_blog ->{
-                val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)
+                //val alertDialogBuilder = AlertDialog.Builder(this@MainActivity,MiscConstants.ApplyMyThemeRet(applicationContext))
+                val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@MainActivity))
+                //val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)
                 alertDialogBuilder.setTitle("Open a blog")
 
                 val inflater = layoutInflater
                 val dialogView : View = inflater.inflate(R.layout.dialog_open_a_blog, null)
+
                 alertDialogBuilder.setView(dialogView)
                 val edittext = dialogView.findViewById<EditText>(R.id.name)
                 alertDialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener{ diin, num ->
@@ -477,7 +481,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             var subf = sub / CentralConstants.FiveDaysInSeconds
                             var subm = subf * 10000
                             votingpower = (votingpower + subm).toInt()
-                            CentralConstantsOfSteem.getInstance().currentvotingpower = StaticMethodsMisc.CalculateVotingPower(resulto.votingPower,resulto.lastVoteTime).toInt()
+                            resulto.lastVoteTimeLong = lastvotetime.time
+                            CentralConstantsOfSteem.getInstance().currentvotingpower = StaticMethodsMisc.CalculateVotingPower(resulto.votingPower,lastvotetime.time).toInt()
                             /*var reps = resulto.reputation.toDouble()
                             var replog = Math.log10(reps)
                             var subni = replog - 9

@@ -120,6 +120,7 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
    // private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyTheme(this@OpenOtherGuyBlog)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_open_other_guy_blog)
 
@@ -564,7 +565,7 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
 
                                     activity_username_toolbar.text = resultp.profile.name
                                 }
-                                activity_location.text = resultp.profile.location
+                                if(resultp.profile.location != null && resultp.profile.location != "") activity_location.text = resultp.profile.location
                                 activity_website.movementMethod = LinkMovementMethod.getInstance()
                                 if(resultp.profile.website == null) cardviewsix.visibility = View.GONE
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){

@@ -4,15 +4,18 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.Drawable
 import android.media.Image
 import android.opengl.Visibility
 import android.os.AsyncTask
+import android.support.annotation.ColorInt
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -65,6 +68,7 @@ import kotlin.collections.ArrayList
 class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecyclerViewAdapter ,adpterType:AdapterToUseFor) {
     val con:Context = context
     var name:String? = username
+    var textColorMineTheme: Int = 0
     val adaptedcomms:arvdinterface = adapter
     val and = AndDown()
     var selectedPos = -1
@@ -77,7 +81,20 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
     init {
         if(name == null){
             name = sharedpref.getString(CentralConstants.username,null)
+
         }
+        /*var typedValue =  TypedValue()
+        var theme = context.theme
+        theme.resolveAttribute(R.attr.textColorMine, typedValue, true)
+        textColorMineTheme = typedValue.data*/
+
+        var attrs  = intArrayOf(R.attr.textColorMine)
+        var ta = context.obtainStyledAttributes(attrs)
+        var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
+        ta.recycle()
+        textColorMineTheme = ContextCompat.getColor(con, textColorMineThemeint)
+        /*imgthumblike = context.getResources().getDrawable(R.drawable.ic_thumb_up_likeint_24px)
+        imgthumbtheme = context.getResources().getDrawable(R.drawable.ic_thumb_up_black_24px)*/
     }
 
     public fun add(article : FeedArticleDataHolder.FeedArticleHolder){
@@ -120,9 +137,14 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
 
         if(holder.article?.uservoted != null && holder.article?.uservoted as Boolean == true){
             holder.article_likes?.setTextColor(ContextCompat.getColor(con, R.color.colorAccent))
+            holder.article_likes?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumb_up_likeint_24px,0,0,0)
         }
         else {
-            holder.article_likes?.setTextColor(ContextCompat.getColor(con, R.color.abc_hint_foreground_material_light))
+
+            //holder.article_likes?.setTextColor(ContextCompat.getColor(con, R.color.abc_hint_foreground_material_light))
+
+            holder.article_likes?.setTextColor(textColorMineTheme)
+            holder.article_likes?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumb_up_black_24px,0,0,0)
         }
         holder.article_likes?.text = holder.article?.netVotes.toString()
        // holder.article_name?.text = "${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
@@ -304,44 +326,51 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
             mholder.article_reblog_now?.visibility = View.VISIBLE
             holder.article_image?.visibility = View.VISIBLE
         }
-        mholder.article_reblog_now?.setOnClickListener(View.OnClickListener {
-            //Toast.makeText(con,"Processing. Please wait....",Toast.LENGTH_LONG).show()
-            //ForReturningQuestionsLite q = item;
-            var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
-            var vop = ReblogOperation(AccountName(name),AccountName(articles.author),Permlink(articles.permlink))
-            var al = ArrayList<AccountName>()
-            al.add(AccountName(name))
-            var cus = CustomJsonOperation(null,al,"follow",vop.toJson())
+        if(holder.article?.author == name){
+            mholder.article_reblog_now?.visibility = View.GONE
+        }
+        else{
+            mholder.article_reblog_now?.visibility = View.VISIBLE
+            mholder.article_reblog_now?.setOnClickListener(View.OnClickListener {
+                //Toast.makeText(con,"Processing. Please wait....",Toast.LENGTH_LONG).show()
+                //ForReturningQuestionsLite q = item;
+                var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
+                var vop = ReblogOperation(AccountName(name),AccountName(articles.author),Permlink(articles.permlink))
+                var al = ArrayList<AccountName>()
+                al.add(AccountName(name))
+                var cus = CustomJsonOperation(null,al,"follow",vop.toJson())
 
 
-            /*var l : List<FollowType> = ArrayList()
-            l += FollowType.BLOG
-            var fop = FollowOperation(AccountName(name), AccountName(articles.author), l)
-            var fus = CustomJsonOperation(null,al,"follow",fop.toJson())
+                /*var l : List<FollowType> = ArrayList()
+                l += FollowType.BLOG
+                var fop = FollowOperation(AccountName(name), AccountName(articles.author), l)
+                var fus = CustomJsonOperation(null,al,"follow",fop.toJson())
 
-            var obs = Response.Listener<JSONObject> { response ->
-                //var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
-                val gson = Gson()
-                var ress = gson.fromJson<Block.BlockAdded>(response.toString(),Block.BlockAdded::class.java)
-                if(ress != null && ress.result != null ){
-                    *//*Runnable { run { Toast.makeText(con,"$name has upvoted ${vop.author.name}",Toast.LENGTH_LONG).show() } }*//*
+                var obs = Response.Listener<JSONObject> { response ->
+                    //var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
+                    val gson = Gson()
+                    var ress = gson.fromJson<Block.BlockAdded>(response.toString(),Block.BlockAdded::class.java)
+                    if(ress != null && ress.result != null ){
+                        *//*Runnable { run { Toast.makeText(con,"$name has upvoted ${vop.author.name}",Toast.LENGTH_LONG).show() } }*//*
                     Toast.makeText(con,"Reblogged ${vop.permlink.link}",Toast.LENGTH_LONG).show()
 
                 }
             }*/
-            var list  = ArrayList<Operation>()
-            list.add(cus)
-            //var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,mholder,null,cus,obs,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog)
-            var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,list,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog)
-            bloc.GetDynamicGlobalProperties()
-            /*globallist.add(bloc)
-            Log.d("buttonclick",globallist.toString())*/
-            /*val myIntent = Intent(con, ArticleActivity::class.java)
-            myIntent.putExtra("username", holder.article?.author)
-            myIntent.putExtra("tag", holder.article?.category)
-            myIntent.putExtra("permlink", holder.article?.permlink)
-            con.startActivity(myIntent)*/
-        })
+                var list  = ArrayList<Operation>()
+                list.add(cus)
+                //var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,mholder,null,cus,obs,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog)
+                var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,list,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog)
+                bloc.GetDynamicGlobalProperties()
+                /*globallist.add(bloc)
+                Log.d("buttonclick",globallist.toString())*/
+                /*val myIntent = Intent(con, ArticleActivity::class.java)
+                myIntent.putExtra("username", holder.article?.author)
+                myIntent.putExtra("tag", holder.article?.category)
+                myIntent.putExtra("permlink", holder.article?.permlink)
+                con.startActivity(myIntent)*/
+            })
+        }
+
         //and = AndDown()
         /*var st : String? = holder.article?.body
         if(st?.length != null && st?.length > 300){

@@ -31,6 +31,7 @@ class UserUpvoteActivity : AppCompatActivity() {
     var useOtherGuyOnly : Boolean? = false
     var key : String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyThemeArticle(this@UserUpvoteActivity)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_upvote)
         /*setSupportActionBar(toolbar)

@@ -30,6 +30,7 @@ import android.view.MenuItem
 class SettingsActivity : AppCompatPreferenceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MiscConstants.ApplyMyThemeSettings(this@SettingsActivity)
         super.onCreate(savedInstanceState)
         setupActionBar()
     }
