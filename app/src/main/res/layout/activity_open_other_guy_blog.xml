@@ -132,6 +132,7 @@
                             <android.support.v7.widget.CardView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+
                                 android:layout_weight="1"
                                 android:id="@+id/cardviewTwo"
                                 app:cardUseCompatPadding="true"
@@ -152,7 +153,7 @@
                                     android:padding="1dp"
                                     android:text="1000 followers"
                                     android:textAlignment="center"
-                                    android:textColor="@android:color/black" />
+                                     />
                             </android.support.v7.widget.CardView>
 
                             <android.support.v7.widget.CardView
@@ -177,7 +178,7 @@
                                     android:layout_gravity="center_horizontal"
                                     android:layout_margin="5dp"
                                     android:text="1000 posts"
-                                    android:textColor="@android:color/black"
+
                                     />
                             </android.support.v7.widget.CardView>
 
@@ -203,7 +204,7 @@
                                     android:layout_gravity="center_horizontal"
                                     android:layout_margin="5dp"
                                     android:text="1000 following"
-                                    android:textColor="@android:color/black"
+
                                     />
                             </android.support.v7.widget.CardView>
 
@@ -237,7 +238,7 @@
                                     android:layout_gravity="center_horizontal"
                                     android:layout_margin="5dp"
                                     android:text="Omaumau"
-                                    android:textColor="@android:color/black"
+
                                     />
                             </android.support.v7.widget.CardView>
 
@@ -276,7 +277,7 @@
                                     android:layout_gravity="center_horizontal"
                                     android:layout_margin="5dp"
                                     android:text="July 2017"
-                                    android:textColor="@android:color/black"
+
                                     />
                             </android.support.v7.widget.CardView>
 
@@ -303,7 +304,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:layout_margin="5dp"
                                 android:text="website"
-                                android:textColor="@android:color/black"
+
                                 />
                         </android.support.v7.widget.CardView>
 

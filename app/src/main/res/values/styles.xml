@@ -39,8 +39,36 @@
 
 
 
+    <style name="Plaid.AlertDialog.AppCompat" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/background_light</item>
+    </style>
+
+    <style name="Plaid.AlertDialog.AppCompat.Dark" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/background_dark</item>
+    </style>
 
 
+
+
+
+    <style name="Plaid.Alert.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <!-- <item name="colorAccent">@color/colorAccent</item>-->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorAccent">@color/accent</item>
+        <!--<item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary</item>-->
+        <item name="android:itemBackground">@color/background_dark</item>
+        <item name="textColorAlertDialogListItem">@color/background_dark</item>
+        <!--<item name="android:actionModeBackground">@color/background_dark</item>-->
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="android:textColorHint">@color/dribbble_link_highlight</item>
+        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:textColor">@color/background_light</item>
+        <item name="android:textColorSecondary">@color/text_disabled_light</item>
+        <item name="android:textColorPrimary">@color/text_primary_light</item>
+        <item name="android:alertDialogTheme">@style/Plaid.AlertDialog.AppCompat.Dark</item>
+    </style>
 
 
     <style name="Plaid.Alert" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -48,12 +76,17 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!--<item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/primary</item>-->
+        <item name="android:itemBackground">@color/background_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="android:actionModeBackground">@color/background_dark</item>
+        <item name="textColorAlertDialogListItem">@color/background_light</item>
+        <!--<item name="android:actionModeBackground">@color/background_dark</item>-->
         <item name="android:colorBackground">@color/background_light</item>
-        <item name="android:textColorHint">@color/hint_disabled_dark</item>
+        <item name="android:textColorHint">@color/dribbble_link_highlight</item>
         <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
         <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:textColorSecondary">@color/text_primary_dark</item>
+        <item name="android:alertDialogTheme">@style/Plaid.AlertDialog.AppCompat</item>
     </style>
 
 
@@ -65,19 +98,24 @@
     <style name="Plaid" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
         <!--<item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/primary</item>-->
+
         <item name="colorAccent">@color/accent</item>
         <item name="android:actionModeBackground">@color/background_dark</item>
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/hint_disabled_dark</item>
         <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:popupBackground">@color/background_light</item>
+        <item name="android:itemBackground">@color/background_light</item>
         <item name="android:textColor">@color/text_primary_dark</item>
 
         <item name="cardBackgroundColor">@color/background_light</item>
         <item name="textColorMine">@color/text_primary_dark</item>
         <item name="textColorMineInverse">@color/background_light</item>
         <item name="android:textColorPrimary">@color/text_primary_dark</item>
+        <item name="android:alertDialogStyle">@style/Plaid.AlertDialog.AppCompat</item>
         <!--<item name="android:navigationBarColor">@color/primary_super_dark</item>
         <item name="android:statusBarColor">@color/background_super_dark</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
@@ -96,11 +134,14 @@
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/text_disabled_light</item>
         <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:popupBackground">@color/background_dark</item>
+        <item name="android:itemBackground">@color/background_dark</item>
         <item name="android:textColor">@color/text_primary_light</item>
         <item name="cardBackgroundColor">@color/accback</item>
         <item name="textColorMine">@color/text_primary_light</item>
         <item name="textColorMineInverse">@color/text_primary_dark</item>
         <item name="android:textColorPrimary">@color/text_primary_light</item>
+        <item name="android:alertDialogStyle">@style/Plaid.AlertDialog.AppCompat.Dark</item>
 
         <!--<item name="android:navigationBarColor">@color/primary_super_dark</item>
         <item name="android:statusBarColor">@color/background_super_dark</item>
@@ -157,11 +198,52 @@
     </style>
 
     <style name="Plaid.Translucent.DesignerNewsStory">
-        <item name="colorPrimary">@color/designer_news</item>
+        <!--<item name="colorPrimary">@color/designer_news</item>
         <item name="colorAccent">@color/designer_news</item>
-        <item name="colorControlActivated">?colorAccent</item>
+        <item name="colorControlActivated">?colorAccent</item>-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="android:textColorHint">@color/hint_disabled_dark</item>
+        <item name="android:popupBackground">@color/background_light</item>
+        <item name="android:itemBackground">@color/background_light</item>
+        <item name="android:textColor">@color/text_primary_dark</item>
+
+        <item name="cardBackgroundColor">@color/background_light</item>
+        <item name="textColorMine">@color/text_primary_dark</item>
+        <item name="textColorMineInverse">@color/background_light</item>
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
        <!-- <item name="android:windowEnterAnimation">@transition/designer_news_story_shared_enter</item>-->
+        <!--<item name="android:windowReturnTransition">@transition/designer_news_story_shared_return</item>-->
+        <!--<item name="android:statusBarColor">@color/designer_news_dark</item>
+        <item name="android:navigationBarColor">@color/designer_news_super_dark</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/designer_news_story_shared_enter</item>
+        <item name="android:windowSharedElementReturnTransition">@transition/designer_news_story_shared_return</item>-->
+
+    </style>
+
+    <style name="Plaid.Translucent.DesignerNewsStory.Dark">
+        <!--<item name="colorPrimary">@color/designer_news</item>
+        <item name="colorAccent">@color/designer_news</item>
+        <item name="colorControlActivated">?colorAccent</item>-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+
+
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="android:textColorHint">@color/text_disabled_light</item>
+        <item name="android:popupBackground">@color/background_dark</item>
+        <item name="android:itemBackground">@color/background_dark</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="cardBackgroundColor">@color/accback</item>
+        <item name="textColorMine">@color/text_primary_light</item>
+        <item name="textColorMineInverse">@color/text_primary_dark</item>
+        <item name="android:textColorPrimary">@color/text_primary_light</item>
+        <!-- <item name="android:windowEnterAnimation">@transition/designer_news_story_shared_enter</item>-->
         <!--<item name="android:windowReturnTransition">@transition/designer_news_story_shared_return</item>-->
         <!--<item name="android:statusBarColor">@color/designer_news_dark</item>
         <item name="android:navigationBarColor">@color/designer_news_super_dark</item>

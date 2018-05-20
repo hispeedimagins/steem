@@ -28,45 +28,41 @@
 
 
             <TextView
-                android:textColor="@color/accback"
-                android:padding="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
                 android:id="@+id/article_resteemed_by"
-                android:text="name"
-
-
-                android:drawablePadding="4dp"
-                android:drawableLeft="@drawable/ic_repeat_black_24px"
-                android:textStyle="bold"
-                />
-
-            <TextView
-                android:layout_weight="1"
-                android:padding="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-
-
-
+                android:drawableLeft="@drawable/ic_repeat_black_24px"
                 android:drawablePadding="4dp"
 
-                android:textStyle="bold"
-                />
+
+                android:padding="5dp"
+                android:text="name"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="4dp"
+
+
+                android:padding="5dp"
+
+                android:textStyle="bold" />
 
 
             <TextView
-                android:textStyle="bold"
-                android:paddingRight="5dp"
                 android:id="@+id/textViewOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="5dp"
                 android:text="&#8942;"
-                android:textAppearance="?android:textAppearanceLarge" />
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textStyle="bold" />
             <!--android:text="&#8942;"-->
         </LinearLayout>
 
@@ -274,7 +270,7 @@
                     android:gravity="center"
 
                     android:drawableLeft="@drawable/ic_thumb_up_black_24px"
-                    android:drawablePadding="2dp"
+                    android:drawablePadding="4dp"
                     android:textStyle="bold"
                     />
             </LinearLayout>
@@ -291,7 +287,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/article_comments"
                     android:text="200"
-                    android:drawablePadding="2dp"
+                    android:drawablePadding="4dp"
                     android:gravity="center_vertical"
 
                     android:drawableLeft="@drawable/ic_comment_black_24px"

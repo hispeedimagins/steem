@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
 
 
-        android:background="@color/white"
+        app:cardBackgroundColor="?attr/cardBackgroundColor"
 
         app:cardUseCompatPadding="true"
         app:cardPreventCornerOverlap="true"

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:markdown="http://schemas.android.com/apk/res-auto"
-
+    app:cardBackgroundColor="?attr/cardBackgroundColor"
     app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="true"
     contentPadding="1dp"

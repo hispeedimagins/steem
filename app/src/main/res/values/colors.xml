@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
+    &lt;!&ndash;<color name="colorAccent">#4aa87a</color>&ndash;&gt;
+    <color name="colorAccent">#FF4081</color>-->
+
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimaryLight">#BB86FC</color>
     <!--<color name="colorAccent">#4aa87a</color>-->
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#03DAC6</color>
+    <color name="colorAccentDark">#018786</color>
+
 
     <color name="black">#000</color>
     <color name="white">#ffffff</color>
@@ -21,9 +29,12 @@
 
 
     <!-- app palette -->
-    <color name="primary">#69F0AE</color>
-    <color name="accent">@color/primary</color> <!-- mono-color -->
-    <color name="primary_dark">#4aa87a</color>
+    <!--<color name="primary">#69F0AE</color>
+    <color name="accent">@color/primary</color> &lt;!&ndash; mono-color &ndash;&gt;
+    <color name="primary_dark">#4aa87a</color>-->
+    <color name="primary">#03DAC6</color>
+    <color name="accent">#BB86FC</color> <!-- mono-color -->
+    <color name="primary_dark">#018786</color>
 
     <!-- common colours -->
     <color name="text_primary_dark">#de000000</color> <!-- 87% -->

@@ -350,6 +350,7 @@
             xmlns:markdown="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             tools:context="com.steemapp.lokisveil.steemapp.Fragments.ArticleFragment"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
             app:cardUseCompatPadding="true"
             app:cardPreventCornerOverlap="true"
             contentPadding="1dp"
@@ -551,6 +552,7 @@
 
 
                 <br.tiagohm.markdownview.MarkdownView
+                    app:cardBackgroundColor="?attr/cardBackgroundColor"
                     android:id="@+id/markdown_view"
                     app:escapeHtml="false"
                     android:layout_width="match_parent"

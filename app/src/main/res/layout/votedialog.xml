@@ -15,10 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <SeekBar
+        <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/dialog_seekbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        <!--<SeekBar
+            android:id="@+id/dialog_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />-->
 
         <TextView
             android:textAlignment="center"
