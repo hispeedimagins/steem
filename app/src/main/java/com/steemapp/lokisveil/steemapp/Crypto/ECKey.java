@@ -1064,6 +1064,7 @@ public class ECKey {
         if (recId == -1)
             throw new RuntimeException("Could not construct a recoverable key. This should never happen.");
         int headerByte = recId + 27 + (isCompressed() ? 4 : 0);
+        //int headerByte = recId + 27 + 4;
         byte[] sigData = new byte[65]; // 1 header + 32 bytes for R + 32 bytes
                                        // for S
         sigData[0] = (byte) headerByte;
@@ -1094,6 +1095,32 @@ public class ECKey {
         byte[] sigData = new byte[65]; // 1 header + 32 bytes for R + 32 bytes
                                        // for S
         sigData[0] = (byte) headerByte;
+        System.arraycopy(CryptoUtils.bigIntegerToBytes(sig.r, 32), 0, sigData, 1, 32);
+        System.arraycopy(CryptoUtils.bigIntegerToBytes(sig.s, 32), 0, sigData, 33, 32);
+        return new String(Base64.encode(sigData), Charset.forName("UTF-8"));
+    }
+
+
+    public String signMessageUploadImage(Sha256Hash messageHash, @Nullable KeyParameter aesKey) {
+        ECDSASignature sig = sign(messageHash, aesKey);
+        // Now we have to work backwards to figure out the recId needed to
+        // recover the signature.
+        int recId = -1;
+        for (int i = 0; i < 4; i++) {
+            ECKey k = ECKey.recoverFromSignature(i, sig, messageHash, isCompressed());
+            if (k != null && k.pub != null && k.pub.equals(pub)) {
+                recId = i;
+                break;
+            }
+        }
+        if (recId == -1)
+            throw new RuntimeException("Could not construct a recoverable key. This should never happen.");
+        //apparently it is not signed if we check for compresses, just add 4
+        int headerByte = recId + 27 + 4;
+        byte[] sigData = new byte[65]; // 1 header + 32 bytes for R + 32 bytes
+        // for S
+        sigData[0] = (byte) headerByte;
+
         System.arraycopy(CryptoUtils.bigIntegerToBytes(sig.r, 32), 0, sigData, 1, 32);
         System.arraycopy(CryptoUtils.bigIntegerToBytes(sig.s, 32), 0, sigData, 33, 32);
         return new String(Base64.encode(sigData), Charset.forName("UTF-8"));

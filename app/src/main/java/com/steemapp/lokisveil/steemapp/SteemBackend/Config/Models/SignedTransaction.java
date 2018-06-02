@@ -183,7 +183,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                 byte[] signatureAsByteArray = Base64.decode(signature);
 
                 if (isCanonical(signatureAsByteArray)) {
-                    this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 1);
+                    this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 1000);
                 } else {
                     isCanonical = true;
                     this.signatures.add(CryptoUtils.HEX.encode(signatureAsByteArray));
