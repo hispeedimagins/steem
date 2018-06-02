@@ -145,14 +145,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     fun firstinit(){
-        val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(this))
+        /*val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(this))
         val job = createJob(dispatcher)
 
         val dis = dispatcher.schedule(job)
         Log.d("firebasedispatcher",dis.toString())
         if (dis != FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS) {
             Log.d("TAG", "Error while creating JOB ")
-        }
+        }*/
+
+
         mysetup()
         val headv = nav_view.getHeaderView(0)
         val men = nav_view.menu
@@ -191,8 +193,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    fun createJob(dispatcher: FirebaseJobDispatcher): Job {
-        /* Job job = dispatcher.newJobBuilder()
+    /*fun createJob(dispatcher: FirebaseJobDispatcher): Job {
+        *//* Job job = dispatcher.newJobBuilder()
                 // persist the task across boots
                 .setLifetime(Lifetime.FOREVER)
                 // Call this service when the criteria are met.
@@ -205,7 +207,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .setTrigger(Trigger.executionWindow(10,20))
                 //Run this job only when the network is avaiable.
                 .setConstraints(Constraint.ON_ANY_NETWORK)
-                .build();*/
+                .build();*//*
 
 
         val myExtrasBundle = Bundle()
@@ -244,7 +246,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         )
                 .setExtras(myExtrasBundle)
                 .build()
-    }
+    }*/
 
 
 

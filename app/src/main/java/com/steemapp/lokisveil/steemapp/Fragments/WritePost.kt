@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.opengl.Visibility
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
-import android.support.v7.widget.CardView
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.support.v4.app.FragmentActivity
+import android.support.v7.widget.*
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -23,8 +22,14 @@ import com.steemapp.lokisveil.steemapp.Fragments.dummy.DummyContent.DummyItem
 import com.steemapp.lokisveil.steemapp.HelperClasses.TextInputLayoutErrorHandler
 import android.text.Selection.getSelectionEnd
 import android.text.Selection.getSelectionStart
+import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
 import com.steemapp.lokisveil.steemapp.CentralConstants
+import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.drafts
+import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
+import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
+import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
+import java.util.ArrayList
 
 
 /**
@@ -41,7 +46,7 @@ import com.steemapp.lokisveil.steemapp.Databases.drafts
 class WritePost : Fragment() {
     // TODO: Customize parameters
     private var mColumnCount = 1
-    private var mListener: OnListFragmentInteractionListener? = null
+    private var mListener: GlobalInterface? = null
     internal var EditTextMainOne: EditText? = null
     internal var EditTextMainTwo: EditText? = null
     internal var EditTextMainThree: EditText? = null
@@ -57,6 +62,10 @@ class WritePost : Fragment() {
     //android.support.v4.widget.ContentLoadingProgressBar progressBar;
     internal var progressBar: ProgressBar? = null
     internal var titleholder: TextView? = null
+    internal var beneficiaryrecycler : RecyclerView? = null
+    internal var beneficiaryrecyclerswipecommon : swipecommonactionsclass? = null
+    internal var beneficiaryAdapter : AllRecyclerViewAdapter? = null
+    internal var beneficiaryBottomSheet : BottomSheetBehavior<LinearLayout>? = null
     var dbid : Long? = -1
     var dbcom : Long? = -1
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +82,8 @@ class WritePost : Fragment() {
         val view = inflater.inflate(R.layout.fragment_item_list2, container, false)
 
         setUpCommons(view)
+        //beneficiaryBottomSheet = BottomSheetBehavior.from(view.findViewById<LinearLayout>(R.id.bottomsheetmain))
+
         // Set the adapter
         if (view is RecyclerView) {
             val context = view.getContext()
@@ -98,9 +109,13 @@ class WritePost : Fragment() {
         //progressBar.hide();
         /*val dab = v.findViewById(R.id.addaquestionfabminebc) as FloatingActionButton
         dab.setOnClickListener { view -> FabIntermediary(view) }*/
-        activity = activity
-        context = v?.context
-
+        activity = getActivity() as FragmentActivity
+        context = v.context
+        /*beneficiaryrecycler = v.findViewById(R.id.beneficiaryrecycler)
+        //beneficiaryrecyclerswipecommon = swipecommonactionsclass(v.findViewById(R.id.beneficiaryrecycler_swipe_refresh_layout))
+        beneficiaryAdapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(),beneficiaryrecycler!!,v,AdapterToUseFor.beneficiaries)
+        beneficiaryrecycler?.itemAnimator = DefaultItemAnimator()
+        beneficiaryrecycler?.adapter = beneficiaryAdapter*/
         EditTextMainOne = v.findViewById(R.id.TextMainOne) as EditText
         EditTextMainTwo = v.findViewById(R.id.EditMainTextTwo) as EditText
         EditTextMainThree = v.findViewById(R.id.EditMainTextThree) as EditText
@@ -110,6 +125,9 @@ class WritePost : Fragment() {
         EditTextMainThree?.setMovementMethod(ScrollingMovementMethod())*/
 
         CheckBoxMainOne = v.findViewById(R.id.CheckboxMainOne) as CheckBox
+
+        //set up a callback for parent to attach a listner, used to use or not use developer beneficiaries
+        mListener?.attachCheckboxListner(CheckBoxMainOne)
 
         EditTextMainOnehandler = TextInputLayoutErrorHandler(v.findViewById(R.id.TextMainOneTextLayout) as TextInputLayout)
         EditTextMainTwohandler = TextInputLayoutErrorHandler(v.findViewById(R.id.EditMainTextTwoTextLayout) as TextInputLayout)
@@ -126,6 +144,7 @@ class WritePost : Fragment() {
         cardviewTwo = v.findViewById(R.id.cardviewTwo) as CardView
         cardviewThree = v.findViewById(R.id.cardviewThree) as CardView
         cardviewFour = v.findViewById(R.id.cardviewFour) as CardView*/
+//        beneficiaryAdapter?.beneficiaryHelperFunctionsOb?.addDummies()
     }
 
 
@@ -164,6 +183,17 @@ class WritePost : Fragment() {
         }
     }
 
+
+
+    fun getList():List<FeedArticleDataHolder.beneficiariesDataHolder>?{
+        var arl = ArrayList<FeedArticleDataHolder.beneficiariesDataHolder>()
+        for(item in beneficiaryAdapter?.getList()!!){
+            arl.add(item as FeedArticleDataHolder.beneficiariesDataHolder)
+        }
+        return arl.sortedWith(compareBy({it.username}))
+        //return beneficiaryAdapter?.getList()?.sortBy(compareBy<FeedArticleDataHolder.beneficiariesDataHolder> { it.username })
+    }
+
     fun getedittext():String{
         return EditTextMainThree?.text.toString()
     }
@@ -187,7 +217,7 @@ class WritePost : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnListFragmentInteractionListener) {
+        if (context is GlobalInterface) {
             mListener = context
         } else {
             //throw RuntimeException(context!!.toString() + " must implement OnListFragmentInteractionListener")

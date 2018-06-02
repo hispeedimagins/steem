@@ -128,12 +128,12 @@
                     >
 
                     <EditText
-                        style="@style/MyMaterialTheme.FullWidthText"
+                        style="@style/MyMaterialTheme.NormalText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/TextMainOne"
 
-                        android:textColor="@color/accback"
+                        android:textColor="?attr/textColorMine"
                         android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
                         />
 
@@ -167,12 +167,12 @@
 
 
                     <EditText
-                        style="@style/MyMaterialTheme.FullWidthText"
+                        style="@style/MyMaterialTheme.NormalText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
                         android:id="@+id/EditMainTextTwo"
-                        android:textColor="@color/accback"
+                        android:textColor="?attr/textColorMine"
                         android:inputType="textEmailAddress|textMultiLine|textAutoComplete|textAutoCorrect"
                         />
 
@@ -208,12 +208,12 @@
 
 
                     <EditText
-                        style="@style/MyMaterialTheme.FullWidthText"
+                        style="@style/MyMaterialTheme.NormalText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
                         android:id="@+id/EditMainTextThree"
-                        android:textColor="@color/accback"
+                        android:textColor="?attr/textColorMine"
                         android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
                         />
 
@@ -224,7 +224,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
+                    android:background="?attr/cardBackgroundColor"
                     android:id="@+id/cardviewTwo"
                     app:cardUseCompatPadding="true"
                     app:cardPreventCornerOverlap="true"
@@ -233,13 +233,60 @@
                     android:layout_gravity="center_horizontal"
                     >
                     <CheckBox
-                        android:text=""
+                        android:checked="true"
+                        android:textColor="?attr/textColorMine"
+                        android:text="Support developers as beneficiary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="?attr/cardBackgroundColor"
                         android:id="@+id/CheckboxMainOne"
                         />
                 </android.support.v7.widget.CardView>
+
+                <!--<RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/bentext"
+                        android:textSize="20sp"
+                        android:layout_margin="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Beneficiaries"
+
+                        />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/beneficiary_add_fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="bottom|end"
+                        app:layout_anchor="@id/bentext"
+                        android:layout_margin="5dp"
+
+                        app:srcCompat="@drawable/ic_person_add_black_24px" />
+                </RelativeLayout>
+
+
+                <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/beneficiaryrecycler"
+                    android:name="ccom.steemapp.lokisveil.steemapp.Fragments.WritePost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    app:layoutManager="LinearLayoutManager"
+                    tools:context="com.steemapp.lokisveil.steemapp.Fragments.WritePost"
+
+
+                    android:scrollbarStyle="insideOverlay"
+                    tools:listitem="@layout/beneficiaryview"
+                    />-->
+
+
 
 
             </LinearLayout>
@@ -256,7 +303,7 @@
             app:layout_anchor="@id/linearlayoutanchormodal"
             app:layout_anchorGravity="end|top"
             />-->
-
+        <!--<include layout="@layout/bottom_sheet_beneficiaries_view" />-->
     </android.support.design.widget.CoordinatorLayout>
 
 

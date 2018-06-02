@@ -44,7 +44,7 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
+class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
     override fun linkClicked(tag: String, name: String, link: String) {
         val myIntent = Intent(this@ArticleActivity, ArticleActivity::class.java)
         myIntent.putExtra("username", name)

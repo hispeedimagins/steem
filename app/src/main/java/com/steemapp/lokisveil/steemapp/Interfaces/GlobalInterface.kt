@@ -3,6 +3,7 @@ package com.steemapp.lokisveil.steemapp.Interfaces
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
+import android.widget.CheckBox
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 
 /**
@@ -31,6 +32,11 @@ interface GlobalInterface {
 
     }
     fun followingDone(){
+
+    }
+
+    // for attaching listeners
+    fun attachCheckboxListner(box:CheckBox?){
 
     }
 

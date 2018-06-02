@@ -32,7 +32,7 @@
         <android.support.v7.widget.AppCompatAutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type a tag"
+            android:hint="Tag (Optional)"
             android:id="@+id/tags_autocom"
             android:imeOptions="actionUnspecified"
             android:imeActionLabel="ok"

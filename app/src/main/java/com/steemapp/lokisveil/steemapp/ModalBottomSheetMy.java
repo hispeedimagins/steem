@@ -239,7 +239,7 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
             String[] tags = new String[articleViewHolder.getTags().size()];
             tags = articleViewHolder.getTags().toArray(tags); //tagsd.split(" ");
             MakeOperationsMine mine = new MakeOperationsMine();
-            List<Operation> ops = mine.createComment(new AccountName(username),new AccountName(articleViewHolder.getAuthor()),new Permlink(articleViewHolder.getPermlink()),content,tags);
+            List<Operation> ops = mine.createComment(new AccountName(username),new AccountName(articleViewHolder.getAuthor()),new Permlink(articleViewHolder.getPermlink()),content,tags,CheckBoxMainOne.isChecked());
             /*Gson gson = new Gson();
             Gson gsons = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             String jsons = gsons.toJson(ops);
@@ -265,7 +265,7 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
             String[] tags = new String[commentViewHolder.getTags().size()];
             tags = commentViewHolder.getTags().toArray(tags); //tagsd.split(" ");
             MakeOperationsMine mine = new MakeOperationsMine();
-            List<Operation> ops = mine.createComment(new AccountName(username),new AccountName(commentViewHolder.getAuthor()),new Permlink(commentViewHolder.getPermlink()),content,tags);
+            List<Operation> ops = mine.createComment(new AccountName(username),new AccountName(commentViewHolder.getAuthor()),new Permlink(commentViewHolder.getPermlink()),content,tags,CheckBoxMainOne.isChecked());
             /*Gson gson = new Gson();
             String json = gson.toJson(ops);*/
             GetDynamicAndBlock block = new GetDynamicAndBlock(context,null,0,ops,"Comment on " +commentViewHolder.getAuthor() , MyOperationTypes.comment,progressBar,globalInterface);
@@ -289,24 +289,7 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
         if(articleViewHolder != null){
             MakeOperationsMine mine = new MakeOperationsMine();
             List<Operation> ops = mine.updateComment(new AccountName(username),new AccountName(parentau),new Permlink(articlepermlink ),new Permlink(articleViewHolder.getPermlink()),content,tags);
-            //List<Operation> ops = mine.createComment(new AccountName(username),new AccountName(articleViewHolder.getAuthor()),new Permlink(articleViewHolder.getPermlink()),content,tags);
-            /*Gson gson = new Gson();
-            Gson gsons = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            String jsons = gsons.toJson(ops);
-            List<Object> obs = new ArrayList<>();
-            //String von = MyOperationTypes.comment_options.name().toString();
-            obs.add(MyOperationTypes.comment.name().toString());
-            obs.add(ops.get(0));
 
-            List<Object> obs2 = new ArrayList<>();
-            obs2.add(MyOperationTypes.comment_options.name().toString());
-            obs2.add(ops.get(1));
-            List<Object> obss = new ArrayList<>();
-            obss.add(obs);
-            obss.add(obs2);
-            String json = gsons.toJson(obss);*/
-
-            //String json = gson.toJson(ops);
             GetDynamicAndBlock block = new GetDynamicAndBlock(context,null,0,ops,"Edited " +articleViewHolder.getAuthor() , MyOperationTypes.edit_comment,progressBar,globalInterface);
             block.GetDynamicGlobalProperties();
 
@@ -372,7 +355,7 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
 
     public void setUpComments(){
         cardviewOne.setVisibility(View.GONE);
-        cardviewTwo.setVisibility(View.GONE);
+        //cardviewTwo.setVisibility(View.GONE);
         cardviewFour.setVisibility(View.GONE);
         EditTextMainTwo.setHint("Body");
         if(articleViewHolder != null){
@@ -386,6 +369,7 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
 
 
     public void setUpCommentsEdit(){
+        cardviewTwo.setVisibility(View.GONE);
         //EditTextMainTwo.setText(Html.fromHtml(this.comment));
         EditTextMainTwo.setText(this.comment);
 

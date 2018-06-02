@@ -1,4 +1,5 @@
 package com.steemapp.lokisveil.steemapp.jsonclasses
+import android.content.Intent
 import com.google.gson.annotations.SerializedName
 import com.steemapp.lokisveil.steemapp.Enums.NotificationType
 
@@ -26,7 +27,13 @@ data class Result(
         @SerializedName("account") val account : String?,
         @SerializedName("is_root_post") val isRootPost : Boolean?,
         var showdate : String? = "",
-		var notiIsRead : Boolean? = false
+		var notiIsRead : Boolean? = false,
+
+
+		//added to make life easier
+		var title:String = "",
+		var body : String = "",
+		var notiIntent: Intent? = null
 
         /*public bool? is_root_post { get; set; }
     public string follower { get; set; }

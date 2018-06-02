@@ -44,7 +44,7 @@ public class CentralConstants {
 
 
     public static String GetFeedImageUrl(String username){
-        return "https://steemitimages.com/u/"+username+"/avatar/medium";
+        return "https://cdn.steemitimages.com/u/"+username+"/avatar/medium";
     }
 
 
