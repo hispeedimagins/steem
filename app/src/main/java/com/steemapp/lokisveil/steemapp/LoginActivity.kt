@@ -31,6 +31,7 @@ import com.google.gson.Gson
 import com.steemapp.lokisveil.steemapp.Databases.FollowersDatabase
 import com.steemapp.lokisveil.steemapp.Databases.FollowingDatabase
 import com.steemapp.lokisveil.steemapp.HelperClasses.GeneralRequestsFeedIntoConstants
+import com.steemapp.lokisveil.steemapp.HelperClasses.RegisterJob
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
@@ -277,6 +278,8 @@ class LoginActivity : AppCompatActivity() , GlobalInterface{
             var gens = GeneralRequestsFeedIntoConstants(this@LoginActivity)
             gens.GetFollowCount(emailStr,null,null,null)
             email_login_form.removeAllViews()
+            //register firebase job
+            var reg = RegisterJob.reg(this)
             //val accessToken = sharedPreferences.getString("accessToken", null)
             //_username = sharedPreferences.getString("username", null)
 
