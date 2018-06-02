@@ -186,4 +186,21 @@ class FeedArticleDataHolder {
             var rootPermlink: String?,
             var highlightThis:Boolean = false
     )
+
+
+    //data class for beneficiaries
+    data class beneficiariesDataHolder(
+            var username:String,
+            var percent:Int,
+            var isdeveloper:Int,
+            var isdefault:Int,
+            var tags:String,
+            var dateLong:Long,
+            var dateString:String,
+            var isbuiltin:Int,
+            var usenow : Int = 0,
+            var dbid:Int,
+            var uncheckedbyuser:Int = 0
+
+    )
 }
