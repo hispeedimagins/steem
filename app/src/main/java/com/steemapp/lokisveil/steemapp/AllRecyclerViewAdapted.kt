@@ -29,6 +29,7 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.OperationJson
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by boot on 2/4/2018.
@@ -97,6 +98,7 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
     private val isFollowView = 500
     private val isDraftView = 600
     private val isNotificationBusyView = 700
+    private val isBeneficaryView = 800
     /*private val isdateview = 65
     private val ischatview = 72
     private val isadview = 74
@@ -126,6 +128,7 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
     var upvotesHelperFunctions : UpvotesHelperFunctions? = null
     var followDisplayHelperFunctions : FollowDisplayHelperFunctions? = null
     var draftHelperFunctionss : draftHelperFunctions? = null
+    var beneficiaryHelperFunctionsOb : beneficiaryHelperFunctions? = null
     //var otherguy = otherguy
     /*var peopleFunctionsList: PeopleFunctionsList
     var openAQuestionHelperFunctions: OpenAQuestionHelperFunctions
@@ -214,6 +217,9 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
             AdapterToUseFor.commentNoti ->{
                 this.commentNotiHelperFunctions = FeedHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this,apptype)
             }
+            AdapterToUseFor.beneficiaries -> {
+                this.beneficiaryHelperFunctionsOb = beneficiaryHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this)
+            }
 
                 //this.openAQuestionHelperFunctions = OpenAQuestionHelperFunctions(metrics, calcs, this.appUserName, this.fontSingleton, this@AllRecyclerViewAdapter)
             /*AdapterToUseFor.feed -> {
@@ -271,6 +277,10 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         else if(viewType == isNotificationBusyView){
             v = LayoutInflater.from(parent.context).inflate(R.layout.notification_busy, parent, false)
             vh = NotificationBusyViewHolder(v)
+        }
+        else if(viewType == isBeneficaryView){
+            v = LayoutInflater.from(parent.context).inflate(R.layout.beneficiaryview, parent, false)
+            vh = beneficiaryViewHolder(v)
         }
         /*else if (viewType == ischatview) {
             v = LayoutInflater.from(parent.context).inflate(R.layout.chat_message_layout, parent, false)
@@ -345,6 +355,9 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         else if(ht == isNotificationBusyView){
             notificationsBusyHelperFunctions?.Bind(holder,position)
         }
+        else if(ht == isBeneficaryView){
+            beneficiaryHelperFunctionsOb?.Bind(holder,position)
+        }
         /*if (ht == ischatview) {
             if (holder !is ChatViewHolder) {
                 return
@@ -418,6 +431,10 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         notifyDataSetChanged()
     }
 
+    fun getList():MutableList<Any>?{
+        return mValues
+    }
+
 
     /*fun add(holder: NothingToShowDataHolder) {
         mValues?.add(holder)
@@ -449,6 +466,9 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         }
         else if(ins is BusyNotificationJson.Result){
             return isNotificationBusyView
+        }
+        else if(ins is FeedArticleDataHolder.beneficiariesDataHolder){
+            return isBeneficaryView
         }
 
         return isFeedView

@@ -1,5 +1,6 @@
 package com.steemapp.lokisveil.steemapp;
 
+import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.CondenserUtils;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.AssetSymbolType;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName;
@@ -16,6 +17,7 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Utilities;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -39,7 +41,7 @@ public class MakeOperationsMine {
     }
 
     public ArrayList<Operation> createPost(AccountName authorThatPublishsThePost, String title, String content,
-                                       String[] tags) {
+                                           String[] tags, List<FeedArticleDataHolder.beneficiariesDataHolder> benlist) {
         if (tags == null || tags.length < 1 || tags.length > 10) {
             throw new InvalidParameterException(SteemJConfig.TAG_ERROR_MESSAGE);
         }
@@ -69,27 +71,55 @@ public class MakeOperationsMine {
 
         CommentOptionsOperation commentOptionsOperation;
         // Only add a BeneficiaryRouteType if it makes sense.
-        if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
-            BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+
+        //check if beneficiary list is greater than 0
+        if (benlist.size() > 0) {
+            /*BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
                     SteemJConfig.getInstance().getSteemJWeight());
 
             BeneficiaryRouteType beneficiaryRouteTypeD = new BeneficiaryRouteType(SteemJConfig.getDev_ACCOUNT(),
-                    SteemJConfig.getInstance().getDevWeight());
+                    SteemJConfig.getInstance().getDevWeight());*/
+
 
             ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
-            beneficiaryRouteTypes.add(beneficiaryRouteTypeD);
-            beneficiaryRouteTypes.add(beneficiaryRouteType);
+            //beneficiaryRouteTypes.add(beneficiaryRouteTypeD);
+            //beneficiaryRouteTypes.add(beneficiaryRouteType);
 
 
-            CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
-            commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+            // build the class
+            for(int i = 0; i < benlist.size(); i++){
+                FeedArticleDataHolder.beneficiariesDataHolder item = benlist.get(i);
+                if(item != null && item.getUsenow() == 1){
+                    //Float val = Float.parseFloat(String.valueOf(item.getPercent()));
+                    Integer mid = (item.getPercent() * 100) / 2;
+                    Short sh = Short.parseShort(mid.toString());
+                    BeneficiaryRouteType brt = new BeneficiaryRouteType(new AccountName(item.getUsername()),
+                            sh );
 
-            ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-            commentOptionsExtensions.add(commentPayoutBeneficiaries);
+                    beneficiaryRouteTypes.add(brt);
+                }
+            }
 
-            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
-                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
-            commentOptionsOperation.makeGsonExtensions();
+
+
+            //add to extra operations if there are some beneficiaries.
+            //The should be presorted to be alphabetical
+            if(beneficiaryRouteTypes.size() > 0){
+                CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
+                commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+
+                ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
+                commentOptionsExtensions.add(commentPayoutBeneficiaries);
+
+                commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
+                        maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
+                commentOptionsOperation.makeGsonExtensions();
+            }
+            else {
+                commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
+                        maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
+            }
+
         } else {
             commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
                     maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
@@ -113,7 +143,7 @@ public class MakeOperationsMine {
 
     public ArrayList<Operation> createComment(AccountName authorThatPublishsTheComment,
                                           AccountName authorOfThePostOrCommentToReplyTo, Permlink permlinkOfThePostOrCommentToReplyTo, String content,
-                                          String[] tags)
+                                          String[] tags,boolean useBeneficiaries)
              {
         if (tags == null || tags.length < 1 || tags.length > 10) {
             throw new InvalidParameterException(SteemJConfig.TAG_ERROR_MESSAGE);
@@ -157,8 +187,9 @@ public class MakeOperationsMine {
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
 
         CommentOptionsOperation commentOptionsOperation;
-        // Only add a BeneficiaryRouteType if it makes sense.
-        if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
+
+        // Only add if it is true. Cannot be changed for now
+        if (useBeneficiaries) {
             BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
                     SteemJConfig.getInstance().getSteemJWeight());
 

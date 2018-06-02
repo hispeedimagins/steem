@@ -9,9 +9,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.steemapp.lokisveil.steemapp.Fragments.FeedFragment
@@ -30,26 +27,46 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.AsyncTask
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
+import android.support.annotation.NonNull
+import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.*
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.*
 import com.steemapp.lokisveil.steemapp.Databases.ImageUploadedUrls
 import com.steemapp.lokisveil.steemapp.Databases.drafts
+import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
+import com.steemapp.lokisveil.steemapp.HelperClasses.AddABeneficiary
 import com.steemapp.lokisveil.steemapp.HelperClasses.GetDynamicAndBlock
+import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
+
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.ImageUpload.SteemImageUpload
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
+import kotlinx.android.synthetic.main.bottom_sheet_beneficiaries_view.*
 import java.io.File
+import com.steemapp.lokisveil.steemapp.*
+import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.Databases.beneficiariesDatabase
+import com.steemapp.lokisveil.steemapp.Interfaces.BeneficiaryAddInterface
+import java.util.regex.Pattern
 
 
-class Post : AppCompatActivity() , GlobalInterface {
+class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
+    //open the beneficiary page after adding it to the db
+    override fun AddedSuccessfully(dbid: Long) {
+        beneficiaryBottomSheet?.state = BottomSheetBehavior.STATE_EXPANDED
+        beneficiaryrecycler?.smoothScrollToPosition(beneficiaryAdapter?.getSize()!! - 1)
+    }
+
     override fun notifyRequestMadeSuccess() {
 
     }
@@ -70,6 +87,39 @@ class Post : AppCompatActivity() , GlobalInterface {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    //listener for changes
+    override fun attachCheckboxListner(box:CheckBox?) {
+
+        //checkdevs(box?.isChecked!!)
+        box?.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener({buttonView, isChecked ->
+
+            checkdevs(isChecked)
+        }))
+    }
+
+    //Use or remove develpers are beneficiaries
+    fun checkdevs(isChecked:Boolean){
+        var ben = getList(false)
+        var i = 0
+        for(item in ben!!){
+            /*var tagsi = item.tags?.trim()?.split(" ")
+            if(tags?.contains(item.tags)!!){
+                item.usenow = 1
+            }*/
+            if(item.isdeveloper == 1){
+                item.uncheckedbyuser = 0
+                if(isChecked){
+                    item.usenow = 1
+                } else{
+                    item.usenow = 0
+                }
+
+                beneficiaryAdapter?.notifyitemcchanged(i,item)
+            }
+            i++
+        }
+    }
+
     companion object {
         val MY_PERMISSIONS_READ_EXTERNAL_STORAGE = 100
     }
@@ -81,6 +131,10 @@ class Post : AppCompatActivity() , GlobalInterface {
     internal var writePost : WritePost? = null
     internal var previewPost : PreviewPost? = null
     internal var viewPagerAdapteradapter: ViewPagerAdapter? = null
+    internal var beneficiaryrecycler : RecyclerView? = null
+    internal var beneficiaryrecyclerswipecommon : swipecommonactionsclass? = null
+    internal var beneficiaryAdapter : AllRecyclerViewAdapter? = null
+    internal var beneficiaryBottomSheet : BottomSheetBehavior<LinearLayout>? = null
     val PICK_IMAGE_REQUEST = 1
     var filePath: String? = null
     var dbid : Int = -1
@@ -93,10 +147,42 @@ class Post : AppCompatActivity() , GlobalInterface {
         setContentView(R.layout.activity_post)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(this@Post)
+
+        //create the bottom sheet
+        beneficiaryBottomSheet = BottomSheetBehavior.from(findViewById<LinearLayout>(R.id.bottomsheetmain))
+
+        beneficiaryrecycler = findViewById(R.id.beneficiaryrecycler)
+        //beneficiaryrecyclerswipecommon = swipecommonactionsclass(v.findViewById(R.id.beneficiaryrecycler_swipe_refresh_layout))
+        beneficiaryAdapter = AllRecyclerViewAdapter(this@Post, ArrayList(), beneficiaryrecycler!!, null, AdapterToUseFor.beneficiaries)
+        beneficiaryrecycler?.itemAnimator = DefaultItemAnimator()
+        beneficiaryrecycler?.adapter = beneficiaryAdapter
+        beneficiaryBottomSheet?.state = BottomSheetBehavior.STATE_HIDDEN
+        //beneficiaryAdapter?.beneficiaryHelperFunctionsOb?.addDummies()
+        var sd = beneficiariesDatabase(this@Post)
+        beneficiaryAdapter?.beneficiaryHelperFunctionsOb?.add(sd.GetAllQuestions())
+        beneficiary_add_fab.setOnClickListener { view ->
+            //var add = AddABeneficiary(this@Post,this@Post)
+            beneficiaryBottomSheet?.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        //events for buttons
+        Add_menu_item.setOnClickListener { view ->
+            var add = AddABeneficiary(this@Post,this@Post)
+            fabmenu.close(true)
+        }
+
+        View_menu_item.setOnClickListener { view ->
+            beneficiaryBottomSheet?.state = BottomSheetBehavior.STATE_EXPANDED
+            fabmenu.close(true)
+        }
+
+        post_menu_item.setOnClickListener { view ->
+            fabmenu.close(true)
+            //val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemePopUp(this@Post))
+            val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@Post))
             alertDialogBuilder.setTitle("Post the article?")
             alertDialogBuilder.setMessage("This action is not reversible")
+
             alertDialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener{ diin, num ->
 
 
@@ -104,6 +190,14 @@ class Post : AppCompatActivity() , GlobalInterface {
                 var tags = writePost?.gettags()?.trim()
                 var title = writePost?.gettitle()?.trim()
                 var content = writePost?.getedittext()?.trim()
+                var ben = getList()
+                var sd = beneficiariesDatabase(this@Post)
+                for(item in ben!!){
+                    if(item.isbuiltin == 0){
+                        sd.update(item)
+                    }
+
+                }
                 var posttr = true
                 if(!(content != null && !content.isNullOrEmpty() && content != "")){
                     posttr = false
@@ -118,7 +212,10 @@ class Post : AppCompatActivity() , GlobalInterface {
                     Toast.makeText(applicationContext,"Tags cannot be empty",Toast.LENGTH_LONG).show()
                 }
                 if(posttr){
-                    val ops = mine.createPost(AccountName(username), title,content,tags?.split(" ")?.toTypedArray())
+
+
+
+                    val ops = mine.createPost(AccountName(username), title,content,tags?.split(" ")?.toTypedArray(),ben)
 
                     val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.post, writePost?.progressBar, this@Post)
                     block.GetDynamicGlobalProperties()
@@ -165,6 +262,56 @@ class Post : AppCompatActivity() , GlobalInterface {
         })
 
         mysetup()
+
+
+        //Call back for modal bottom sheet states
+        beneficiaryBottomSheet?.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        //check the tags and see if we can enable a tag beneficiary
+                        var vtag = writePost?.gettags()?.trim()
+                        if(vtag?.isNotEmpty()!! && vtag?.isNotBlank()!!){
+                            var ben = getList(false)
+                            var tags = "\\b(?:${writePost?.gettags()?.trim()?.replace(" ","|")})\\b"
+                            val pattern = Pattern.compile(
+                                    tags,
+                                    Pattern.CASE_INSENSITIVE)
+                            var i = 0
+                            for(item in ben!!){
+                                /*var tagsi = item.tags?.trim()?.split(" ")
+                                if(tags?.contains(item.tags)!!){
+                                    item.usenow = 1
+                                }*/
+                                if(pattern.matcher(item.tags?.trim()).find() && item.uncheckedbyuser == 0){
+                                    item.usenow = 1
+                                    beneficiaryAdapter?.notifyitemcchanged(i,item)
+                                }
+                                i++
+                            }
+                        }
+
+                        //fab.hide()
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        //fab.show()
+                        beneficiaryBottomSheet?.state = BottomSheetBehavior.STATE_HIDDEN
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+                }
+            }
+
+            override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
+
+            }
+        })
+
+
         if (ContextCompat.checkSelfPermission(this@Post, READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
@@ -181,6 +328,16 @@ class Post : AppCompatActivity() , GlobalInterface {
     }*/
 
 
+    //sort the list by default and return it, alphabetically
+    fun getList(getSorted:Boolean = true):List<FeedArticleDataHolder.beneficiariesDataHolder>?{
+        var arl = ArrayList<FeedArticleDataHolder.beneficiariesDataHolder>()
+        for(item in beneficiaryAdapter?.getList()!!){
+            arl.add(item as FeedArticleDataHolder.beneficiariesDataHolder)
+        }
+        if(getSorted) return arl.sortedWith(compareBy({it.username}))
+        else return arl
+        //return beneficiaryAdapter?.getList()?.sortBy(compareBy<FeedArticleDataHolder.beneficiariesDataHolder> { it.username })
+    }
 
 
     private fun imageBrowse() {
@@ -202,7 +359,8 @@ class Post : AppCompatActivity() , GlobalInterface {
                     filePath = getPath(picUri)
                     var file = File(filePath)
 
-                    val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(this@Post)
+                    //val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(this@Post)
+                    val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@Post))
                     alertDialogBuilder.setTitle("Upload this image?")
 
                     val inflater = layoutInflater
@@ -213,6 +371,8 @@ class Post : AppCompatActivity() , GlobalInterface {
                     //val edittext = dialogView.findViewById<EditText>(R.id.name)
                     alertDialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener{ diin, num ->
                         writePost?.progress(View.VISIBLE)
+
+
                         //vote.weight = numberPicker.value as Short
                         /*if(edittext.text != null){
                             //val u : Int = edittext.text
@@ -228,6 +388,23 @@ class Post : AppCompatActivity() , GlobalInterface {
                             }
 
                             override fun onPostExecute(result: String?) {
+
+                                /*var webView = WebView(this@Post)
+                                webView.getSettings().setJavaScriptEnabled(true)
+
+
+                                webView.webViewClient = object : WebViewClient() {
+
+                                    override fun onPageFinished(view: WebView, url: String) {
+
+
+
+                                        super.onPageFinished(view, url)
+                                    }
+                                }
+
+                                webView.loadUrl("https://steemit.com/");*/
+
                                 var db = ImageUploadedUrls(applicationContext)
                                 var ins = db.Insert(result!!)
                                 writePost?.addtexturl(result,file.name)
