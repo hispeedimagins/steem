@@ -3,6 +3,7 @@ package com.steemapp.lokisveil.steemapp
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.media.RingtoneManager
 import android.net.Uri
@@ -16,6 +17,7 @@ import android.preference.PreferenceManager
 import android.preference.RingtonePreference
 import android.text.TextUtils
 import android.view.MenuItem
+import com.steemapp.lokisveil.steemapp.HelperClasses.RegisterJob
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -27,12 +29,43 @@ import android.view.MenuItem
  * for design guidelines and the [Settings API Guide](http://developer.android.com/guide/topics/ui/settings.html)
  * for more information on developing a Settings UI.
  */
-class SettingsActivity : AppCompatPreferenceActivity() {
+class SettingsActivity : AppCompatPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+
+    var sharedPref : SharedPreferences? = null
+    //callback from android when notifications are changed.
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if(key == "example_switch"){
+            //val connectionPref = findPreference(key)
+            if(sharedPreferences?.getBoolean(key,false)!!){
+                RegisterJob.reg(this@SettingsActivity)
+            }
+            else {
+                RegisterJob.unreg(this@SettingsActivity)
+            }
+
+        }
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyThemeSettings(this@SettingsActivity)
         super.onCreate(savedInstanceState)
         setupActionBar()
+        //Register a callback
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        sharedPref?.registerOnSharedPreferenceChangeListener(this@SettingsActivity)
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        sharedPref?.registerOnSharedPreferenceChangeListener(this@SettingsActivity)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sharedPref?.unregisterOnSharedPreferenceChangeListener(this@SettingsActivity)
     }
 
     /**
@@ -87,12 +120,20 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             bindPreferenceSummaryToValue(findPreference("theme_list"))
         }
 
+
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             val id = item.itemId
             if (id == android.R.id.home) {
+                //this.activity.finish()
                 startActivity(Intent(activity, SettingsActivity::class.java))
                 return true
-            }
+            } /*else if(id == R.id.enable_notifications){
+                if(item.isChecked){
+                    RegisterJob.reg(this.activity)
+                } else {
+                    RegisterJob.unreg(this.activity)
+                }
+            }*/
             return super.onOptionsItemSelected(item)
         }
     }
@@ -118,6 +159,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             val id = item.itemId
             if (id == android.R.id.home) {
+                //this.activity.finish()
                 startActivity(Intent(activity, SettingsActivity::class.java))
                 return true
             }
@@ -146,6 +188,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             val id = item.itemId
             if (id == android.R.id.home) {
+                //this.activity.finish()
                 startActivity(Intent(activity, SettingsActivity::class.java))
                 return true
             }
