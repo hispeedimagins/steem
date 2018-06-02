@@ -7,4 +7,7 @@
 package com.commonsware.cwac.anddown;
 
 public final class R {
+    public static final class drawable {
+        public static int ic_steemerggsv = 0x7f090001;
+    }
 }
