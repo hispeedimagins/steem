@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import com.google.gson.reflect.TypeToken
 import com.splunk.mint.Mint
+import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Fragments.FeedFragment
 import com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
@@ -136,6 +137,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         else{
             firstinit()
+
         }
 
 
@@ -157,10 +159,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mysetup()
         val headv = nav_view.getHeaderView(0)
-        val men = nav_view.menu
-        val pfp : ImageView? = headv.findViewById(R.id.pfp)
+        //val men = nav_view.menu
+        //val pfp : ImageView? = headv.findViewById(R.id.pfp)
         val name:TextView? = headv.findViewById(R.id.name)
-        val status:TextView? = headv.findViewById(R.id.status)
+        //val status:TextView? = headv.findViewById(R.id.status)
         name?.text = username
         mysetup()
         if(username != null){
@@ -168,8 +170,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             runs.RunThemAll()
 
             GetProfile()
-            addAccount()
+            //addAccount()
+
             runs.GetFollowCount(username as String,null,null,null)
+            //check the intent if, someone shared links then we can open them
+            //this happens if the app was not running
+            extractLinks(intent)
         }
 
     }
@@ -190,6 +196,76 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             super.onBackPressed()
         }
+    }
+
+    //if app is running this is where the shared data intent will come
+    override fun onNewIntent(intent: Intent?) {
+        extractLinks(intent)
+        super.onNewIntent(intent)
+    }
+
+    //gets the shared text
+    fun handleSendText(intent: Intent):String{
+        return intent.getStringExtra(Intent.EXTRA_TEXT)
+    }
+
+    //try to extract information from the links
+    //some more work has to be done
+    //then start the article activity
+    fun openLink(lis:List<String>){
+        val myIntent = Intent(this, ArticleActivity::class.java)
+        myIntent.putExtra("username", lis[2].removePrefix("@"))
+        myIntent.putExtra("tag", lis[1])
+        var sl = lis[3]
+        if(sl.contains("#")){
+            sl = sl.split("#").first()
+        }
+        myIntent.putExtra("permlink", sl)
+        this.startActivity(myIntent)
+    }
+
+
+    fun extractLinks(intent:Intent?){
+        if(intent != null){
+            //chekc the action and type
+            val action = intent.action
+            val type = intent.type
+            if(action == null || type == null){
+                return
+            }
+            //if they match
+            if(Intent.ACTION_SEND == action && type != null){
+                if("text/plain" == type){
+                    var potu = handleSendText(intent)
+                    //get links are regexp, form the links class
+                    var mat = Links.urlwithoutexGroups().toRegex()
+                    //match them to the text
+                    var mats = mat.findAll(potu).toList()
+                    //if no more than one match occurs
+                    if(mats.any() && mats.size == 1){
+
+                        if(mats[0].groupValues.size == 4){
+                            var sp = mats[0].groupValues[3].split("/")
+                            if(sp.size == 2){
+                                //if this then it a link to a profile
+                                //var uname = sp[1]
+                                sendToOtherGuy(sp[1].removePrefix("@"))
+                            } else if(sp.size > 2){
+                                //if this then it is a link to an article
+                                /*var tag = sp[1]
+                                var uname = sp[2]
+                                var permlink = sp[3]*/
+                                openLink(sp)
+                            }
+                        }
+
+                    }
+                }
+            } else if(Intent.ACTION_SEND_MULTIPLE == action && type != null){
+
+            }
+        }
+
     }
 
 
@@ -271,6 +347,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    //function to open the otherguy activity
+    fun sendToOtherGuy(uname:String){
+        val i = Intent(this, OpenOtherGuyBlog::class.java)
+        i.putExtra(CentralConstants.OtherGuyNamePasser,uname)
+        this.startActivity(i)
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -289,9 +372,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //vote.weight = numberPicker.value as Short
                     if(edittext.text != null){
                         //val u : Int = edittext.text
-                        val i = Intent(this, OpenOtherGuyBlog::class.java)
-                        i.putExtra(CentralConstants.OtherGuyNamePasser,edittext.text.toString())
-                        this.startActivity(i)
+                        sendToOtherGuy(edittext.text.toString())
                     }
 
 
