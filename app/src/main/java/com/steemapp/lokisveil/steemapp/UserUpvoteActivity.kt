@@ -14,6 +14,7 @@ import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
+import com.steemapp.lokisveil.steemapp.jsonclasses.BusyNotificationJson
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 
 import kotlinx.android.synthetic.main.activity_user_upvote.*
@@ -56,13 +57,18 @@ class UserUpvoteActivity : AppCompatActivity() {
     }
 
 
-
+    //sort the likes by the value of vote, reverse it and return
+    //we reverse as the data is not sorted by descending
+    private fun sortList(data:List<feed.avtiveVotes>):List<feed.avtiveVotes>{
+        return data.sortedWith(compareBy({it.votevalforsorting})).reversed()
+    }
 
 
 
 
     fun display(jsonArray : JSONArray){
         var con = FollowApiConstants.getInstance()
+        var al = ArrayList<feed.avtiveVotes>()
         for(x in 0 until jsonArray.length()){
             var jo = jsonArray.getJSONObject(x)
             var du = DateUtils.getRelativeDateTimeString(applicationContext,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(jo.getString("time"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
@@ -72,11 +78,13 @@ class UserUpvoteActivity : AppCompatActivity() {
             else {
                 //x.followInternal = MyOperationTypes.follow
             }*/
+            var votvalr = StaticMethodsMisc.VotingValueSteemToSd(StaticMethodsMisc.CalculateVotingValueRshares(jo.getString("rshares")))
             var av = feed.avtiveVotes(
                     voter = jo.getString("voter"),
                     calculatedpercent = "Vote percent :"+  (jo.getString("percent").toInt() / 100).toString(),
                     calculatedrep = StaticMethodsMisc.CalculateRepScore(jo.getString("reputation")),
-                    calculatedrshares = StaticMethodsMisc.FormatVotingValueToSBD(StaticMethodsMisc.VotingValueSteemToSd(StaticMethodsMisc.CalculateVotingValueRshares(jo.getString("rshares")))),
+                    calculatedrshares = StaticMethodsMisc.FormatVotingValueToSBD(votvalr),
+                    votevalforsorting = votvalr,
                     calculatedtime = "",
                     calculatedvotepercent = "Vote power :"+ (jo.getString("weight").toInt() / 100).toString(),
                     dateString = du.toString(),
@@ -88,10 +96,11 @@ class UserUpvoteActivity : AppCompatActivity() {
                     weight = "",
                     followInternal = if(!con.following.isEmpty() && con.following.any { p -> p.following == jo.getString("voter") }) MyOperationTypes.unfollow else MyOperationTypes.follow
             )
-            adapter?.add(av)
+            al.add(av)
+
         }
 
-
+        adapter?.add(sortList(al))
         /*for(x in activevotes){
             x.namewithrep = "${x.voter} (${StaticMethodsMisc.CalculateRepScore(x.reputation)})"
             x.calculatedpercent = "Vote percent :"+  ((x.percent as String).toInt() / 100).toString()
