@@ -2,6 +2,7 @@ package com.steemapp.lokisveil.steemapp.Fragments
 
 
 /*import `in`.uncod.android.bypass.Bypass*/
+import android.annotation.TargetApi
 import android.app.Activity
 import android.app.FragmentManager
 import android.content.Context
@@ -28,15 +29,14 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewFragment
+import android.webkit.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import br.tiagohm.markdownview.css.styles.Bootstrap
 import br.tiagohm.markdownview.css.styles.Github
+import br.tiagohm.markdownview.js.ExternalScript
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -47,9 +47,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.commonsware.cwac.anddown.AndDown
 import com.commonsware.cwac.anddown.AndDown.*
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
@@ -70,13 +72,17 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.Block
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import kotlinx.android.synthetic.main.article_preview.*
+import org.apache.commons.text.StringEscapeUtils
+
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.html.HtmlGenerator
 import org.intellij.markdown.parser.MarkdownParser
 import org.json.JSONObject
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.time.Period
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * A simple [Fragment] subclass.
@@ -125,7 +131,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
     var metrics : DisplayMetrics = DisplayMetrics()
     var texcolormine : Int? = 0
     var cardbackground : Int? = 0
-
+    var dblist = ArrayList<Long>()
     private var adapter: AllRecyclerViewAdapter? = null
 
     //internal var swipeRefreshLayout: SwipeRefreshLayout? = null
@@ -189,6 +195,27 @@ class ArticleFragment : Fragment() , GlobalInterface {
         })
         metrics = DisplayMetrics()
         getActivity()?.windowManager?.defaultDisplay?.getMetrics(metrics)
+
+        //check if savedinstance exists
+        if(savedInstanceState != null){
+            //displayMessage(savedInstanceState?.getParcelable("body") as FeedArticleDataHolder.FeedArticleHolder)
+            //fetch database ids
+            var lar = savedInstanceState.getLongArray("dbitems")
+            //re add the to the variable
+            dblist.addAll(lar.toList())
+            var gson = Gson()
+            var db = RequestsDatabase(context!!)
+            for(x in lar){
+                var req = db.GetAllQuestions(x)
+                if(req != null){
+                    //var jso = JSONObject(req.json)
+                    if(req.otherInfo == "article"){
+                        //add the data
+                        displayMessage(gson.fromJson(req.json,FeedArticleDataHolder.FeedArticleHolder::class.java))
+                    }
+                }
+            }
+        }
         return view
     }
 
@@ -210,10 +237,13 @@ class ArticleFragment : Fragment() , GlobalInterface {
         //webview = view?.findViewById(R.id.article_webview)
     }
 
-    /*override fun onSaveInstanceState(outState: Bundle) {
+    //save current dbitems list to fetch later
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("body",univBody)
-    }*/
+        outState?.putBoolean("issaved",true)
+        outState.putLongArray("dbitems",dblist.toLongArray())
+
+    }
 
 
 
@@ -361,9 +391,15 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
         })
         holder.article_title?.text = holder.article?.title
-        val and = AndDown()
+        //val and = AndDown()
         //val s : String = and.markdownToHtml(holder.article?.body, AndDown.HOEDOWN_EXT_QUOTE, 0)
-        var bod = StaticMethodsMisc.CorrectMarkDown(holder.article?.body,holder.article?.image)
+        //var bod = StaticMethodsMisc.CorrectMarkDown(holder.article?.body,holder.article?.image)
+
+
+        //adding without anddown
+        var bod = holder.article?.body
+
+
         /*bod = StaticMethodsMisc.CorrectBeforeMainLinks(bod,holder.article?.links)
         bod = StaticMethodsMisc.CorrectMarkDownUsers(bod,holder.article?.users)*/
         //bod = StaticMethodsMisc.CorrectMarkDownUsers(bod,holder.article?.users)
@@ -378,22 +414,48 @@ class ArticleFragment : Fragment() , GlobalInterface {
         }*/
 
         //var s : String = and.markdownToHtml(holder.article?.body, AndDown.HOEDOWN_EXT_AUTOLINK, 0)
-        var s : String = ""
-        //var s : String = bod
-        if(holder.article?.format == "html"){
-            s = bod
+        //var s : String = ""
+
+        //Added because some REGEXs do not identify from the start,
+        var s = "<br/>"
+        //s += "      "
+        //var s : String = bod!!
+        s += bod!!
+        /*if(holder.article?.format == "html"){
+            //s = bod
         }
         else{
-            /*val flavour = CommonMarkFlavourDescriptor()
+            *//*val flavour = CommonMarkFlavourDescriptor()
             val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(bod)
-            s = HtmlGenerator(bod, parsedTree, flavour).generateHtml()*/
-            s  = and.markdownToHtml(bod, AndDown.HOEDOWN_EXT_AUTOLINK, 0)
+            s = HtmlGenerator(bod, parsedTree, flavour).generateHtml()*//*
+            //s  = and.markdownToHtml(bod, AndDown.HOEDOWN_EXT_AUTOLINK, 0)
+        }*/
+
+        //If tags exist, add them to show them as files under
+        if(holder.article?.tags != null){
+            s += "<br/>"
+            s += "<br/>"
+            s += "<hr/>"
+            s += "Filed Under The Tags - "
+            s += "<br/> "
+            var sb = StringBuilder()
+            for(x in holder.article?.tags!!){
+                sb.append("#$x ")
+            }
+            s += sb.toString()
         }
+
 
         //s = StaticMethodsMisc.CorrectAfterMainImages(s)
         //s = StaticMethodsMisc.CorrectBeforeMainLinks(s,holder.article?.links)
-        s = StaticMethodsMisc.CorrectMarkDownUsers(s,holder.article?.users)
-        s = StaticMethodsMisc.CorrectBr(s)
+        //s = StaticMethodsMisc.CorrectMarkDownUsers(s)
+
+        //pass through steemit's regexs for links, hash tags, image proxies and username
+        s = MiscConstants.CorrectUsernamesK(s)
+        s = MiscConstants.CorrectHashtags(s)
+        s = MiscConstants.CorrectLinks(s)
+        s = MiscConstants.CorrectOtherImgProxies(s)
+        //s = StaticMethodsMisc.CorrectBr(s)
 
         //s = StaticMethodsMisc.CorrectNewLine(s)
         /*s += "<style>*{max-width:100%}</style>"
@@ -470,18 +532,53 @@ class ArticleFragment : Fragment() , GlobalInterface {
         })
 
         //setWebView(s)
+        //s
 
-        s += "<script type=\"text/javascript\">\n" +
+        //this is a mess, but don't feel like changing it
+        //some javascript for tag clicks which are not used for now
+        //initialize the remarkable library
+        var sc = "<script type=\"text/javascript\">\n" +
+                "function setusernameslink(){\n"+
                 "var contents = document.getElementsByClassName(\"mylink\");\n" +
+                "var tags = document.getElementsByClassName(\"mytag\");\n" +
+                "var alla = document.getElementsByTagName(\"a\");\n" +
                 "for(var i = 0; i < contents.length; i++){\n"+
                 "    contents[i].addEventListener(\"click\", ContentClick, false);}\n" +
+                "for(var i = 0; i < tags.length; i++){\n"+
+                "    tags[i].addEventListener(\"click\", TagClick, false);}\n" +
+                "for(var i = 0; i < alla.length; i++){\n"+
+                "    alla[i].addEventListener(\"click\", function() {\n" +
+                "    var hre = this.getAttribute('href');\n"+
+                "console.log(\"tag clicked\" + hre);\n" +
+                "      if(hre.search(\"steemer\") != -1){\n" +
+                "        }\n" +
+                "      else if(hre.search(\"https://steemit.com\") != -1 || hre.search(\"https://busy.org\") != -1){\n"+
+                "            event.preventDefault();Android.LinkClicked(hre);}" +
+                "}, false);}\n" +
+                "}\n"+
+
                 "function ContentClick(event) {\n"+
                 "console.log(event.defaultPrevented);\n" +
                 "      if(event.target.href.search(\"steemer\") != -1){\n" +
                 "       Android.UserClicked(event.target.href.split(\"@\")[1]);\n event.preventDefault(); }\n" +
                 "      if(event.target.href.search(\"https://steemit.com\") != -1 || event.target.href.search(\"https://busy.org\") != -1){\n"+
                 "            event.preventDefault();Android.LinkClicked(event.target.href);}}\n" +
-                /*" \$(document).ready(function(){\n" +
+
+                "function TagClick(event) {\n"+
+                "console.log(\"tag clicked\" + event.target.href);\n" +
+                "      if(event.target.href.search(\"steemer\") != -1){\n" +
+                "       Android.TagClicked(event.target.href.split(\"#\")[1]);\n event.preventDefault(); }\n" +
+                "      if(event.target.href.search(\"https://steemit.com\") != -1 || event.target.href.search(\"https://busy.org\") != -1){\n"+
+                "            event.preventDefault();Android.LinkClicked(event.target.href);}}\n" +
+
+                "function AllAClick(event) {\n"+
+                "console.log(\"tag clicked\" + event.target);\n" +
+                "      if(event.target.href.search(\"steemer\") != -1){\n" +
+                "        }\n" +
+                "      else if(event.target.href.search(\"https://steemit.com\") != -1 || event.target.href.search(\"https://busy.org\") != -1){\n"+
+                "            event.preventDefault();Android.LinkClicked(event.target.href);}}\n" +
+
+                        /*" \$(document).ready(function(){\n" +
                 "    \$(\".mylink\").click(function(event){\n" +
                 "        console.log(this.href);\n" +
                 "        console.log(this.href);\n" +
@@ -494,11 +591,48 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
                 "    });\n" +
                 "});" +*/
+                " $(document).ready(function(){\n" +
+                //" console.log(\"document load fun called woo\");" +
+               // " var remarkable = new Remarkable({\n" +
+               // "    html: true, \n" +
+              //  "    breaks: true,\n" +
+              //  "    linkify: false, \n" +
+               // "    typographer: false, \n" +
+              //  "    quotes: '“”‘’'\n" +
+              //  "   }); console.log(\"going to render now\");" +
+                //" remarkable.render(\""+s+"\");"+
+                "});" +
                 "    function UserClickedK(user) {\n" +
                 "         Android.UserClicked(user);\n" +
                 "    }\n" +
+                "    function loadremark(mar) {\n" +
+                " console.log(\"got mar\");\n"+
+                //"    var jss = JSON.parse(mar); \n"+
+                //" console.log(\"mar js\" + jss);\n"+
+                //" console.log(\"mar body\" + jss.body);\n"+
+                " var remarkable = new Remarkable({\n" +
+                "    html: true, \n" +
+                "    breaks: true,\n" +
+                "    linkify: false, \n" +
+                "    typographer: false, \n" +
+                "    quotes: '“”‘’'\n" +
+                "   }); \n console.log(\"going to render now\" + remarkable.render(mar.body));\n"+
+                //"        document.getElementById(\"md\").innerHTML = remarkable.render(mar);\n" +
+                //reg ex to use [!]\[([\w\d\s.]*)]\(((https?:\/\/(?:[-a-zA-Z0-9\._]*[-a-zA-Z0-9])(?::\d{2,5})?(?:[\/\?#](?:[^\s"<>\]\[\(\)]*[^\s"<>\]\[\(\)])?)?))\)
+
+                //Check for any remaining images which are not rendered and render them
+                "     var reg = new RegExp('[!]\\\\[([\\\\w\\\\d\\\\s.]*)]\\\\(((https?:\\\\/\\\\/(?:[-a-zA-Z0-9\\\\._]*[-a-zA-Z0-9])(?::\\\\d{2,5})?(?:[\\\\/\\\\?#](?:[^\"<>\\\\]\\[\\\\(\\\\)]*[^\"<>\\\\]\\[\\\\(\\\\)])?)?))\\\\)','g'); \n"+
+                "    var reb = remarkable.render(mar.body).replace(reg, \n"+
+                "                     '<img src=\"\\$&\" />'       \n"+
+                "               );\n" +
+
+                "        document.getElementById(\"md\").innerHTML = reb;\n" +
+                //"        document.getElementById(\"md\").innerHTML = remarkable.render(mar.body);\n" +
+                //"    setusernameslink(); \n" +
+                "    }\n" +
                 "</script>"
         //s += "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>"
+        //s += "<script src='https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js' async></script>"
         //var css =  Github()
         var css =  Github()
         //css.addFontFace("MyFont", "condensed", "italic", "bold", "url('myfont.ttf')");
@@ -514,8 +648,72 @@ class ArticleFragment : Fragment() , GlobalInterface {
         css.addRule("sub","bottom:-1em","line-height: 1")
         holder.markdownView.addStyleSheet( css)
         holder.markdownView.addJavascriptInterface(WebAppInterface(articleActivityInterface), "Android")
-        holder.markdownView.loadMarkdown(s)
 
+        //var js = ExternalScript("https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js", true, false);
+
+        //this is where we load the remarkable library
+        var js = ExternalScript("file:///android_asset/remarkable.js", false, false)
+        holder.markdownView.addJavascript(js);
+
+        //holder.markdownView.addJavascript(ExternalScript(sc,false,false,"text/javascript"))
+
+        //load the javascript mess above with a div with the id md, this is where we
+        //load the processed markdown
+        holder.markdownView.loadMarkdown("<div id=\"md\"></div> \n" + sc)
+
+        //when loading finished this is called
+        //load the markdown in it
+        holder.markdownView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                //this makes it an object which is access normally on the js end in the browser
+                //did not expect this to happen
+                var jso = JsonObject()
+                jso.addProperty("body",s)
+                var gs = Gson()
+                var j = gs.toJson(jso)
+                holder.markdownView.loadUrl("javascript:loadremark($j);")
+                swipe?.makeswipestop()
+            }
+
+
+
+            //In the future we can use this method
+            /*@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                var req = request?.url
+                return super.shouldOverrideUrlLoading(view, request)
+            }*/
+
+
+            //Method is deprecated but works till nougat and below, Do not know about oreo
+            //need to test
+            //used for compatibility
+            override fun shouldOverrideUrlLoading(view: WebView?, request: String?): Boolean {
+                //check if it begins with steemit or busy
+                //Should more be added?
+                if(request?.startsWith("https://steemit.com")!! ||
+                        request?.startsWith("https://busy.org")!!){
+                    linkclicker(request)
+                    return true
+                } else if(request?.startsWith("steemer://#")!!){
+                    articleActivityInterface?.TagClicked((request.split("#"))[1])
+                    return true
+                } else if(request?.startsWith("steemer://@")!!){
+                    articleActivityInterface?.UserClicked((request.split("@"))[1])
+                    return true
+                } else{
+                    //If we do not know this link
+                    //open in browser
+                    var uri = Uri.parse(request)
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
+                    return true
+                }
+                //return super.shouldOverrideUrlLoading(view, request)
+            }
+        }
+        //holder.markdownView.loadMarkdown(s)
+        //holder.markdownView.loadDataWithBaseURL("",s,null,"UTF-8",null)
 
         /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
            // tvDocument.setText(Html.fromHtml(bodyData,Html.FROM_HTML_MODE_LEGACY))
@@ -544,6 +742,26 @@ class ArticleFragment : Fragment() , GlobalInterface {
         /*Glide.with(activity).load(holder.article?.image?.get(0))
                 .placeholder(R.drawable.common_full_open_on_phone)
                 .into(holder.article_image)*/
+    }
+
+
+    //extracts link data
+    //is not perfect, has to be changed
+    fun linkclicker(href:String){
+        val pat = Pattern.compile("(https?://)(.*)/(.*)/(.*)/(.*)")
+        val matcher = pat.matcher(href)
+        var tag: String? = null
+        var name: String? = null
+        var link: String? = null
+        while (matcher.find()) {
+            tag = href.substring(matcher.start(3), matcher.end(3))
+            name = href.substring(matcher.start(4) + 1, matcher.end(4))
+            link = href.substring(matcher.start(5), matcher.end(5))
+        }
+
+        if (tag != null && name != null && link != null) {
+            articleActivityInterface?.linkClicked(tag, name, link)
+        }
     }
 
     fun setWebView(s:String){
@@ -720,7 +938,19 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
 
     }*/
-    fun displayMessage(result: FeedArticleDataHolder.FeedArticleHolder) {
+    fun displayMessage(result: FeedArticleDataHolder.FeedArticleHolder,save:Boolean = false) {
+
+        //this is where we save data to the database for saveinstance
+        //the id is saved to instance
+        if(save){
+            if(context != null){
+                val req = RequestsDatabase(context!!)
+                var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "article"))
+                if(ad > 0){
+                    dblist.add(ad)
+                }
+            }
+        }
         //swipecommonactionsclass?.makeswipestop()
         //adapter.questionListFunctions.add(message)
         swipe?.makeswipestop()

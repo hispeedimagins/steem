@@ -15,10 +15,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.commonsware.cwac.anddown.AndDown
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
 import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
+import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import com.steemapp.lokisveil.steemapp.HelperClasses.calendarcalculations
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
@@ -27,8 +30,10 @@ import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 
 import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
+import org.json.JSONObject
+import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.ArrayList
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -67,7 +72,7 @@ class CommentsFragment : Fragment(),GlobalInterface {
 
     private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
 
-    private var adapter: AllRecyclerViewAdapter? = null
+    var adapter: AllRecyclerViewAdapter? = null
     private var activity: Context? = null
     internal var view: View? = null
     internal var swipeRefreshLayout: SwipeRefreshLayout? = null
@@ -84,7 +89,7 @@ class CommentsFragment : Fragment(),GlobalInterface {
     val and = AndDown()
     internal var permlinkToFind = ""
     internal var scrollToPosition : Int? = 0
-
+    var dblist = ArrayList<Long>()
     //private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,10 +135,44 @@ class CommentsFragment : Fragment(),GlobalInterface {
         username = sharedPreferences?.getString(CentralConstants.username, null)
         key = sharedPreferences?.getString(CentralConstants.key, null)
 
+        //saveinstance check
+        if(savedInstanceState != null){
+            /*var asl = savedInstanceState?.getSerializable("bodycomms")
+            adapter?.add(if(asl != null) asl as List<Any> else ArrayList<Any>())*/
+            var lar = savedInstanceState.getLongArray("dbitems")
+            dblist.addAll(lar.toList())
+            var gson = Gson()
+            var db = RequestsDatabase(context!!)
+            for(x in lar){
+                var req = db.GetAllQuestions(x)
+                if(req != null){
+                    //var jso = JSONObject(req.json)
+                   if(req.otherInfo == "list") {
+                       //if data is in list form
+                        val collectionType = object : TypeToken<List<FeedArticleDataHolder.CommentHolder>>() {
+
+                        }.type
+                        displayMessage(gson.fromJson<List<FeedArticleDataHolder.CommentHolder>>(req.json,collectionType))
+                    } else if(req.otherInfo == "comment") {
+                        //or just one single comment
+                        displayMessage(gson.fromJson(req.json,FeedArticleDataHolder.CommentHolder::class.java))
+                    }
+                    //make sure spinner has stopped
+                    swipecommonactionsclass?.makeswipestopDef()
+                }
+            }
+        }
         return view
     }
 
 
+
+    //save database ids to the state
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState?.putBoolean("issaved",true)
+        outState.putLongArray("dbitems",dblist.toLongArray())
+    }
 
 /*    fun displayMessage(result: feed.Comment) {
         //swipecommonactionsclass?.makeswipestop()
@@ -223,7 +262,7 @@ class CommentsFragment : Fragment(),GlobalInterface {
         adapter?.clear()
     }
 
-    fun displayMessage(result: FeedArticleDataHolder.CommentHolder) {
+    fun displayMessage(result: FeedArticleDataHolder.CommentHolder,save:Boolean = false) {
         var bo = false
         if(permlinkToFind != null){
             if(result.permlink == permlinkToFind){
@@ -241,10 +280,18 @@ class CommentsFragment : Fragment(),GlobalInterface {
             recyclerView?.smoothScrollToPosition(if(scrollToPosition != null) scrollToPosition as Int else 0)
         }
 
-
+        //this is where we save the single comment to the db
+        //id goes to state
+        if(save){
+            val req = RequestsDatabase(context!!)
+            var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "comment"))
+            if(ad > 0){
+                dblist.add(ad)
+            }
+        }
 
     }
-    fun displayMessage(result: List<FeedArticleDataHolder.CommentHolder>) {
+    fun displayMessage(result: List<FeedArticleDataHolder.CommentHolder>,save:Boolean = false) {
 
 
         loading = false
@@ -256,6 +303,14 @@ class CommentsFragment : Fragment(),GlobalInterface {
         swipecommonactionsclass?.makeswipestop()
         //adapter.questionListFunctions.add(questionsList)
 
+        //this is where we save the list to the db as json and keep the db id
+        if(save){
+            val req = RequestsDatabase(context!!)
+            var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "list"))
+            if(ad > 0){
+                dblist.add(ad)
+            }
+        }
     }
 
 
