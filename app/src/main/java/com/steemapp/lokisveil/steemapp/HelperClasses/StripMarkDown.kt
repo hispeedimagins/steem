@@ -14,8 +14,9 @@ class StripMarkDown {
             options.listUnicodeChar = options.hasOwnProperty('listUnicodeChar') ? options.listUnicodeChar : false;
             options.stripListLeaders = options.hasOwnProperty('stripListLeaders') ? options.stripListLeaders : true;
             options.gfm = options.hasOwnProperty('gfm') ? options.gfm : true;*/
-
-            var output = md
+            var output = "<br/>"
+            //var output = md
+            output += md
 
             //output = output.replace("^([\\s\t]*)([\\*\\-\\+]|\\d+\\.)\\s+", {mr -> mr.}  )
 
@@ -23,7 +24,7 @@ class StripMarkDown {
             //val newtegex = "[!]\\[([-a-zA-Z0-9+&@#\\[\\]_. ]*(.\\w+)| |)]\\((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]\\)"
             //String regexmatch = "!\\[[\\w\\W]]\\([\\w\\W]\\)";
             // Remove horizontal rules (stripListHeaders conflict with this rule, which is why it has been moved to the top)
-            output = output.replace("^(-\\s*?|\\*\\s*?|_\\s*?){3,}\\s*$".toRegex(), "")
+            //output = output.replace("^(-\\s*?|\\*\\s*?|_\\s*?){3,}\\s*$".toRegex(), "")
 
             try {
                 if (options.stripListLeaders) {
@@ -46,6 +47,9 @@ class StripMarkDown {
                     .replace("`{3}.*\n".toRegex(), "")
                 }
                 output = output
+
+                        //Remove links from markdown
+                        .replace(Links.any(),"")
                         // Remove HTML tags
                         .replace("<[^>]*>".toRegex(), "")
                 // Remove setext-style headers
@@ -53,6 +57,8 @@ class StripMarkDown {
                 // Remove footnotes?
                 //.replace("\\[\\^.+?](: .*?$)?".toRegex(), "")
                 //.replace("\\s{0,2}\\[.*?]: .*?$".toRegex(), "")
+                        //remove http
+                        //.replace("/https?://[^ ]+/g".toRegex(), "")
                 // Remove images
                 .replace("!\\[.*?][\\[(].*?[])]".toRegex(), "")
                 // Remove inline links
@@ -66,9 +72,10 @@ class StripMarkDown {
                 //.replace("^(\n)?\\s*#{1,6}\\s+| *(\n)?\\s*#* *(\n)?\\s*$".toRegex(), "")
                 //.replace("^(\n)?\\s{0,}#{1,6}\\s+| {0,}(\n)?\\s{0,}#{0,} {0,}(\n)?\\s{0,}$", "$1$2$3")
                 // Remove emphasis (repeat the line to remove double emphasis)
-                .replace("([*_]{1,3})(\\S.*?\\S?)\\1".toRegex(), "")
+                //.replace("([*_]{1,3})(\\S.*?\\S?)\\1".toRegex(), "")
                 //.replace("([\\*_]{1,3})(\\S.*?\\S{0,1})\\1", "$2")
-                .replace("([*_]{1,3})(\\S.*?\\S?)\\1".toRegex(), "")
+                //.replace("([*_]{1,3})(\\S.*?\\S?)\\1".toRegex(), "")
+                //.replace("/[,!?]?\\s+[^\\s]+$/".toRegex(), "…")
                 //.replace("([\\*_]{1,3})(\\S.*?\\S{0,1})\\1", "$2")
                 // Remove code blocks
                 //.replace("(`{3,})(.*?)\\1".toRegex(), "$2")
@@ -76,13 +83,21 @@ class StripMarkDown {
                 //.replace("`(.+?)`".toRegex(), "$1")
                 // Replace two or more newlines with exactly two? Not entirely sure this belongs here...
                 //.replace("\n{2,}".toRegex(), "\n\n")
+
+                        //should remove any newlines more than 2
+                .replace("\n{2,}".toRegex(), "")
+                //.replace("/https?://[^ ]+/g".toRegex(), "")
+
+                        //should remove all markdown # chars, so no headers
+                .replace("[#]".toRegex(),"")
                 //.replace(check.toRegex()," ")
                 //.replace(newtegex.toRegex()," ")
+                return output
             } catch(e:Exception) {
                 //console.error(e);
                 return md
             }
-            return output
+            //return output
 
         }
     }
