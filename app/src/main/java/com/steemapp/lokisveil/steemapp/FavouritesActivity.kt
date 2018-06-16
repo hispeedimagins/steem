@@ -56,4 +56,6 @@ class FavouritesActivity : AppCompatActivity() {
         adapter?.feedHelperFunctions?.add(db.GetAllQuestions())
     }
 
+
+
 }

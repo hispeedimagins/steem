@@ -1,10 +1,14 @@
 package com.steemapp.lokisveil.steemapp.DataHolders
 
+import android.os.Parcel
+import android.os.Parcelable
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import org.json.JSONArray
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -89,7 +93,7 @@ class FeedArticleDataHolder {
 
 
      }*/
-    data class FeedArticleHolder (
+    data class FeedArticleHolder  (
         val reblogBy: List<String>?,
         val reblogOn: String?, //2018-02-04T13:44:21
         val entryId: Int?, //2363
@@ -133,7 +137,109 @@ class FeedArticleDataHolder {
         var displayName:String = "",
         var rootAuthor: String? = null,
         var rootPermlink: String? = null
-        )
+        )/*: Parcelable{
+
+    constructor(parcel: Parcel) : this(
+            parcel.createStringArrayList(),
+            parcel.readString(),
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readInt(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readInt(),
+            parcel.readInt(),
+            parcel.readString(),
+            parcel.readInt(),
+            parcel.readInt(),
+            parcel.createStringArrayList(),
+            parcel.createStringArrayList(),
+            parcel.createStringArrayList(),
+            parcel.createStringArrayList(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readInt(),
+            MyOperationTypes.valueOf(parcel.readString()),
+            if(parcel.readString() != null) Gson().fromJson(parcel.readString(),JSONArray::class.java) else JSONArray(),
+            if(parcel.readString() != null) Gson().fromJson(parcel.readString(),JSONArray::class.java) else JSONArray(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString()) {
+    }
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.writeStringList(reblogBy)
+        dest?.writeString(reblogOn)
+        dest?.writeInt(if(entryId != null) entryId!! else 0)
+        dest?.writeInt(id)
+        dest?.writeString(author)
+        dest?.writeString(permlink)
+        dest?.writeString(category)
+        dest?.writeString(title)
+        dest?.writeString(body)
+        dest?.writeString(summary)
+        dest?.writeString(lastUpdate)
+        dest?.writeString(created)
+        dest?.writeString(createdcon)
+        dest?.writeString(datespan)
+        dest?.writeString(active)
+        dest?.writeString(lastPayout)
+        dest?.writeInt(depth)
+        dest?.writeInt(children)
+        dest?.writeString(cashoutTime)
+        dest?.writeInt(netVotes)
+        dest?.writeInt(rootComment)
+        dest?.writeStringList(tags)
+        dest?.writeStringList(users)
+        dest?.writeStringList(image)
+        dest?.writeStringList(links)
+        dest?.writeString(app)
+        dest?.writeString(format)
+        dest?.writeString(pending_payout_value)
+        dest?.writeString(total_pending_payout_value)
+        dest?.writeString(uservoted?.toString())
+        dest?.writeString(authorreputation)
+        dest?.writeString(promoted)
+        dest?.writeString(already_paid)
+        dest?.writeInt(width)
+        dest?.writeString(useFollow.name)
+        dest?.writeString(replies?.toString())
+        dest?.writeString(activeVotes?.toString())
+        dest?.writeString(displayName)
+        dest?.writeString(rootAuthor)
+        dest?.writeString(rootPermlink)
+
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<FeedArticleHolder> {
+        override fun createFromParcel(parcel: Parcel): FeedArticleHolder {
+            return FeedArticleHolder(parcel)
+        }
+
+        override fun newArray(size: Int): Array<FeedArticleHolder?> {
+            return arrayOfNulls(size)
+        }
+    }
+}*/
 
 
     data class CommentHolder(
@@ -185,7 +291,117 @@ class FeedArticleDataHolder {
             var rootAuthor: String?,
             var rootPermlink: String?,
             var highlightThis:Boolean = false
-    )
+    )/*: Parcelable{
+        constructor(parcel: Parcel) : this(
+                parcel.createStringArrayList(),
+                parcel.readString(),
+                parcel.readValue(Int::class.java.classLoader) as? Int,
+                parcel.readInt(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readInt(),
+                parcel.readInt(),
+                parcel.readString(),
+                parcel.readInt(),
+                parcel.readInt(),
+                parcel.createStringArrayList(),
+                parcel.createStringArrayList(),
+                parcel.createStringArrayList(),
+                parcel.createStringArrayList(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readInt(),
+                MyOperationTypes.valueOf(parcel.readString()),
+                if(parcel.readString() != null) Gson().fromJson(parcel.readString(),JSONArray::class.java) else JSONArray(),
+                if(parcel.readString() != null) Gson().fromJson(parcel.readString(),JSONArray::class.java) else JSONArray(),
+                parcel.readByte() != 0.toByte(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readByte() != 0.toByte()) {
+        }
+
+        override fun writeToParcel(dest: Parcel?, flags: Int) {
+            dest?.writeStringList(reblogBy)
+            dest?.writeString(reblogOn)
+            dest?.writeInt(if(entryId != null) entryId!! else 0)
+            dest?.writeInt(id)
+            dest?.writeString(author)
+            dest?.writeString(permlink)
+            dest?.writeString(category)
+            dest?.writeString(title)
+            dest?.writeString(body)
+
+            dest?.writeString(lastUpdate)
+            dest?.writeString(created)
+            dest?.writeString(createdcon)
+            dest?.writeString(datespan)
+            dest?.writeString(active)
+            dest?.writeString(lastPayout)
+            dest?.writeInt(depth)
+            dest?.writeInt(children)
+            dest?.writeString(cashoutTime)
+            dest?.writeInt(netVotes)
+            dest?.writeInt(rootComment)
+            dest?.writeStringList(tags)
+            dest?.writeStringList(users)
+            dest?.writeStringList(image)
+            dest?.writeStringList(links)
+            dest?.writeString(app)
+            dest?.writeString(format)
+            dest?.writeString(pending_payout_value)
+            dest?.writeString(total_pending_payout_value)
+            dest?.writeString(uservoted?.toString())
+            dest?.writeString(authorreputation)
+            dest?.writeString(promoted)
+            dest?.writeString(already_paid)
+            dest?.writeInt(width)
+            dest?.writeString(useFollow.name)
+            dest?.writeString(replies?.toString())
+            dest?.writeString(activeVotes?.toString())
+            dest?.writeString(reply_to_above?.toString())
+            dest?.writeString(displayName)
+            dest?.writeString(parent_permlink)
+            dest?.writeString(parent_tag)
+            dest?.writeString(paretn_author)
+            dest?.writeString(rootAuthor)
+            dest?.writeString(rootPermlink)
+            dest?.writeString(highlightThis?.toString())
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<CommentHolder> {
+            override fun createFromParcel(parcel: Parcel): CommentHolder {
+                return CommentHolder(parcel)
+            }
+
+            override fun newArray(size: Int): Array<CommentHolder?> {
+                return arrayOfNulls(size)
+            }
+        }
+
+    }*/
 
 
     //data class for beneficiaries

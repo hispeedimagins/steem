@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
 import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.HelperClasses.JsonRpcResultConversion
@@ -35,8 +36,10 @@ import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.VolleyRequest
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
+import org.json.JSONObject
+import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.ArrayList
+import java.util.*
 
 
 /**
@@ -73,6 +76,7 @@ class MyFeedFragment : Fragment() {
     var startPermlink : String? = null
     var startTag : String? = null
     var globalInterface : GlobalInterface? = null
+    var dblist = ArrayList<Long>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -164,9 +168,51 @@ class MyFeedFragment : Fragment() {
 
         }
 
-        GetFeed()
+        //check instance
+        if(savedInstanceState != null){
+            //get all the variables back
+            val sharedPreferences = view?.context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
+            username = sharedPreferences?.getString(CentralConstants.username, null)
+            key = sharedPreferences?.getString(CentralConstants.key, null)
+            startAuthor = savedInstanceState?.getString("startau")
+            startPermlink = savedInstanceState?.getString("startperm")
+            startTag = savedInstanceState?.getString("starttag")
+            otherguy = savedInstanceState?.getString("otherguy")
+
+            var lar = savedInstanceState.getLongArray("dbitemsf")
+            dblist.addAll(lar.toList())
+            var db = RequestsDatabase(context!!)
+            for(x in lar){
+                var req = db.GetAllQuestions(x)
+                if(req != null){
+                    //initialize the jsonobject
+                    var jso = JSONObject(req.json)
+                    if(req.otherInfo == "more"){
+                        addMoreItems(jso,GetNameToUse())
+                    } else {
+                        addItems(jso,GetNameToUse())
+                    }
+                }
+            }
+
+        } else {
+            GetFeed()
+        }
         return view
         //return inflater!!.inflate(R.layout.fragment_my_feed, container, false)
+    }
+
+
+
+    //save state
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        //outState.putSerializable("feedlist",adapter?.getList() as Serializable)
+        outState.putLongArray("dbitemsf",dblist.toLongArray())
+        outState.putString("startau",startAuthor)
+        outState.putString("startperm",startPermlink)
+        outState.putString("starttag",startTag)
+        outState.putString("otherguy",otherguy)
     }
 
 
@@ -352,37 +398,7 @@ class MyFeedFragment : Fragment() {
 
     fun GetFeed(){
         swipecommonactionsclass?.makeswiperun()
-        /*val queue = Volley.newRequestQueue(context)
 
-        val url = "https://api.steemjs.com/get_blog?account=$username&limit=10"
-        val stringRequest = StringRequest(Request.Method.GET, url,
-                Response.Listener { response ->
-                    // Display the first 500 characters of the response string.
-                    //mTextView.setText("Response is: "+ response.substring(0,500));
-                    //swipecommonactionsclassT.makeswipestop()
-                    *//*val gson = Gson()
-                    val result = gson.fromJson<JsonTenorResultTrending>(response, JsonTenorResultTrending::class.java!!)
-                    for (s in result.results) {
-                        tenoradapter.add(s.media.get(0))
-                    }*//*
-                    val gson = Gson()
-                    val collectionType = object : TypeToken<List<feed.FeedData>>() {
-
-                    }.type
-                    val result = gson.fromJson<List<feed.FeedData>>(response,collectionType)
-                    if(result != null && !result.isEmpty()){
-
-
-                        //displayMessage(result)
-                    }
-
-                }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
-        })
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest)*/
-        //val queue = Volley.newRequestQueue(context)
         val volleyre : VolleyRequest = VolleyRequest.getInstance(activity)
         if(username == null){
             val sharedPreferences = view?.context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
@@ -392,25 +408,23 @@ class MyFeedFragment : Fragment() {
         val url = "https://api.steemit.com/"
         val d = MakeJsonRpc.getInstance()
         val g = Gson()
-        var nametouse : String = if(username != null) username as String else ""
+        /*var nametouse : String = if(username != null) username as String else ""
         if(otherguy != null){
             nametouse = otherguy as String
-        }
+        }*/
+        var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getBlogJ(nametouse),
                 Response.Listener { response ->
-                    // Display the first 500 characters of the response string.
-                    //mTextView.setText("Response is: "+ response.substring(0,500));
-                    //swipecommonactionsclassT.makeswipestop()
-                    /*val gson = Gson()
-                    val result = gson.fromJson<JsonTenorResultTrending>(response, JsonTenorResultTrending::class.java!!)
-                    for (s in result.results) {
-                        tenoradapter.add(s.media.get(0))
-                    }*/
-                    val gson = Gson()
-                    val collectionType = object : TypeToken<List<feed.FeedData>>() {
 
-                    }.type
-                    val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,activity as Context)
+                    //save to the db, ids go the state
+                    if(context != null){
+                        val req = RequestsDatabase(context!!)
+                        var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString() ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "feedfirst"))
+                        if(ad > 0){
+                            dblist.add(ad)
+                        }
+                    }
+                    /*val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,activity as Context)
                     //con.ParseJsonBlog()
                     val result = con.ParseJsonBlog()
                     //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
@@ -418,7 +432,8 @@ class MyFeedFragment : Fragment() {
 
 
                         displayMessageFeddArticle(result)
-                    }
+                    }*/
+                    addItems(response,nametouse)
 
                 }, Response.ErrorListener {
             //swipecommonactionsclassT.makeswipestop()
@@ -432,6 +447,16 @@ class MyFeedFragment : Fragment() {
     }
 
 
+    //which name to use? user or otherguy?
+    fun GetNameToUse():String{
+        var nametouse : String =  if(username != null) username as String else ""
+        if(otherguy != null){
+            nametouse = otherguy as String
+        }
+        return nametouse
+    }
+
+
     fun GetMoreItems(){
         //val queue = Volley.newRequestQueue(context)
 
@@ -441,10 +466,11 @@ class MyFeedFragment : Fragment() {
 
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
-        var nametouse : String = username as String
+        /*var nametouse : String = username as String
         if(otherguy != null){
             nametouse = otherguy as String
-        }
+        }*/
+        var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getMoreItems(startAuthor,startPermlink,startTag,true),
                 Response.Listener { response ->
                     loading = false
@@ -455,7 +481,16 @@ class MyFeedFragment : Fragment() {
                     //val con = JsonRpcResultConversion(response.toString(),username as String,TypeOfRequest.feed)
                     //con.ParseJsonBlog()
                     //val result = con.ParseJsonBlog()
-                    val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,if(activity != null) activity as Context else globalInterface?.getContextMine() as Context)
+
+                    //save request to db, id goes to state
+                    if(context != null){
+                        val req = RequestsDatabase(context!!)
+                        var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString(),dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "more"))
+                        if(ad > 0){
+                            dblist.add(ad)
+                        }
+                    }
+                    /*val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,if(activity != null) activity as Context else globalInterface?.getContextMine() as Context)
                     //con.ParseJsonBlog()
                     val result = con.ParseJsonBlogMore()
                     //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
@@ -466,7 +501,8 @@ class MyFeedFragment : Fragment() {
                     }
                     else{
                         displayMessageFeddArticle(ArrayList<FeedArticleDataHolder.FeedArticleHolder>())
-                    }
+                    }*/
+                    addMoreItems(response,nametouse)
 
                 }, Response.ErrorListener {
             //swipecommonactionsclassT.makeswipestop()
@@ -476,6 +512,34 @@ class MyFeedFragment : Fragment() {
         )
         //queue.add(s)
         volleyre.addToRequestQueue(s)
+    }
+
+    fun addMoreItems(response:JSONObject,nametouse:String){
+        val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,context as Context)
+        //con.ParseJsonBlog()
+        val result = con.ParseJsonBlogMore()
+        //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
+        if(result != null && !result.isEmpty()){
+
+
+            displayMessageFeddArticle(result)
+        }
+        else{
+            displayMessageFeddArticle(ArrayList<FeedArticleDataHolder.FeedArticleHolder>())
+        }
+    }
+
+    fun addItems(response:JSONObject,nametouse:String){
+        val con = JsonRpcResultConversion(response,nametouse as String,TypeOfRequest.blog,context as Context)
+        //con.ParseJsonBlog()
+        val result = con.ParseJsonBlog()
+        //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
+        if(result != null && !result.isEmpty()){
+
+            /*adapter?.feedHelperFunctions.add(result)*/
+            //displayMessage(result)
+            displayMessageFeddArticle(result)
+        }
     }
 
     companion object {

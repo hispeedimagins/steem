@@ -4,6 +4,7 @@ import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -26,6 +27,7 @@ import com.google.gson.JsonObject
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.NotificationType
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.Fragments.ArticleFragment
@@ -41,10 +43,26 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.SignedTransact
 import com.steemapp.lokisveil.steemapp.jsonclasses.Block
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import java.io.Serializable
 
 class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
+
+    //implements tag clicks
+    override fun TagClicked(tag: String) {
+        var it = Intent(this@ArticleActivity,MainTags::class.java)
+        it.putExtra(CentralConstants.MainRequest,"get_discussions_by_trending")
+        it.putExtra(CentralConstants.MainTag,tag)
+        it.putExtra(CentralConstants.OriginalRequest,"trending")
+        this@ArticleActivity.startActivity(it)
+    }
+
+    //Return the body of the article
+    override fun getBody():String{
+        return articleFragment?.holder?.article?.body!!
+    }
     override fun linkClicked(tag: String, name: String, link: String) {
         val myIntent = Intent(this@ArticleActivity, ArticleActivity::class.java)
         myIntent.putExtra("username", name)
@@ -88,6 +106,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
     internal var usernameToState:String? = ""
     var notifitype: NotificationType? = null
     internal var result : List<feed.Comment>? = null
+    var dblist = ArrayList<Long>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyThemeArticle(this@ArticleActivity)
@@ -162,7 +181,28 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
             }
         }
         else{
-            GetFeed(articletag as String,articleuser as String,articlepermlink as String)
+            if(savedInstanceState != null){
+                //initiate all variables form save state
+                articleuser = savedInstanceState?.getString("articleuser")
+                articlepermlink = savedInstanceState?.getString("articlepermlink")
+                articletag = savedInstanceState?.getString("articletag")
+                permlinkToFind = savedInstanceState?.getString("permlinkToFind")
+                blockNumberToFind = savedInstanceState?.getInt("blockNumberToFind")
+                usernameToState = savedInstanceState?.getString("usernameToState")
+                var not = savedInstanceState?.getString("notifitype",null)
+                if(not != null){
+                    notifitype = NotificationType.valueOf(not)
+                }
+
+                var lar = savedInstanceState.getLongArray("dbitems")
+                dblist.addAll(lar.toList())
+
+
+            } else {
+                GetFeed(articletag as String,articleuser as String,articlepermlink as String)
+            }
+            //GetFeed(articletag as String,articleuser as String,articlepermlink as String)
+
         }
         /*if(blockNumberToFind == 0){
             GetFeed(articletag as String,articleuser as String,articlepermlink as String)
@@ -170,6 +210,25 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
         else{
             GetBlock(blockNumberToFind)
         }*/
+    }
+
+    //save variables to state
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLongArray("dbitems",dblist.toLongArray())
+        outState?.putBoolean("issaved",true)
+        outState?.putString("articleuser",articleuser)
+        outState?.putString("articlepermlink",articlepermlink)
+        outState?.putString("articletag",articletag)
+        outState?.putString("permlinkToFind",permlinkToFind)
+        outState?.putInt("blockNumberToFind",blockNumberToFind)
+        outState?.putString("usernameToState",usernameToState)
+        outState?.putString("notifitype",notifitype?.name)
+        /*var ar = ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
+        ar.add(articleFragment?.holder?.article!!)
+        outState?.putSerializable("body",ar as Serializable)
+        outState?.putSerializable("bodycomms",commentsFragment?.adapter?.getList() as Serializable)
+    */
     }
 
 
@@ -325,6 +384,15 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
 
 
     }
+
+
+    /*override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        //outState?.putSerializable("body",articleFragment?.holder?.article as Serializable)
+        //outState?.putSerializable("bodycomms",commentsFragment?.adapter?.getList() as Serializable)
+    }*/
+
+
 
 
     internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
@@ -599,25 +667,47 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
                                 var pers = r.reputation
                             }
                         }*/
+                       /* if(result[0] != null){
+                            val req = RequestsDatabase(this@ArticleActivity)
+                            var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result[0]) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "article"))
+                            if(ad > 0){
+                                dblist.add(ad)
+                            }
+                        }*/
 
 
-                        articleFragment?.displayMessage(result[0] as FeedArticleDataHolder.FeedArticleHolder)
+                        //send true for fragment to save json
+                        articleFragment?.displayMessage(result[0] as FeedArticleDataHolder.FeedArticleHolder,true)
                         /*if(result[0].active_voted != null){
                             upvoteFragment?.display(result[0].active_voted as List<feed.avtiveVotes>)
                         }*/
 
                         if(result.size > 2){
                             //var si = result.size - 1
-                            commentsFragment?.displayMessage(result.subList(1,result.size) as List<FeedArticleDataHolder.CommentHolder>)
+                            var sb = result.subList(1,result.size)
+                            //send true to save a list of comments
+                            commentsFragment?.displayMessage( sb as List<FeedArticleDataHolder.CommentHolder>,true)
+                            /*val req = RequestsDatabase(this@ArticleActivity)
+                            var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(sb) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "list"))
+                            if(ad > 0){
+                                dblist.add(ad)
+                            }*/
                         }
                         else if(result.size == 2){
-                            commentsFragment?.displayMessage(result[1] as FeedArticleDataHolder.CommentHolder)
-                            commentsFragment?.swipecommonactionsclass?.makeswipestop()
+                            //send true to save one comment
+                            commentsFragment?.displayMessage(result[1] as FeedArticleDataHolder.CommentHolder,true)
+                            /*val req = RequestsDatabase(this@ArticleActivity)
+                            var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result[1]) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "comment"))
+                            if(ad > 0){
+                                dblist.add(ad)
+                            }*/
+
                         }
                         else if(result.size == 1){
-                            commentsFragment?.swipecommonactionsclass?.makeswipestop()
-                        }
 
+                        }
+                        //stop the comments spinner def.
+                        commentsFragment?.swipecommonactionsclass?.makeswipestopDef()
 
                     }
 
