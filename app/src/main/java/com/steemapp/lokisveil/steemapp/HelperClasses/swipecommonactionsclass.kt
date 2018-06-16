@@ -37,4 +37,12 @@ class swipecommonactionsclass (swipeRefreshLayoutf: SwipeRefreshLayout) {
             swipeRefreshLayout.post { swipeRefreshLayout.isRefreshing = false }
         }
     }
+
+
+    //function to stop without checking if running
+    //sometimes it would get stuck, so use this
+    fun makeswipestopDef() {
+        //swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.post { swipeRefreshLayout.isRefreshing = false }
+    }
 }
