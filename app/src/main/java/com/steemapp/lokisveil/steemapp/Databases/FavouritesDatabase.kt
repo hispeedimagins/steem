@@ -11,6 +11,7 @@ import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.text.format.DateUtils.WEEK_IN_MILLIS
 import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -77,7 +78,8 @@ class FavouritesDatabase(context : Context) : SQLiteOpenHelper(context,CentralCo
         values.put(DatabaseColoumnPermlink, lite.permlink)
         values.put(DatabaseColoumnDate, lite.created)
         values.put(DatabaseColoumnRebloggedBy, if(!lite.reblogBy?.isEmpty()!!) lite.reblogBy?.first() else "")
-        values.put(DatabaseColoumnImage, if(!lite.image?.isEmpty()!!) lite.image?.first() else "")
+        //check for null
+        values.put(DatabaseColoumnImage, if(lite.image != null && !lite.image?.isEmpty()!!) lite.image?.first() else "")
         values.put(DatabaseColoumnTitle, lite.title)
         values.put(DatabaseColoumnReputation, lite.authorreputation)
         values.put(DatabaseColoumnBody, lite.body)
@@ -138,6 +140,10 @@ class FavouritesDatabase(context : Context) : SQLiteOpenHelper(context,CentralCo
         if (cursor.count == 0) {
             return questionsLites
         }
+        //fetch username and the followers db
+        val sharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname, 0)
+        val username = sharedPreferences?.getString(CentralConstants.username, null)
+        val followersDatabase = FollowersDatabase(context)
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
             var rl = ArrayList<String>()
@@ -156,13 +162,27 @@ class FavouritesDatabase(context : Context) : SQLiteOpenHelper(context,CentralCo
             if(cursor.getInt(cursor.getColumnIndex(DatabaseColoumnUserVoted)) == 0){
                 usv = false
             }
+            //fetch name and reputation
+            val au = cursor.getString(cursor.getColumnIndex(DatabaseColoumnName))
+            val rep = cursor.getString(cursor.getColumnIndex(DatabaseColoumnReputation))
+            var autho = "$au (${StaticMethodsMisc.CalculateRepScore(rep)})"
+            //check if user follows you
+            if(au != username){
+                autho += if(followersDatabase.simpleSearch(au) as Boolean){
+                    " follows you"
+                } else{
+                    ""
+                }
+            }
             var du = DateUtils.getRelativeDateTimeString(context,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(cursor.getString(cursor.getColumnIndex(DatabaseColoumnDate)))).time,SECOND_IN_MILLIS,WEEK_IN_MILLIS,0)
+            //updated the display name
             val q = FeedArticleDataHolder.FeedArticleHolder(
                     reblogBy = rl,
                     reblogOn = "" ,
                     entryId =  0 ,
                     active = "",
-                    author = cursor.getString(cursor.getColumnIndex(DatabaseColoumnName)),
+                    displayName = autho,
+                    author = au,
                     body = cursor.getString(cursor.getColumnIndex(DatabaseColoumnBody)),
                     cashoutTime = "",
                     category = cursor.getString(cursor.getColumnIndex(DatabaseColoumnTag)),
@@ -183,7 +203,7 @@ class FavouritesDatabase(context : Context) : SQLiteOpenHelper(context,CentralCo
                     links = null,
                     tags = null,
                     users = null,
-                    authorreputation = cursor.getString(cursor.getColumnIndex(DatabaseColoumnReputation)),
+                    authorreputation = rep ,
                     pending_payout_value = cursor.getString(cursor.getColumnIndex(DatabaseColoumnPayout)),
                     promoted = "",
                     total_pending_payout_value = cursor.getString(cursor.getColumnIndex(DatabaseColoumnPayout)),
