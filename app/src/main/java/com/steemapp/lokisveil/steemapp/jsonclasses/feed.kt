@@ -146,7 +146,10 @@ data class JsonMetadataInner(
 			var calculatedrshares : String = "",
 			var calculatedvotepercent : String = "",
 			var followInternal: MyOperationTypes = MyOperationTypes.follow,
-			var dateString : String = ""
+
+			//added for sorting the likes from the largest by value
+			var dateString : String = "",
+			var votevalforsorting:Double? = null
 	)
 
 

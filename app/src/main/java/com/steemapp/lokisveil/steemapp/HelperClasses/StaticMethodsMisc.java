@@ -149,6 +149,35 @@ public class StaticMethodsMisc {
        // return value;
     }
 
+    /*public static String CorrectMarkDownUsers(String value){
+
+        //match pattern from steemit condenser
+        *//*Pattern pattern = Pattern.compile(
+                "/(^|[^a-zA-Z0-9_!#$%&*@＠/]|(^|[^a-zA-Z0-9_+~.-/#]))[@＠]([a-z][-.a-z\\d]+[a-z\\d])/gi",
+                Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = pattern.matcher(value);
+        while (urlMatcher.find()) {
+            String name = value.substring(urlMatcher.start(3), urlMatcher.end(3));
+            String reps = " <a class=\"mylink\" href=\"steemer://@"+name+"\" >"+name+"</a> ";
+            value = value.replace(name,reps);
+
+        }*//*
+
+        Pattern pattern = Pattern.compile("(@{1})([a-z0-9.-]{3,16})", Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = pattern.matcher(value);
+        int fin = 0;
+        while (urlMatcher.find(fin)) {
+            int end = urlMatcher.end(0);
+            fin = end;
+            String name = value.substring(urlMatcher.start(0), end);
+            String reps = " <a class=\"mylink\" href=\"steemer://@"+name+"\" >"+name+"</a> ";
+            value = value.replace(name,reps);
+            //containedUrls.add(content.substring(urlMatcher.start(2), urlMatcher.end(2)));
+        }
+
+        return value;
+    }*/
+
     public static String CorrectMarkDownUsers(String value,List<String> users){
         if(users != null){
             for(int i = 0; i < users.size(); i++){
@@ -192,9 +221,9 @@ public class StaticMethodsMisc {
     }
 
     public static String CorrectAfterMainImages(String value){
-        Pattern pattern = Pattern.compile(
+        /*Pattern pattern = Pattern.compile(
                 "\\b(!\\[\\w \\]\\((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]\\))",
-                Pattern.CASE_INSENSITIVE);
+                Pattern.CASE_INSENSITIVE);*/
         //pattern.pattern()
         //Matcher urlMatcher = pattern.matcher(value);
        // String regexmatchm = "<img([\\w\\W]+?)/>";

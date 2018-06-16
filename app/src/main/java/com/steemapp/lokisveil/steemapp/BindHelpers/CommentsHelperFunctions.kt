@@ -265,7 +265,9 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
             s  = and.markdownToHtml(bod, AndDown.HOEDOWN_EXT_AUTOLINK, AndDown.HOEDOWN_HTML_SKIP_HTML)
         }
         s = StaticMethodsMisc.CorrectAfterMainImages(s)
-        s = StaticMethodsMisc.CorrectMarkDownUsers(s,holder.article?.users)
+        //s = StaticMethodsMisc.CorrectMarkDownUsers(s,holder.article?.users)
+        //added new username catcher
+        s = MiscConstants.CorrectUsernamesK(s)
         s = StaticMethodsMisc.CorrectNewLine(s)
         //GenerateCommentViews(s,holder)
         holder?.openarticle?.removeAllViews()

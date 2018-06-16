@@ -287,7 +287,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
             var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
             //var s : SteemJ = SteemJ()
             //s.vote(AccountName(holder.article?.author), Permlink(holder.article?.permlink),10000)
-            var vop : VoteOperation = VoteOperation(AccountName(name), AccountName(articles.author), Permlink(articles.permlink))
+            var vop  = VoteOperation(AccountName(name), AccountName(articles.author), Permlink(articles.permlink))
             vop.weight = 100
             var obs = Response.Listener<JSONObject> { response ->
                 //var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder

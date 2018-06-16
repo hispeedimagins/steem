@@ -41,6 +41,22 @@ public class WebAppInterface {
         //Toast.makeText(mContext, user, Toast.LENGTH_SHORT).show();
     }
 
+
+    //tag clicks are sent to the interface
+    @JavascriptInterface
+    public void TagClicked(String tag){
+        articleActivityInterface.TagClicked(tag);
+        /*Intent i = new Intent(mContext, OpenOtherGuyBlog.class);
+        i.putExtra(CentralConstants.OtherGuyNamePasser,user);
+        mContext.startActivity(i);*/
+        //Toast.makeText(mContext, user, Toast.LENGTH_SHORT).show();
+    }
+
+    /*@JavascriptInterface
+    public String GetData(){
+       return articleActivityInterface.getBody();
+    }*/
+
     @JavascriptInterface
     public void LinkClicked(String href){
         Pattern pat = Pattern.compile("(https?://)(.*)/(.*)/(.*)/(.*)");

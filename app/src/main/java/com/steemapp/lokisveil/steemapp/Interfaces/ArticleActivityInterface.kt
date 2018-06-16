@@ -8,8 +8,14 @@ import android.util.DisplayMetrics
  */
 interface ArticleActivityInterface {
     fun UserClicked(name : String)
+    //interface function for tag clicks
+    fun TagClicked(tag:String)
     fun ReloadData()
     fun getContextMine(): Context
     fun linkClicked(tag:String,name:String,link:String)
+    //interface function for returning the body
+    fun getBody():String{
+        return ""
+    }
     //fun GetDisplayMetrics() : DisplayMetrics
 }
