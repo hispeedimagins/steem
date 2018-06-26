@@ -1,18 +1,21 @@
 package com.steemapp.lokisveil.steemapp.BindHelpers
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.EditText
 import com.commonsware.cwac.anddown.AndDown
-import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
-import com.steemapp.lokisveil.steemapp.CentralConstants
+import com.steemapp.lokisveil.steemapp.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
 import com.steemapp.lokisveil.steemapp.MyViewHolders.DraftViewHolder
-import com.steemapp.lokisveil.steemapp.Post
 import com.steemapp.lokisveil.steemapp.jsonclasses.OperationJson
 
 class draftHelperFunctions (context : Context, username:String?, adapter: AllRecyclerViewAdapter, adpterType: AdapterToUseFor) {
@@ -87,6 +90,33 @@ class draftHelperFunctions (context : Context, username:String?, adapter: AllRec
             con.startActivity(myIntent)
             //creating a popup menu
 
+        })
+
+        //event for draft delete
+        mholder.shareTextView?.setOnClickListener({
+
+            //use a dialogue for miss clicks
+            val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(con))
+            //val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)
+            alertDialogBuilder.setTitle("Delete this draft?")
+
+
+            alertDialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener{ diin, num ->
+                //vote.weight = numberPicker.value as Short
+                //if yes remove from db first
+                var db = drafts(con)
+                db.deleteContact(mholder?.article?.dbid)
+
+                //then remove from the adapter
+                adaptedcomms?.removeAt(position)
+            })
+
+            alertDialogBuilder.setNegativeButton("No", DialogInterface.OnClickListener { diin, num ->
+
+            })
+            val alertDialog = alertDialogBuilder.create()
+
+            alertDialog.show()
         })
 
         //val articlepop = ArticlePopUpMenu(con, mholder.shareTextView, "${CentralConstants.baseUrlView}@${holder?.article?.author}", "${CentralConstants.baseUrlView}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}", null, name, holder.article?.author, adaptedcomms, position, holder?.progressbar, null, holder?.article?.activeVotes, true)
