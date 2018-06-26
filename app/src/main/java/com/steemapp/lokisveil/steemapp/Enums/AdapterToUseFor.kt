@@ -16,5 +16,6 @@ enum class AdapterToUseFor {
     draft,
     commentNoti,
     replyNoti,
-    beneficiaries
+    beneficiaries,
+    search
 }

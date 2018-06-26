@@ -19,6 +19,7 @@ import com.google.gson.Gson
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import com.steemapp.lokisveil.steemapp.BindHelpers.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.DataHolders.GetReputationDataHolder
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Interfaces.AllRecyclerViewAdapterInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
@@ -99,6 +100,8 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
     private val isDraftView = 600
     private val isNotificationBusyView = 700
     private val isBeneficaryView = 800
+    private val isHeader = 900
+    private val isSearchUser = 1000
     /*private val isdateview = 65
     private val ischatview = 72
     private val isadview = 74
@@ -129,6 +132,8 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
     var followDisplayHelperFunctions : FollowDisplayHelperFunctions? = null
     var draftHelperFunctionss : draftHelperFunctions? = null
     var beneficiaryHelperFunctionsOb : beneficiaryHelperFunctions? = null
+    var headerHelperFunctions : HeaderHelperFunctions? = null
+    var searchUsersHelperFunctions:SearchUsersHelperFunctions? = null
     //var otherguy = otherguy
     /*var peopleFunctionsList: PeopleFunctionsList
     var openAQuestionHelperFunctions: OpenAQuestionHelperFunctions
@@ -170,7 +175,8 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         this.registerAdapterDataObserver(observer)
         observer.onChanged()
 
-
+        //sometimes username is null, check it before going forward
+        appUserName = if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null)
 
         when (initiate) {
             AdapterToUseFor.feed -> {
@@ -219,6 +225,12 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
             }
             AdapterToUseFor.beneficiaries -> {
                 this.beneficiaryHelperFunctionsOb = beneficiaryHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this)
+            }
+            AdapterToUseFor.search ->{
+                //initialize all the classes needed for searches
+                this.feedHelperFunctions = FeedHelperFunctions(context as Context,appUserName,this,AdapterToUseFor.feed)
+                this.searchUsersHelperFunctions = SearchUsersHelperFunctions(context as Context,appUserName as String ,this,AdapterToUseFor.followers)
+                this.headerHelperFunctions = HeaderHelperFunctions(context as Context,appUserName as String,this,apptype)
             }
 
                 //this.openAQuestionHelperFunctions = OpenAQuestionHelperFunctions(metrics, calcs, this.appUserName, this.fontSingleton, this@AllRecyclerViewAdapter)
@@ -281,6 +293,16 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         else if(viewType == isBeneficaryView){
             v = LayoutInflater.from(parent.context).inflate(R.layout.beneficiaryview, parent, false)
             vh = beneficiaryViewHolder(v)
+        }
+        else if(viewType == isHeader){
+            //initialize the layout here for search headers
+            v = LayoutInflater.from(parent.context).inflate(R.layout.searchheader, parent, false)
+            vh = HeaderViewHolder(v)
+        }
+        else if(viewType == isSearchUser){
+            //initialize the layout here for search users
+            v = LayoutInflater.from(parent.context).inflate(R.layout.follow_view_resource, parent, false)
+            vh = followViewHolder(v)
         }
         /*else if (viewType == ischatview) {
             v = LayoutInflater.from(parent.context).inflate(R.layout.chat_message_layout, parent, false)
@@ -358,64 +380,15 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         else if(ht == isBeneficaryView){
             beneficiaryHelperFunctionsOb?.Bind(holder,position)
         }
-        /*if (ht == ischatview) {
-            if (holder !is ChatViewHolder) {
-                return
-            }
-            val my = holder as ChatViewHolder
-            if (mValues[position] !is ChatMessage) {
-                return
-            }
-            my.mItem = mValues[position] as ChatMessage
+        else if(ht == isHeader){
+            //if object in the list is a header use the header class bind function
+            headerHelperFunctions?.Bind(holder,position)
+        }
+        else if(ht == isSearchUser){
+            //if the object is a search user, use the search bind function
+            searchUsersHelperFunctions?.Bind(holder,position)
+        }
 
-
-            if (appUserName == null) {
-                appUserName = s.getString("username", null)
-            }
-            chatMessageFunctions.CreateMessage(my, appUserName)
-
-        } else if (ht == isQuestionView) {
-            questionListFunctions.CreateQuestion(holder, position)
-        } else if (ht == isPeopleView) {
-            peopleFunctionsList.CreatePeople(holder, position)
-        } else if (ht == isadview) {
-            if (holder !is AdViewHolder) {
-                return
-            }
-            val my = holder as AdViewHolder
-
-            if (this.adRequest != null) {
-                my.adView.loadAd(this.adRequest)
-            } else {
-                my.adView.loadAd(AdRequest.Builder().build())
-            }
-
-        } else if (ht == isdateview) {
-            floatingDateHolder!!.BindDateToDateTitle(holder, position)
-        } else if (ht == isNoMessageView) {
-
-            if (!showEmptyView()) {
-                val my = holder as NothingToShow
-                my.nothingToShowDataHolder = mValues[position] as NothingToShowDataHolder
-                my.nomessagetoshow.setTypeface(fontSingleton.getCinzelRegular())
-                my.nomessagetoshow.setText(my.nothingToShowDataHolder.messageToShow)
-            }
-
-
-        } else if (ht == isOpenAQuestionView) {
-
-            val my = holder as OpenAQuestionDataHolder
-            openAQuestionHelperFunctions.Create(my, mValues[position] as OpenAQuestionClassForShowingData, position)
-        } else if (ht == isNotificationView) {
-            notificationListFunctions.CreateQuestion(holder, position)
-        } else if (ht == isTenorView) {
-            val hol = holder as TenorGifDataHolder
-            hol.mItem = getObject(position) as JsonTenorTrendingMedium
-            tenorHelperFunctions.Create(hol, hol.mItem, position)
-            *//*Glide.with(context).load(hol.mItem.nanogif.url).asGif()
-                    .placeholder(R.drawable.common_full_open_on_phone)
-                    .into(hol.image);*//*
-        }*/
 
 
     }
@@ -469,6 +442,14 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         }
         else if(ins is FeedArticleDataHolder.beneficiariesDataHolder){
             return isBeneficaryView
+        }
+        else if(ins is String){
+            //if the object is a string then return isHeader
+            return isHeader
+        }
+        else if(ins is GetReputationDataHolder){
+            //if object is of GetReputationDataHolder return isSearchUser
+            return isSearchUser
         }
 
         return isFeedView
@@ -604,9 +585,23 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         }
     }
 
+    //implement remove at
+    override fun removeAt(position: Int) {
+        //first remove the item from the list
+        mValues?.removeAt(position)
+        //then notify the system that an item was removed
+        notifyItemRemoved(position)
+    }
+
+    override fun notifyitemRemoved(position: Int) {
+        //notify the system that an item was removed
+        notifyitemRemoved(position)
+    }
+
     override fun notifyitemcchanged(position: Int, payload: Any) {
         try {
             notifyItemChanged(position,payload)
+
         }
         catch (ex : IllegalStateException){
 
@@ -657,6 +652,7 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
     override fun AddItemDivider() {
         val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         recyclerView!!.addItemDecoration(itemDecoration)
+
     }
 
 

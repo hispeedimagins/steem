@@ -7,5 +7,8 @@ enum class TypeOfRequest {
     feed,
     blog,
     comments,
-    replies
+    replies,
+    SearchAccountReps,
+    SearchUsers,
+    SearchPosts
 }
