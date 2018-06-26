@@ -1,10 +1,12 @@
 package com.steemapp.lokisveil.steemapp
 
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -34,10 +36,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import com.google.gson.reflect.TypeToken
 import com.splunk.mint.Mint
+import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Fragments.FeedFragment
 import com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
+import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.TagsInterface
 import kotlinx.android.synthetic.main.nav_header_main.*
 /*import eu.bittrade.libs.steemj.base.models.AccountName
@@ -49,7 +53,26 @@ import java.util.*
 
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,TagsInterface {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,TagsInterface,GlobalInterface {
+    override fun notifyRequestMadeSuccess() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun notifyRequestMadeError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getObjectMine(): Any {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getContextMine(): Context {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getActivityMine(): Activity {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
     /*override fun notifyRequestMadeSuccess() {
 
     }
@@ -70,7 +93,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return this@MainActivity
     }*/
 
-
+    override fun getFab(): FloatingActionButton? {
+        return fab
+    }
 
     override fun okclicked(originalval: String, tag: String, limit: String, request: String) {
         var it = Intent(this@MainActivity,MainTags::class.java)
@@ -105,6 +130,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }*/
         MiscConstants.ApplyMyTheme(this@MainActivity)
 
+        //this is set so as someone type's using his phones physical keyboard
+        //or tab keyboard, the search will open as default on the home screen
+        setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -237,6 +265,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if(Intent.ACTION_SEND == action && type != null){
                 if("text/plain" == type){
                     var potu = handleSendText(intent)
+
+                    //this is normal text probably
+                    //if contains words send it to the Post activity for making an article/post
+                    if(potu.contains("\\w+".toRegex())){
+
+                        var db = drafts(this@MainActivity)
+                        var di = db.Insert("","",potu,"")
+
+                        val myIntent = Intent(this@MainActivity, Post::class.java)
+                        myIntent.putExtra("db",di.toInt() )
+
+                        startActivity(myIntent)
+                        return
+                    }
                     //get links are regexp, form the links class
                     var mat = Links.urlwithoutexGroups().toRegex()
                     //match them to the text
@@ -341,6 +383,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.action_notifications_busy ->{
                 var ints = Intent(this@MainActivity,NotificationsBusyD::class.java)
                 startActivity(ints)
+                return true
+            }
+            R.id.action_search ->{
+                //as recommended by google you should include and icon
+                //as android might not always show it by default
+                this.onSearchRequested()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
