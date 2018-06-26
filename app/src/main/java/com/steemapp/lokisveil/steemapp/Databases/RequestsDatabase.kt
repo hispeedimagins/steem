@@ -99,10 +99,12 @@ class RequestsDatabase  (context : Context) : SQLiteOpenHelper(context, Database
 
     }
 
-    //Delete all old references, deletes all which are more than 12 hours old. Still needs to be tested
+    //Delete all old references, deletes all which are more than 6 hours old. Still needs to be tested
     fun DeleteOld(){
+        //43200000 - 12
         for(x in GetAllQuestions()){
-            if(Date().time - x.dateLong > 43200000){
+            val sub = Date().time - x.dateLong
+            if(sub > 21600000){
                 deleteContact(x.dbId)
             }
         }
@@ -162,6 +164,7 @@ class RequestsDatabase  (context : Context) : SQLiteOpenHelper(context, Database
         return questionsLites
     }
 
+    //made the creation of the class to a common function as it was needed in another place
     fun createRequestDataClass(cursor:Cursor):Request{
         return Request(
 
