@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -20,6 +21,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.bumptech.glide.Glide
+
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import com.google.gson.Gson
@@ -49,6 +51,9 @@ import java.util.*
 import java.io.Serializable
 
 class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
+    override fun getFab(): FloatingActionButton? {
+        return fab
+    }
 
     //implements tag clicks
     override fun TagClicked(tag: String) {
@@ -677,7 +682,10 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
 
 
                         //send true for fragment to save json
-                        articleFragment?.displayMessage(result[0] as FeedArticleDataHolder.FeedArticleHolder,true)
+                        val art = result[0] as FeedArticleDataHolder.FeedArticleHolder
+                        articleFragment?.displayMessage(art,true)
+                        //set the articles title as the activity header
+                        supportActionBar?.title = art.title
                         /*if(result[0].active_voted != null){
                             upvoteFragment?.display(result[0].active_voted as List<feed.avtiveVotes>)
                         }*/

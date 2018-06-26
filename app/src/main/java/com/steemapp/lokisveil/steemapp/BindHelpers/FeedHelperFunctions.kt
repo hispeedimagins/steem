@@ -75,7 +75,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
     val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
 
     var key = sharedpref.getString(CentralConstants.key,null)
-    val globallist = ArrayList<Any>()
+    //val globallist = ArrayList<Any>()
     val adaptype = adpterType
 
     init {
@@ -171,24 +171,12 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
 
         if(holder.article?.reblogBy == null || holder.article?.reblogBy?.isEmpty() as Boolean){
             holder.article_resteemed_by?.visibility = View.GONE
-            /*if(adaptype == AdapterToUseFor.blog){
-                if(this.name != holder.article?.author){
-                    holder.article_resteemed_by?.visibility = View.VISIBLE
-                    holder.article_resteemed_by?.text = "resteemed"
-                }
-                else{
-                    holder.article_resteemed_by?.visibility = View.GONE
-                }
-            }
-            else{
-                holder.article_resteemed_by?.visibility = View.GONE
-            }*/
-
-
-
+            //hide the resteem bar if there are no resteems
+            holder.article_resteemed_by_Linear?.visibility = View.GONE
         }
         else{
             holder.article_resteemed_by?.visibility = View.VISIBLE
+            holder.article_resteemed_by_Linear?.visibility = View.VISIBLE
             holder.article_resteemed_by?.text = "by "+ holder.article?.reblogBy?.get(0)
             holder.article_resteemed_by?.setOnClickListener(View.OnClickListener {
                 val i = Intent(con, OpenOtherGuyBlog::class.java)
@@ -197,7 +185,8 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
             })
         }
 
-        holder.article_tag?.text = "in "+ holder.article?.category
+        //Add the app name for users to view
+        holder.article_tag?.text = "in ${holder.article?.category} using ${holder.article?.app}"
         holder.article_tag?.setOnClickListener(View.OnClickListener {
             var it = Intent(con,MainTags::class.java)
             it.putExtra(CentralConstants.MainRequest,"get_discussions_by_trending")

@@ -252,7 +252,9 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
             mod.setMyOperationTypes(MyOperationTypes.comment)
         })
 
-        val articlepop = ArticlePopUpMenu(con,mholder.shareTextView,"${CentralConstants.baseUrlView}@${holder?.article?.author}","${CentralConstants.baseUrl}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}",holder?.article?.useFollow,name,holder?.article?.author,adaptedcomms,position,holder?.progressbar,null,holder?.article?.activeVotes)
+
+
+        val articlepop = ArticlePopUpMenu(con,mholder.shareTextView,"${CentralConstants.baseUrlView}@${holder?.article?.author}","${CentralConstants.baseUrlView}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}",holder?.article?.useFollow,name,holder?.article?.author,adaptedcomms,position,holder?.progressbar,null,holder?.article?.activeVotes)
 
 
         var bod = holder.article?.body //StaticMethodsMisc.CorrectMarkDown(holder.article?.body,holder.article?.image)
