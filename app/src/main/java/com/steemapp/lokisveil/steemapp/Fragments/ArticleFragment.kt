@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.NestedScrollView
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
@@ -157,6 +158,8 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
         //view = inflater!!.inflate(R.layout.fragment_article, container, false)
         view = inflater!!.inflate(R.layout.fragment_article, container, false)
+        //initialize fabhider so the FAB hides on scroll
+        var fa = FabHider(null,articleActivityInterface?.getFab(),view?.findViewById(R.id.nestedscroll))
         
         /*if(view == null){
             view = inflater!!.inflate(R.layout.fragment_article, container, false)
@@ -531,110 +534,9 @@ class ArticleFragment : Fragment() , GlobalInterface {
             con.startActivity(myIntent)*/
         })
 
-        //setWebView(s)
-        //s
 
-        //this is a mess, but don't feel like changing it
-        //some javascript for tag clicks which are not used for now
-        //initialize the remarkable library
-        var sc = "<script type=\"text/javascript\">\n" +
-                "function setusernameslink(){\n"+
-                "var contents = document.getElementsByClassName(\"mylink\");\n" +
-                "var tags = document.getElementsByClassName(\"mytag\");\n" +
-                "var alla = document.getElementsByTagName(\"a\");\n" +
-                "for(var i = 0; i < contents.length; i++){\n"+
-                "    contents[i].addEventListener(\"click\", ContentClick, false);}\n" +
-                "for(var i = 0; i < tags.length; i++){\n"+
-                "    tags[i].addEventListener(\"click\", TagClick, false);}\n" +
-                "for(var i = 0; i < alla.length; i++){\n"+
-                "    alla[i].addEventListener(\"click\", function() {\n" +
-                "    var hre = this.getAttribute('href');\n"+
-                "console.log(\"tag clicked\" + hre);\n" +
-                "      if(hre.search(\"steemer\") != -1){\n" +
-                "        }\n" +
-                "      else if(hre.search(\"https://steemit.com\") != -1 || hre.search(\"https://busy.org\") != -1){\n"+
-                "            event.preventDefault();Android.LinkClicked(hre);}" +
-                "}, false);}\n" +
-                "}\n"+
-
-                "function ContentClick(event) {\n"+
-                "console.log(event.defaultPrevented);\n" +
-                "      if(event.target.href.search(\"steemer\") != -1){\n" +
-                "       Android.UserClicked(event.target.href.split(\"@\")[1]);\n event.preventDefault(); }\n" +
-                "      if(event.target.href.search(\"https://steemit.com\") != -1 || event.target.href.search(\"https://busy.org\") != -1){\n"+
-                "            event.preventDefault();Android.LinkClicked(event.target.href);}}\n" +
-
-                "function TagClick(event) {\n"+
-                "console.log(\"tag clicked\" + event.target.href);\n" +
-                "      if(event.target.href.search(\"steemer\") != -1){\n" +
-                "       Android.TagClicked(event.target.href.split(\"#\")[1]);\n event.preventDefault(); }\n" +
-                "      if(event.target.href.search(\"https://steemit.com\") != -1 || event.target.href.search(\"https://busy.org\") != -1){\n"+
-                "            event.preventDefault();Android.LinkClicked(event.target.href);}}\n" +
-
-                "function AllAClick(event) {\n"+
-                "console.log(\"tag clicked\" + event.target);\n" +
-                "      if(event.target.href.search(\"steemer\") != -1){\n" +
-                "        }\n" +
-                "      else if(event.target.href.search(\"https://steemit.com\") != -1 || event.target.href.search(\"https://busy.org\") != -1){\n"+
-                "            event.preventDefault();Android.LinkClicked(event.target.href);}}\n" +
-
-                        /*" \$(document).ready(function(){\n" +
-                "    \$(\".mylink\").click(function(event){\n" +
-                "        console.log(this.href);\n" +
-                "        console.log(this.href);\n" +
-                "console.log(this.href.toString().search(\"steemer\"))\n" +
-                "        if(this.href.toString().search(\"steemer\" != -1)){\n" +
-                //"console.log(Android);\n" +
-                "                  event.preventDefault();  console.log(this.href);\n Android.UserClicked(this.href.split(\"@\")[1]);\n    }\n" +
-                "         if(this.href.toString().includes(\"https://steemit.com\") || this.href.toString().includes(\"https://busy.org\")){\n" +
-                "                            event.preventDefault();Android.LinkClicked(user);}\n" +
-
-                "    });\n" +
-                "});" +*/
-                " $(document).ready(function(){\n" +
-                //" console.log(\"document load fun called woo\");" +
-               // " var remarkable = new Remarkable({\n" +
-               // "    html: true, \n" +
-              //  "    breaks: true,\n" +
-              //  "    linkify: false, \n" +
-               // "    typographer: false, \n" +
-              //  "    quotes: '“”‘’'\n" +
-              //  "   }); console.log(\"going to render now\");" +
-                //" remarkable.render(\""+s+"\");"+
-                "});" +
-                "    function UserClickedK(user) {\n" +
-                "         Android.UserClicked(user);\n" +
-                "    }\n" +
-                "    function loadremark(mar) {\n" +
-                " console.log(\"got mar\");\n"+
-                //"    var jss = JSON.parse(mar); \n"+
-                //" console.log(\"mar js\" + jss);\n"+
-                //" console.log(\"mar body\" + jss.body);\n"+
-                " var remarkable = new Remarkable({\n" +
-                "    html: true, \n" +
-                "    breaks: true,\n" +
-                "    linkify: false, \n" +
-                "    typographer: false, \n" +
-                "    quotes: '“”‘’'\n" +
-                "   }); \n console.log(\"going to render now\" + remarkable.render(mar.body));\n"+
-                //"        document.getElementById(\"md\").innerHTML = remarkable.render(mar);\n" +
-                //reg ex to use [!]\[([\w\d\s.]*)]\(((https?:\/\/(?:[-a-zA-Z0-9\._]*[-a-zA-Z0-9])(?::\d{2,5})?(?:[\/\?#](?:[^\s"<>\]\[\(\)]*[^\s"<>\]\[\(\)])?)?))\)
-
-                //Check for any remaining images which are not rendered and render them
-                "     var reg = new RegExp('[!]\\\\[([\\\\w\\\\d\\\\s.]*)]\\\\(((https?:\\\\/\\\\/(?:[-a-zA-Z0-9\\\\._]*[-a-zA-Z0-9])(?::\\\\d{2,5})?(?:[\\\\/\\\\?#](?:[^\"<>\\\\]\\[\\\\(\\\\)]*[^\"<>\\\\]\\[\\\\(\\\\)])?)?))\\\\)','g'); \n"+
-                "    var reb = remarkable.render(mar.body).replace(reg, \n"+
-                "                     '<img src=\"\\$&\" />'       \n"+
-                "               );\n" +
-
-                "        document.getElementById(\"md\").innerHTML = reb;\n" +
-                //"        document.getElementById(\"md\").innerHTML = remarkable.render(mar.body);\n" +
-                //"    setusernameslink(); \n" +
-                "    }\n" +
-                "</script>"
-        //s += "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>"
-        //s += "<script src='https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js' async></script>"
-        //var css =  Github()
         var css =  Github()
+        //var st = Regex("[!]\\[([\\w\\d\\s.-]*)]\\(((https?:\\/\\/(?:[-a-zA-Z0-9\\._]*[-a-zA-Z0-9])(?::\\d{2,5})?(?:[\\/\\?#](?:[^\"<>\\]\\[\\(\\)]*[^\"<>\\]\\[\\(\\)])?)?))\\)")
         //css.addFontFace("MyFont", "condensed", "italic", "bold", "url('myfont.ttf')");
         /*css.addMedia("screen and (min-width: 1281px)");
         css.addRule("h1", "color: orange");
@@ -643,6 +545,9 @@ class ArticleFragment : Fragment() , GlobalInterface {
         var cardcolin = String.format("#%06X", 0xFFFFFF and cardbackground!!)
         css.addRule("body", "padding: 0 !important")
         css.addRule("*", "color:$texcolin","background:$cardcolin")
+        css.addRule("pre","overflow:scroll")
+        css.addRule("img","width:100%","height:auto", "vertical-align: middle", "border: 0", "max-width: auto")
+
         //"sub", "position: relative", "font-size: 75%", "line-height: 0", "vertical-align: baseline", "bottom: -0.25em"
         //css.addRule("sub","vertical-align: sub","font-size: smaller","bottom:-0.5em")
         css.addRule("sub","bottom:-1em","line-height: 1")
@@ -655,11 +560,16 @@ class ArticleFragment : Fragment() , GlobalInterface {
         var js = ExternalScript("file:///android_asset/remarkable.js", false, false)
         holder.markdownView.addJavascript(js);
 
+        //all js is now in a seperate file
+        var ijs = ExternalScript("file:///android_asset/site.js", false, false)
+        holder.markdownView.addJavascript(ijs);
+
         //holder.markdownView.addJavascript(ExternalScript(sc,false,false,"text/javascript"))
 
         //load the javascript mess above with a div with the id md, this is where we
         //load the processed markdown
-        holder.markdownView.loadMarkdown("<div id=\"md\"></div> \n" + sc)
+        holder.markdownView.loadMarkdown("<div id=\"md\"></div> \n")
+        //holder.markdownView.loadMarkdown("<div id=\"md\"></div> \n" + sc)
 
         //when loading finished this is called
         //load the markdown in it
