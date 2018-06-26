@@ -21,10 +21,13 @@
         android:supportsRtl="true"
         android:theme="@style/Plaid">
         <activity
-            android:launchMode="singleTask"
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:theme="@style/Plaid.Home">
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchActivity" />
+
 
             <!--
             app -android:theme="@style/AppTheme"
@@ -95,13 +98,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
+                <action android:name="android.intent.action.SEND" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -223,8 +226,7 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Plaid.Home"
-            />
+            android:theme="@style/Plaid.Home" />
         <activity
             android:name=".OpenOtherGuyBlog"
             android:label="@string/title_activity_open_other_guy_blog"
@@ -280,6 +282,25 @@
             android:name=".NotificationsBusyD"
             android:label="@string/title_activity_notifications_busy_d"
             android:theme="@style/Plaid.Translucent.DesignerNewsStory" />
+
+        <provider
+            android:name=".SearchSuggestionsProvider"
+            android:authorities="com.steemapp.lokisveil.steemapp.MySuggestionProvider" />
+
+        <activity
+            android:launchMode="singleTop"
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/Plaid">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+
+
+        </activity>
     </application>
 
 </manifest>
