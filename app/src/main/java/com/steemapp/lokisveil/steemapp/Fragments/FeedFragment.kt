@@ -24,9 +24,11 @@ import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
+import com.steemapp.lokisveil.steemapp.HelperClasses.FabHider
 import com.steemapp.lokisveil.steemapp.HelperClasses.JsonRpcResultConversion
 import com.steemapp.lokisveil.steemapp.HelperClasses.MakeJsonRpc
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
+import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.VolleyRequest
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
@@ -79,7 +81,7 @@ class FeedFragment : Fragment() {
 
     
 
-    private var mListener: OnFragmentInteractionListener? = null
+    private var mListener: GlobalInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +108,8 @@ class FeedFragment : Fragment() {
 
             recyclerView?.setItemAnimator(DefaultItemAnimator())
             recyclerView?.setAdapter(adapter)
-
+            //init fabhider to hide FAB on scroll
+            FabHider(recyclerView,mListener?.getFab())
             recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -419,10 +422,12 @@ class FeedFragment : Fragment() {
                     //save request to db, id goes to state
                     if(context != null){
                         val req = RequestsDatabase(context!!)
+                        //req.DeleteOld()
                         var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString() ,dateLong = Date().time, typeOfRequest = TypeOfRequest.feed.name,otherInfo = "feedfirst"))
                         if(ad > 0){
                             dblist.add(ad)
                         }
+
                     }
 
                     addItems(response,nametouse)
@@ -517,17 +522,21 @@ class FeedFragment : Fragment() {
             //displayMessage(result)
             displayMessageFeddArticle(result)
         }
+
+        val req = RequestsDatabase(context!!)
+        //delete old items
+        req.DeleteOld()
     }
     // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
+    /*fun onButtonPressed(uri: Uri) {
         if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
+            //mListener!!.onFragmentInteraction(uri)
         }
-    }
+    }*/
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is GlobalInterface) {
             mListener = context
         } else {
             //throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")

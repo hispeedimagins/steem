@@ -29,6 +29,7 @@ import android.os.AsyncTask
 import android.provider.MediaStore
 import android.support.annotation.NonNull
 import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.*
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
@@ -39,6 +40,7 @@ import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
+import com.github.clans.fab.FloatingActionMenu
 import com.steemapp.lokisveil.steemapp.Databases.ImageUploadedUrls
 import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
@@ -85,6 +87,10 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
 
     override fun getActivityMine(): Activity {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getFabM(): FloatingActionMenu? {
+        return fabmenu
     }
 
     //listener for changes
@@ -164,6 +170,7 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
             //var add = AddABeneficiary(this@Post,this@Post)
             beneficiaryBottomSheet?.state = BottomSheetBehavior.STATE_HIDDEN
         }
+
 
         //events for buttons
         Add_menu_item.setOnClickListener { view ->

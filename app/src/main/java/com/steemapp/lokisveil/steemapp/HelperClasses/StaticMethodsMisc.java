@@ -294,13 +294,35 @@ public class StaticMethodsMisc {
 
 
 
+
+
+    /**
+     * made respscore common, this returns a string
+     * @param reputation string
+     * @return string
+     */
     public static String CalculateRepScore(String reputation){
+        /*Double resp = Double.valueOf(reputation);
+        Double replog = Math.log10(resp);
+        Double subni = replog - 9;
+        Double mulni = subni * 9;
+        Double addtf = mulni + 25;
+        return String.valueOf( addtf.intValue());*/
+        return String.valueOf(CalculateRepScoreRetInt(reputation));
+    }
+
+    /**
+     * calculates the rep score and returns an int
+     * @param reputation string
+     * @return int
+     */
+    public static int CalculateRepScoreRetInt(String reputation){
         Double resp = Double.valueOf(reputation);
         Double replog = Math.log10(resp);
         Double subni = replog - 9;
         Double mulni = subni * 9;
         Double addtf = mulni + 25;
-        return String.valueOf( addtf.intValue());
+        return addtf.intValue();
     }
 
     /**

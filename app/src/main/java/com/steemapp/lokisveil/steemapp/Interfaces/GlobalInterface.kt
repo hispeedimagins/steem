@@ -3,7 +3,9 @@ package com.steemapp.lokisveil.steemapp.Interfaces
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
+import android.support.design.widget.FloatingActionButton
 import android.widget.CheckBox
+import com.github.clans.fab.FloatingActionMenu
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 
 /**
@@ -38,6 +40,14 @@ interface GlobalInterface {
     // for attaching listeners
     fun attachCheckboxListner(box:CheckBox?){
 
+    }
+    //returns a FAB button
+    fun getFab(): FloatingActionButton?{
+        return null
+    }
+    //returns a FAB menu from the library
+    fun getFabM(): FloatingActionMenu?{
+        return null
     }
 
 

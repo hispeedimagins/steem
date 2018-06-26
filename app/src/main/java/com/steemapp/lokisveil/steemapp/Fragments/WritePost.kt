@@ -27,6 +27,7 @@ import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
+import com.steemapp.lokisveil.steemapp.HelperClasses.FabHider
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import java.util.ArrayList
@@ -128,6 +129,9 @@ class WritePost : Fragment() {
 
         //set up a callback for parent to attach a listner, used to use or not use developer beneficiaries
         mListener?.attachCheckboxListner(CheckBoxMainOne)
+
+        //Init fabhider to hide fab on scroll
+        FabHider(null,null,mListener?.getFabM(),v.findViewById(R.id.design_bottom_sheet))
 
         EditTextMainOnehandler = TextInputLayoutErrorHandler(v.findViewById(R.id.TextMainOneTextLayout) as TextInputLayout)
         EditTextMainTwohandler = TextInputLayoutErrorHandler(v.findViewById(R.id.EditMainTextTwoTextLayout) as TextInputLayout)

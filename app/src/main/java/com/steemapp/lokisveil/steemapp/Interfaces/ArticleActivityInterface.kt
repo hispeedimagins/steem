@@ -2,6 +2,7 @@ package com.steemapp.lokisveil.steemapp.Interfaces
 
 import android.content.Context
 import android.util.DisplayMetrics
+import android.support.design.widget.FloatingActionButton
 
 /**
  * Created by boot on 3/25/2018.
@@ -17,5 +18,8 @@ interface ArticleActivityInterface {
     fun getBody():String{
         return ""
     }
+    //interface to return the fabbutton
+    fun getFab():FloatingActionButton?
+
     //fun GetDisplayMetrics() : DisplayMetrics
 }

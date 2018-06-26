@@ -16,6 +16,8 @@ class ArticleViewHolder constructor(view: View) : RecyclerView.ViewHolder(view) 
     val mView: View = view
     var article: FeedArticleDataHolder.FeedArticleHolder? = null
     val article_resteemed_by : TextView? = view.findViewById(R.id.article_resteemed_by)
+    //added resteemed by linear holder
+    val article_resteemed_by_Linear : LinearLayout? = view.findViewById(R.id.article_resteemed_by_Linear)
     val article_pfp : ImageView? = view.findViewById(R.id.article_pfp)
     val article_name : TextView? = view.findViewById(R.id.article_name)
     val article_date : TextView? = view.findViewById(R.id.article_date)

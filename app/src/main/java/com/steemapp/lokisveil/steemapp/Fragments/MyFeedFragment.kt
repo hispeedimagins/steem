@@ -27,10 +27,7 @@ import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
-import com.steemapp.lokisveil.steemapp.HelperClasses.JsonRpcResultConversion
-import com.steemapp.lokisveil.steemapp.HelperClasses.MakeJsonRpc
-import com.steemapp.lokisveil.steemapp.HelperClasses.calendarcalculations
-import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
+import com.steemapp.lokisveil.steemapp.HelperClasses.*
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 
 import com.steemapp.lokisveil.steemapp.R
@@ -99,7 +96,8 @@ class MyFeedFragment : Fragment() {
 
             recyclerView?.setItemAnimator(DefaultItemAnimator())
             recyclerView?.setAdapter(adapter)
-
+            //init fabhider to hide the FAB on scroll
+            FabHider(recyclerView,globalInterface?.getFab())
             recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -489,6 +487,7 @@ class MyFeedFragment : Fragment() {
                         if(ad > 0){
                             dblist.add(ad)
                         }
+
                     }
                     /*val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,if(activity != null) activity as Context else globalInterface?.getContextMine() as Context)
                     //con.ParseJsonBlog()
@@ -515,7 +514,8 @@ class MyFeedFragment : Fragment() {
     }
 
     fun addMoreItems(response:JSONObject,nametouse:String){
-        val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,context as Context)
+        //if context is null try to load the activity context
+        val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,if(context != null) context as Context else this.activity?.applicationContext!!)
         //con.ParseJsonBlog()
         val result = con.ParseJsonBlogMore()
         //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
@@ -530,7 +530,11 @@ class MyFeedFragment : Fragment() {
     }
 
     fun addItems(response:JSONObject,nametouse:String){
-        val con = JsonRpcResultConversion(response,nametouse as String,TypeOfRequest.blog,context as Context)
+        /*if(context == null){
+
+        }*/
+        //if context is null try to load the activity context
+        val con = JsonRpcResultConversion(response,nametouse as String,TypeOfRequest.blog,if(context != null) context as Context else this.activity?.applicationContext!!)
         //con.ParseJsonBlog()
         val result = con.ParseJsonBlog()
         //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)

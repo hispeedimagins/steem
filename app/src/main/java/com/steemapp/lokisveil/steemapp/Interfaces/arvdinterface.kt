@@ -16,6 +16,11 @@ interface arvdinterface {
     abstract fun notifyitemcchanged(position: Int)
     abstract fun notifyitemcchanged(position: Int,payload:Any)
 
+    //function to notify the adapter that an item was removed
+    fun notifyitemRemoved(position: Int)
+    //function to remove and notify
+    fun removeAt(position: Int)
+
     abstract fun getObject(position: Int): Any
     abstract fun getSize(): Int
 

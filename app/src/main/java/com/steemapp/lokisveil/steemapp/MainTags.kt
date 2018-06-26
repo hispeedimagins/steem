@@ -81,6 +81,8 @@ class MainTags : AppCompatActivity(), TagsInterface {
     var originalrequest = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //apply app theme
+        MiscConstants.ApplyMyTheme(this@MainTags)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_tags)
         setSupportActionBar(toolbar)
