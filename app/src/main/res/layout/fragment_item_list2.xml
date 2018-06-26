@@ -117,12 +117,13 @@
 
                 </android.support.v7.widget.CardView>-->
                 <android.support.design.widget.TextInputLayout
-                    app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
+
                     android:hint="Title"
                     android:id="@+id/TextMainOneTextLayout"
                     android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
                     app:counterOverflowTextAppearance="@style/MyOverflowText"
                     app:counterTextAppearance="@style/MyNormalTextCounter"
                     >
@@ -132,7 +133,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/TextMainOne"
-
+                        android:textColorHint="?attr/textColorMine"
                         android:textColor="?attr/textColorMine"
                         android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
                         />
@@ -170,7 +171,7 @@
                         style="@style/MyMaterialTheme.NormalText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:textColorHint="?attr/textColorMine"
                         android:id="@+id/EditMainTextTwo"
                         android:textColor="?attr/textColorMine"
                         android:inputType="textEmailAddress|textMultiLine|textAutoComplete|textAutoCorrect"
@@ -211,7 +212,7 @@
                         style="@style/MyMaterialTheme.NormalText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:textColorHint="?attr/textColorMine"
                         android:id="@+id/EditMainTextThree"
                         android:textColor="?attr/textColorMine"
                         android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
@@ -233,6 +234,7 @@
                     android:layout_gravity="center_horizontal"
                     >
                     <CheckBox
+
                         android:checked="true"
                         android:textColor="?attr/textColorMine"
                         android:text="Support developers as beneficiary"

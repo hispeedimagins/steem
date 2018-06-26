@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-
+            android:id="@+id/article_resteemed_by_Linear"
             >
 
 
@@ -52,7 +52,7 @@
                 android:textStyle="bold" />
 
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/textViewOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,9 +60,9 @@
                 android:layout_alignParentTop="true"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="5dp"
-                android:text="&#8942;"
+                android:drawableEnd="@drawable/ic_baseline_more_vert_24px"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:textStyle="bold" />
+                android:textStyle="bold" />-->
             <!--android:text="&#8942;"-->
         </LinearLayout>
 
@@ -70,6 +70,7 @@
 
 
         <LinearLayout
+            android:layout_marginTop="7dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -131,7 +132,10 @@
 
 
 
+
                 <TextView
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -143,6 +147,23 @@
                     />
 
                 <TextView
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_toEndOf="@id/article_name"
+                    android:textColor="@color/colorAccent"
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/article_tag"
+                    android:text="tag"
+
+
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -154,7 +175,7 @@
                     />
 
             </LinearLayout>
-            <TextView
+            <!--<TextView
                 android:textColor="@color/colorAccent"
                 android:padding="5dp"
                 android:layout_width="wrap_content"
@@ -164,16 +185,31 @@
 
 
                 android:textStyle="bold"
-                />
+                />-->
+
+            <TextView
+                android:id="@+id/textViewOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="5dp"
+                android:drawableEnd="@drawable/ic_baseline_more_vert_24px"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/openarticle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-            <TextView
+            <!--<TextView
                 android:padding="5dp"
                 android:textAlignment="center"
                 android:layout_width="match_parent"
@@ -183,7 +219,7 @@
 
                 android:maxLines="2"
                 android:textStyle="bold"
-                />
+                />-->
 
             <ImageView
                 android:drawingCacheQuality="low"
@@ -192,6 +228,21 @@
                 android:layout_height="150dp"
                 android:id="@+id/article_image"
 
+                />
+
+            <TextView
+                android:layout_marginTop="7dp"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:padding="5dp"
+                android:textAlignment="viewStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/article_title"
+                android:text="tag"
+
+                android:maxLines="2"
+                android:textStyle="bold"
                 />
 
             <!--<eu.fiskur.markdownview.MarkdownView
@@ -206,6 +257,8 @@
 
             </ScrollView>-->
             <TextView
+
+                android:layout_marginTop="5dp"
 
                 android:id="@+id/article_summary"
                 android:layout_width="match_parent"

@@ -86,7 +86,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="&#8942;"
+                    android:drawableEnd="@drawable/ic_baseline_more_vert_24px"
                     android:textAppearance="?android:textAppearanceLarge" />
                 <!--android:text="&#8942;"-->
             </LinearLayout>
