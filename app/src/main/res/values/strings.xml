@@ -141,4 +141,6 @@
     <string name="title_activity_main_tags">MainTags</string>
     <string name="title_activity_comment_notifications">Comments/Replies</string>
     <string name="title_activity_notifications_busy_d">Notifications</string>
+    <string name="searchprovidertitle">Search powered by AskSteem</string>
+    <string name="title_activity_search">Search</string>
 </resources>

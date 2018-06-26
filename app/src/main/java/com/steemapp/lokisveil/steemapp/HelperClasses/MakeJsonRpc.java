@@ -38,6 +38,21 @@ public class MakeJsonRpc {
         return request;
     }
 
+    /**
+     * get_account_reputations is used to search for usernames - easy and fast
+     * @param searchname username to search for
+     * @param number number of results to get back
+     * @return JSONObject
+     * @throws JSONException
+     */
+    public JSONObject GetAccountRepsAndSearch(String searchname,int number) throws JSONException{
+
+        JSONObject object = new JSONObject(
+                "{\"id\":\""+id+"\",\"jsonrpc\":\"2.0\",\"method\":\"call\",\"params\":[\"follow_api\",\"get_account_reputations\", [\""+searchname+"\",\"" + number + "\"]]}"
+        );
+        id++;
+        return object;
+    }
 
     public JSONObject getTagQuery(String method,String tag,String limit) throws JSONException{
 

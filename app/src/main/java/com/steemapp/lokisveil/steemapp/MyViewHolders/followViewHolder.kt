@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.DataHolders.GetReputationDataHolder
 import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 
@@ -16,6 +17,8 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 class followViewHolder constructor(view: View) : RecyclerView.ViewHolder(view)  {
     val mView: View = view
     var article: prof.Resultfp? = null
+    //added a class type to reuse this holder for search results
+    var userUseWithSearch : GetReputationDataHolder? = null
     //val article_resteemed_by : TextView? = view.findViewById(R.id.article_resteemed_by)
     val article_pfp : ImageView? = view.findViewById(R.id.article_pfp)
     val article_name : TextView? = view.findViewById(R.id.article_name)

@@ -9,6 +9,7 @@ import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.DataHolders.GetReputationDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.FollowersDatabase
 import com.steemapp.lokisveil.steemapp.Databases.FollowingDatabase
 import com.steemapp.lokisveil.steemapp.FollowApiConstants
@@ -38,6 +39,49 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
     var followersDatabase : FollowersDatabase? = null
     var followingDatabase : FollowingDatabase? = null
     var nobots = "\\b(?:postpromoter|smartsteem|buildawhale|upme|appreciator|rocky1|booster|boomerang|jerrybanfield|therising|promobot|upmyvote|pushup|sneaky-ninja|minnowbooster)\\b"
+
+
+
+    //used to parse through get_reputation api data
+    fun ParseRepAndSearch() : List<GetReputationDataHolder>{
+        val body = json
+        var result = if(body?.has("result")!!) body.getJSONArray("result") else null
+        if(result == null){
+            return ArrayList()
+        }
+        var al = ArrayList<GetReputationDataHolder>()
+        for(x in 0 until result.length()){
+            //get jsonobject
+            val curob = result.getJSONObject(x)
+            //get account name
+            val author = curob.getString("account")
+            //get the rep and calculate its int value
+            val calcrep = StaticMethodsMisc.CalculateRepScoreRetInt(curob.getString("reputation"))
+            var autho = "$author ($calcrep)"
+            var mfo = MyOperationTypes.follow
+            //check if person follows you from the local db
+            //it is used to evaluate if the follow or the
+            //unfollow option is presented
+            if(followersDatabase != null){
+                if(author != username){
+                    if(followersDatabase?.simpleSearch(author) as Boolean){
+                        "$autho follows you"
+                        mfo = MyOperationTypes.unfollow
+                    } else{
+                        mfo = MyOperationTypes.follow
+                    }
+                }
+            }
+
+
+            al.add(GetReputationDataHolder(author,calcrep,autho,mfo))
+
+
+        }
+
+        return al
+    }
+
 
     fun GetTrendingTags():List<String>{
         val body = json
@@ -167,9 +211,9 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
 
         //val body = gson.fromJson(json, JsonObject::class.java)
         val body = json
-        var result: JSONArray? = body?.getJSONArray("result") ?: return ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
+        var result: JSONArray? = body?.getJSONArray("result") ?: return ArrayList()
 
-        var returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
+        var returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList()
         //val arr = user.get(getthis)?.asJsonArray
         var skipz = false
         if(result?.length() != null){
@@ -283,8 +327,16 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
             }
         }
 
+        var jsonMetadata : feed.JsonMetadataInner? = null
+        //this is because some apps have tags in a string instead of an array
+        //so the app would crash, this will keep the app running
+        //will try to have a better solution in the other release
+        try{
+            jsonMetadata = gson.fromJson<feed.JsonMetadataInner>(commstr.getString("json_metadata"),feed.JsonMetadataInner::class.java)
+        } catch (jex : JsonSyntaxException){
 
-        var jsonMetadata = gson.fromJson<feed.JsonMetadataInner>(commstr.getString("json_metadata"),feed.JsonMetadataInner::class.java)
+        }
+
         //var du = DateUtils.getRelativeDateTimeString(contex,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var d = calendarcalculations() //2018-02-03T13:58:18
