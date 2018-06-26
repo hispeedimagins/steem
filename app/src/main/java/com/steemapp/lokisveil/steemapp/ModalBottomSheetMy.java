@@ -145,6 +145,7 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        //MiscConstants.Companion.ApplyMyTheme(context);
         super.onCreate(savedInstanceState);
     }
 
@@ -154,7 +155,9 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
 
 
         super.onCreateView(inflater,container,savedInstanceState);
+        //int th = getTheme();
         view = inflater.inflate(R.layout.addaquestionbottom, container, false);
+
 
         //view = v;
 
@@ -357,7 +360,8 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
         cardviewOne.setVisibility(View.GONE);
         //cardviewTwo.setVisibility(View.GONE);
         cardviewFour.setVisibility(View.GONE);
-        EditTextMainTwo.setHint("Body");
+        //added a different text for comment placeholder
+        EditTextMainTwo.setHint("Comment (Make it witty)");
         if(articleViewHolder != null){
             titleholder.setText("Reply to "+articleViewHolder.getAuthor());
         }

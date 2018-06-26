@@ -22,6 +22,7 @@ import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
+import com.steemapp.lokisveil.steemapp.HelperClasses.FabHider
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import com.steemapp.lokisveil.steemapp.HelperClasses.calendarcalculations
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
@@ -118,6 +119,7 @@ class CommentsFragment : Fragment(),GlobalInterface {
 
             recyclerView?.setItemAnimator(DefaultItemAnimator())
             recyclerView?.setAdapter(adapter)
+            FabHider(recyclerView,articleActivityInterface?.getFab())
         }
 
         activity = getActivity()?.applicationContext
@@ -282,7 +284,8 @@ class CommentsFragment : Fragment(),GlobalInterface {
 
         //this is where we save the single comment to the db
         //id goes to state
-        if(save){
+        //check if context is not null, sometimes on fast phones activity is destroyed and it can crash
+        if(save && context != null){
             val req = RequestsDatabase(context!!)
             var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "comment"))
             if(ad > 0){
@@ -304,7 +307,8 @@ class CommentsFragment : Fragment(),GlobalInterface {
         //adapter.questionListFunctions.add(questionsList)
 
         //this is where we save the list to the db as json and keep the db id
-        if(save){
+        //check if context is not null, sometimes on fast phones activity is destroyed and it can crash
+        if(save && context != null){
             val req = RequestsDatabase(context!!)
             var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "list"))
             if(ad > 0){

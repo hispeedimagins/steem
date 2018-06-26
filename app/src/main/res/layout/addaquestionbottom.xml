@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
-
+    android:background="?attr/mybackgroundcolor"
     android:layout_width="match_parent"
 
     android:layout_height="wrap_content"
@@ -118,6 +118,7 @@
                         app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
 
                         android:id="@+id/TextMainOneTextLayout"
+                        android:background="?attr/cardBackgroundColor"
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -130,7 +131,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/TextMainOne"
-
+                            android:background="?attr/cardBackgroundColor"
                             android:textColor="?attr/textColorMine"
                             android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
                             />
@@ -151,11 +152,12 @@
                     android:layout_gravity="center_horizontal"
                     >
                     <CheckBox
+                        android:background="?attr/cardBackgroundColor"
                         android:checked="true"
                         android:text="Support developers as beneficiary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:textColor="?attr/textColorMine"
                         android:id="@+id/CheckboxMainOne"
                         />
                 </android.support.v7.widget.CardView>
@@ -168,17 +170,21 @@
                     app:cardUseCompatPadding="true"
                     app:cardPreventCornerOverlap="true"
                     contentPadding="1dp"
-
                     android:layout_gravity="center_horizontal"
+                    app:cardBackgroundColor="?attr/cardBackgroundColor"
+                    android:layout_margin="5dp"
+
+
                     >
                     <android.support.design.widget.TextInputLayout
                         app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
-
+                        android:background="?attr/cardBackgroundColor"
                         android:id="@+id/EditMainTextTwoTextLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:counterOverflowTextAppearance="@style/MyOverflowText"
                         app:counterTextAppearance="@style/MyNormalTextCounter"
+
                         >
 
 
@@ -186,7 +192,7 @@
                             style="@style/MyMaterialTheme.FullWidthText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
+                            android:textColorHint="?attr/textColorMine"
                             android:id="@+id/EditMainTextTwo"
                             android:textColor="?attr/textColorMine"
                             android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"

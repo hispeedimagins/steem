@@ -46,19 +46,14 @@
     </style>
 
 
-
-
-
     <style name="Plaid.AlertDialog.AppCompat" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">@color/background_light</item>
     </style>
 
     <style name="Plaid.AlertDialog.AppCompat.Dark" parent="Theme.AppCompat.Light.Dialog.Alert">
+
         <item name="android:background">@color/background_dark</item>
     </style>
-
-
-
 
 
     <style name="Plaid.Alert.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -70,6 +65,7 @@
         <item name="colorPrimary">@color/primary</item>-->
         <item name="android:itemBackground">@color/background_dark</item>
         <item name="textColorAlertDialogListItem">@color/background_dark</item>
+        <item name="mybackgroundcolor">@color/background_dark</item>
         <!--<item name="android:actionModeBackground">@color/background_dark</item>-->
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/dribbble_link_highlight</item>
@@ -89,6 +85,7 @@
         <item name="android:itemBackground">@color/background_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="textColorAlertDialogListItem">@color/background_light</item>
+        <item name="mybackgroundcolor">@color/background_light</item>
         <!--<item name="android:actionModeBackground">@color/background_dark</item>-->
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/dribbble_link_highlight</item>
@@ -98,11 +95,6 @@
         <item name="android:textColorSecondary">@color/text_primary_dark</item>
         <item name="android:alertDialogTheme">@style/Plaid.AlertDialog.AppCompat</item>
     </style>
-
-
-
-
-
 
 
     <style name="Plaid" parent="Theme.AppCompat.Light.NoActionBar">
@@ -119,6 +111,7 @@
         <item name="android:windowBackground">@color/background_light</item>
         <item name="android:popupBackground">@color/background_light</item>
         <item name="android:itemBackground">@color/background_light</item>
+        <item name="mybackgroundcolor">@color/background_light</item>
         <item name="android:textColor">@color/text_primary_dark</item>
 
         <item name="cardBackgroundColor">@color/background_light</item>
@@ -135,9 +128,9 @@
 
 
     <style name="Plaid.Dark" parent="Theme.AppCompat.Light.NoActionBar">
-       <!-- <item name="colorPrimary">@color/colorPrimary</item>-->
+        <!-- <item name="colorPrimary">@color/colorPrimary</item>-->
         <item name="colorPrimaryDark">@color/primary_dark</item>
-       <!-- <item name="colorAccent">@color/colorAccent</item>-->
+        <!-- <item name="colorAccent">@color/colorAccent</item>-->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:actionModeBackground">@color/background_dark</item>
@@ -147,6 +140,7 @@
         <item name="android:windowBackground">@color/background_dark</item>
         <item name="android:popupBackground">@color/background_dark</item>
         <item name="android:itemBackground">@color/background_dark</item>
+        <item name="mybackgroundcolor">@color/background_dark</item>
         <item name="android:textColor">@color/text_primary_light</item>
         <item name="cardBackgroundColor">@color/accback</item>
         <item name="textColorMine">@color/text_primary_light</item>
@@ -166,7 +160,7 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <!--<item name="android:windowBackground">@color/background_dark</item>-->
-       <!-- <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/immersive_bars</item>
         <item name="android:navigationBarColor">@color/immersive_bars</item>
         <item name="android:windowEnterTransition">@transition/home_enter</item>-->
@@ -196,7 +190,7 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
-       <!-- <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!-- <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
     </style>
 
     <style name="Plaid.Translucent.Search">
@@ -219,6 +213,7 @@
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/hint_disabled_dark</item>
         <item name="android:popupBackground">@color/background_light</item>
+        <item name="mybackgroundcolor">@color/background_light</item>
         <item name="android:itemBackground">@color/background_light</item>
         <item name="android:textColor">@color/text_primary_dark</item>
 
@@ -226,7 +221,7 @@
         <item name="textColorMine">@color/text_primary_dark</item>
         <item name="textColorMineInverse">@color/background_light</item>
         <item name="android:textColorPrimary">@color/text_primary_dark</item>
-       <!-- <item name="android:windowEnterAnimation">@transition/designer_news_story_shared_enter</item>-->
+        <!-- <item name="android:windowEnterAnimation">@transition/designer_news_story_shared_enter</item>-->
         <!--<item name="android:windowReturnTransition">@transition/designer_news_story_shared_return</item>-->
         <!--<item name="android:statusBarColor">@color/designer_news_dark</item>
         <item name="android:navigationBarColor">@color/designer_news_super_dark</item>
@@ -244,11 +239,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 
 
-
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/text_disabled_light</item>
         <item name="android:popupBackground">@color/background_dark</item>
         <item name="android:itemBackground">@color/background_dark</item>
+        <item name="mybackgroundcolor">@color/background_dark</item>
         <item name="android:textColor">@color/text_primary_light</item>
         <item name="cardBackgroundColor">@color/accback</item>
         <item name="textColorMine">@color/text_primary_light</item>
@@ -269,7 +264,7 @@
         <!--<item name="android:statusBarColor">@color/dribbble_super_dark</item>
         <item name="android:navigationBarColor">@color/dribbble_super_dark</item>-->
         <item name="colorControlActivated">?colorAccent</item>
-       <!-- <item name="android:windowAllowReturnTransitionOverlap">false</item>-->
+        <!-- <item name="android:windowAllowReturnTransitionOverlap">false</item>-->
     </style>
 
     <style name="Plaid.Translucent.Dribbble.Shot">
@@ -300,7 +295,7 @@
         <item name="colorControlHighlight">@color/ripple_light</item>
     </style>
 
-   <!-- <style name="Plaid.Translucent.Dribbble.PlayerSheet">
+    <!-- <style name="Plaid.Translucent.Dribbble.PlayerSheet">
         &lt;!&ndash;<item name="android:windowEnterTransition">@transition/dribbble_player_sheet_enter</item>
         <item name="android:windowReturnTransition">@transition/dribbble_player_sheet_return</item>&ndash;&gt;
     </style>-->
@@ -322,7 +317,7 @@
     </style>
 
     <style name="Plaid.Translucent.About">
-       <!-- <item name="android:windowEnterTransition">@transition/about_enter</item>
+        <!-- <item name="android:windowEnterTransition">@transition/about_enter</item>
         <item name="android:windowReturnTransition">@transition/about_return</item>-->
     </style>
 
@@ -382,7 +377,7 @@
     <style name="TextAppearance.TilePrimary" parent="TextAppearance.AppCompat.Subhead">
 
         <!--<item name="lineHeightHint">20sp</item>-->
-       <!-- <item name="font">roboto-mono-regular</item>-->
+        <!-- <item name="font">roboto-mono-regular</item>-->
     </style>
 
     <!--<style name="Widget.Plaid.TilePrimary">
@@ -408,7 +403,7 @@
 
     </style>
 
-   <!-- <style name="Widget.Plaid.DribbbleShotTitle">
+    <!-- <style name="Widget.Plaid.DribbbleShotTitle">
         <item name="android:textAppearance">@style/TextAppearance.DribbbleShotTitle</item>
         <item name="lineHeightHint">32sp</item>
     </style>
@@ -456,7 +451,7 @@
     </style>
 
     <style name="TextAppearance.CommentAuthor" parent="TextAppearance.AppCompat.Caption">
-       <!-- <item name="android:fontFamily">sans-serif-medium</item>-->
+        <!-- <item name="android:fontFamily">sans-serif-medium</item>-->
         <item name="android:textSize">14sp</item>
 
     </style>
@@ -488,7 +483,7 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-   <!-- <style name="Widget.Plaid.DialogText">
+    <!-- <style name="Widget.Plaid.DialogText">
 
         <item name="android:textAppearance">@style/TextAppearance.DialogContent</item>
 
@@ -581,10 +576,9 @@
         <item name="colorControlHighlight">@color/ripple_light</item>
     </style>
 
+    <style name="Plaid.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-
-
-
+    <style name="Plaid.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

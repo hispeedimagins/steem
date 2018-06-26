@@ -15,7 +15,7 @@ import java.util.*
 class drafts(context : Context) : SQLiteOpenHelper(context, DatabaseName,null, DatabaseVersion) {
     companion object {
         val DatabaseName:String = "drafts"
-        val DatabaseVersion:Int = 2
+        val DatabaseVersion:Int = 3
     }
     val DatabaseTableName = "draft"
     val DatabaseColoumnId = "Id"
@@ -26,9 +26,10 @@ class drafts(context : Context) : SQLiteOpenHelper(context, DatabaseName,null, D
     val DatabaseColoumnDate = "date"
 
     override fun onCreate(db: SQLiteDatabase?) {
+        //Initialize the db, do not keep anything unique
         db?.execSQL("CREATE TABLE IF NOT EXISTS " + DatabaseTableName + " (" + DatabaseColoumnId + " integer primary key, " +
                 DatabaseColoumnTitle + " text, " +
-                DatabaseColoumnTags + " text UNIQUE, " +
+                DatabaseColoumnTags + " text, " +
                 DatabaseColoumnContent + " text, " +
                 DatabaseColoumnPostValue + " text, " +
                 DatabaseColoumnDate + " text " +
@@ -36,6 +37,7 @@ class drafts(context : Context) : SQLiteOpenHelper(context, DatabaseName,null, D
 
     }
 
+    //if table exists drop it and create a new one.
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $DatabaseTableName")
         onCreate(db)
@@ -54,9 +56,7 @@ class drafts(context : Context) : SQLiteOpenHelper(context, DatabaseName,null, D
         values.put(DatabaseColoumnTags, tags)
         values.put(DatabaseColoumnContent, content)
         values.put(DatabaseColoumnPostValue, postvalue)
-        var date = Date()
-
-        values.put(DatabaseColoumnDate, date.time.toString())
+        values.put(DatabaseColoumnDate, Date().time.toString())
         val key = db.insert(DatabaseTableName, null, values)
 
         /*if(key > 0){

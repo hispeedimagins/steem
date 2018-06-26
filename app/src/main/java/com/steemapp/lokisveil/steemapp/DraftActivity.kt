@@ -39,6 +39,8 @@ class DraftActivity : AppCompatActivity() {
         val db = drafts(applicationContext)
         activity_feed_swipe_refresh_layout.setOnRefreshListener {
             adapter?.draftHelperFunctionss?.add(db.GetAllQuestions())
+            //stop the loading bar once finished
+            sw.makeswipestopDef()
         }
         //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
 

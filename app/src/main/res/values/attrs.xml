@@ -10,4 +10,5 @@
    <attr name="cardBackgroundColor" format="color" />
     <attr name="textColorMine" format="color" />
     <attr name="textColorMineInverse" format="color" />
+    <attr name="mybackgroundcolor" format="color"/>
 </resources>
