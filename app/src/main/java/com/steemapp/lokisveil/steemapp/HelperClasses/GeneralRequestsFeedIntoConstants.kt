@@ -18,6 +18,7 @@ import com.steemapp.lokisveil.steemapp.VolleyRequest
 import com.steemapp.lokisveil.steemapp.jsonclasses.Block
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import org.json.JSONObject
+import java.util.function.Predicate
 
 /**
  * Created by boot on 3/12/2018.
@@ -27,8 +28,8 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
     val globalInterface : GlobalInterface? = if(context is GlobalInterface) context else null
     val followlistinterface : GetFollowListsBack? = if(context is GetFollowListsBack) context else null
     var useDbCode = true
-    var followers: List<prof.Resultfp> = java.util.ArrayList()
-    var following: List<prof.Resultfp> = java.util.ArrayList()
+    var followers = ArrayList<prof.Resultfp>()
+    var following = ArrayList<prof.Resultfp>()
     var followcount: prof.FollowCount? = null
     constructor(context:Context,stopDbCode:Boolean) :this(context){
         useDbCode = stopDbCode
@@ -199,7 +200,7 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
             var parse = gson.fromJson(response.toString(), prof.FollowNames::class.java)
             if(parse != null && parse.result != null){
 
-                followers += (parse.result as List<prof.Resultfp>)
+                followers.addAll(parse.result!! )
                 if(!useDbCode){
                     followlistinterface?.GetFollowersList(parse.result as List<prof.Resultfp>)
                 }
@@ -212,13 +213,13 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
                         for(x in followers){
                             x.followInternal = MyOperationTypes.follow
                             if(fold.Insert(x)){
-                                alldbpeople.remove(x)
+                                alldbpeople.remove(alldbpeople.find { t -> t.follower == x.follower })
                             } else {
-                                alldbpeople.remove(x)
+                                alldbpeople.remove(alldbpeople.find { t -> t.follower == x.follower })
                             }
                         }
                         for(x in alldbpeople){
-                            fold.deleteContact(x.follower)
+                            fold.deleteContact(x.dbid)
                         }
                         globalInterface?.followersDone()
                     } else{
@@ -273,9 +274,9 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
             var parse = gson.fromJson(response.toString(), prof.FollowNames::class.java)
             if(parse != null && parse.result != null){
 
-                following += (parse.result as List<prof.Resultfp>)
+                following.addAll (parse.result !!)
                 if(!useDbCode){
-                    followlistinterface?.GetFollowingList(parse.result as List<prof.Resultfp>)
+                    followlistinterface?.GetFollowingList(parse.result !!)
                 }
                 if(following.size == followcount?.result?.followingCount){
                     //globalInterface?.notifyRequestMadeSuccess()
@@ -286,13 +287,13 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
                         for(x in following){
                             x.followInternal = MyOperationTypes.follow
                             if(fold.Insert(x)){
-                                alldbpeople.remove(x)
+                                alldbpeople.remove(alldbpeople.find { t -> t.following == x.following })
                             } else {
-                                alldbpeople.remove(x)
+                                alldbpeople.remove(alldbpeople.find { t -> t.following == x.following })
                             }
                         }
                         for(x in alldbpeople){
-                            fold.deleteContact(x.following)
+                            fold.deleteContact(x.dbid)
                         }
                         globalInterface?.followingDone()
                     }

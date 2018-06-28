@@ -149,7 +149,8 @@ data class Resultfp(
 		@SerializedName("follower") val follower: String, //hispeedimagins
 		@SerializedName("following") val following: String, //amazink-fem
 		@SerializedName("what") val what: List<String>,
-		var followInternal: MyOperationTypes = MyOperationTypes.follow
+		var followInternal: MyOperationTypes = MyOperationTypes.follow,
+		var dbid : Long = 0
 		)
 
 

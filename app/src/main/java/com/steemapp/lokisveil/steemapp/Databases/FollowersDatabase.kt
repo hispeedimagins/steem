@@ -69,12 +69,12 @@ class FollowersDatabase(context : Context) : SQLiteOpenHelper(context, CentralCo
     }
 
 
-    fun deleteContact(id: Int?): Int? {
+    fun deleteContact(id: Long?): Int? {
         val db = this.writableDatabase
 
         return db.delete(DatabaseTableName,
-                "id = ? ",
-                arrayOf(Integer.toString(id!!)))
+                "Id = ? ",
+                arrayOf(id?.toString()))
     }
 
     fun deleteContact(permlink: String?): Int? {
@@ -101,7 +101,8 @@ class FollowersDatabase(context : Context) : SQLiteOpenHelper(context, CentralCo
             val q = prof.Resultfp(
                 follower = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollower)),
                 following = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollowing)),
-                    what = rl
+                    what = rl,
+                    dbid = cursor.getLong(cursor.getColumnIndex(DatabaseColoumnId))
             )
 
             questionsLites.add(q)
