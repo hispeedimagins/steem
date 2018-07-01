@@ -207,7 +207,6 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
             holder.article_image?.visibility = View.GONE
         }
         else{
-
             holder.article_image?.visibility = View.VISIBLE
             val optionss = RequestOptions()
                     .centerCrop()
@@ -215,9 +214,10 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
                     //.error(R.drawable.error)
                     .priority(Priority.HIGH)
 
-            Glide.with(con).load(holder.article?.image?.get(0)).apply(optionss)
+            Glide.with(con).load(holder.article?.image?.firstOrNull()).apply(optionss)
                     //.placeholder(R.drawable.common_full_open_on_phone)
                     .into(holder.article_image as ImageView)
+
         }
 
 
