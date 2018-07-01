@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment"
-    android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment"
-    tools:listitem="@layout/likes_layout" />
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/list"
+        android:name="com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment"
+        tools:listitem="@layout/likes_layout" />
+    <include android:id="@+id/dateanim" layout="@layout/dateholderandanimator" />
+</android.support.design.widget.CoordinatorLayout>
+

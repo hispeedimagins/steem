@@ -35,6 +35,7 @@
 
 
     </android.support.v4.widget.SwipeRefreshLayout>
+    <include layout="@layout/dateholderandanimator" />
     <!--<include layout="@layout/dateholderandanimator" />-->
 
 

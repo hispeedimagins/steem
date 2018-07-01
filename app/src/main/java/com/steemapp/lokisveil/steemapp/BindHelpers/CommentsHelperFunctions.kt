@@ -40,7 +40,7 @@ import org.json.JSONObject
 /**
  * Created by boot on 2/16/2018.
  */
-class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRecyclerViewAdapter ,scale: Float,metrics: DisplayMetrics)  {
+class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRecyclerViewAdapter ,scale: Float,metrics: DisplayMetrics,dateHolder: FloatingDateHolder?)  {
 
     val con: Context = context
     var name:String? = username
@@ -49,6 +49,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
     internal var scale: Float = scale
     internal var metrics: DisplayMetrics = metrics
     var selectedPos = -1
+    var floatingDateHolder = dateHolder
     init {
         if(name == null){
             val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
@@ -81,6 +82,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
 
 
     public fun add(article : FeedArticleDataHolder.CommentHolder){
+        if(article.date != null) floatingDateHolder?.checktimeandaddQuestions(article.date!!)
         adaptedcomms.add(article)
         //adapter.notifyDataSetChanged();
         adaptedcomms.notifyitemcinserted(adaptedcomms.getSize())

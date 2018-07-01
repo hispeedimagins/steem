@@ -340,7 +340,8 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
         //var du = DateUtils.getRelativeDateTimeString(contex,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var d = calendarcalculations() //2018-02-03T13:58:18
-        d.setDateOfTheData((SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")) ))
+        var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")))
+        d.setDateOfTheData(dd)
         var du = DateUtils.getRelativeDateTimeString(contex,d.getGmtToNormal()!!.timeInMillis, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
@@ -355,8 +356,10 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
                 cashoutTime = commstr.getString("cashout_time"),
                 category = commstr.getString("category"),
                 children = commstr.getInt("children"),
+                date = dd,
                 created = commstr.getString("created"),
-                createdcon = d.getDateTimeString(),
+                createdcon = dd.time.toString(),
+                //createdcon = d.getDateTimeString(),
                 depth = commstr.getInt("depth"),
                 id = commstr.getInt("id"),
                 lastPayout = commstr.getString("last_payout"),
@@ -542,7 +545,8 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
         //var du = DateUtils.getRelativeDateTimeString(contex,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var d = calendarcalculations() //2018-02-03T13:58:18
-        d.setDateOfTheData((SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")) ))
+        var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")) )
+        d.setDateOfTheData(dd)
         var du = DateUtils.getRelativeDateTimeString(contex,d.getGmtToNormal()!!.timeInMillis, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var rpb = commstr.getJSONArray("reblogged_by")
@@ -583,6 +587,7 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
                 children = commstr.getInt("children"),
                 created = commstr.getString("created"),
                 createdcon = d.getDateTimeString(),
+                date = dd,
                 depth = commstr.getInt("depth"),
                 id = commstr.getInt("id"),
                 lastPayout = commstr.getString("last_payout"),

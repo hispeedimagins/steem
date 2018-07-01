@@ -22,6 +22,7 @@
     </android.support.design.widget.AppBarLayout>-->
 
     <include layout="@layout/content_user_upvote" />
+    <include android:id="@+id/dateanim" layout="@layout/dateholderandanimator" />
 
     <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

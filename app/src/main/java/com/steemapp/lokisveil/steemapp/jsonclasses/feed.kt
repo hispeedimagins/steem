@@ -2,6 +2,7 @@ package com.steemapp.lokisveil.steemapp.jsonclasses
 import com.google.gson.annotations.SerializedName
 import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
+import java.util.*
 
 
 /**
@@ -149,7 +150,8 @@ data class JsonMetadataInner(
 
 			//added for sorting the likes from the largest by value
 			var dateString : String = "",
-			var votevalforsorting:Double? = null
+			var votevalforsorting:Double? = null,
+			var date : Date? = null
 	)
 
 

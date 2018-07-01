@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <LinearLayout
+        android:paddingTop="2dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+
+        >
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="right"
+            android:gravity="center_horizontal"
+            android:layout_alignParentRight="true"
+            >
+
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:cardUseCompatPadding="true"
+                app:cardPreventCornerOverlap="true"
+                contentPadding="1dp"
+
+                android:padding="1dp"
+
+                android:layout_gravity="center_horizontal"
+                >
+                <RelativeLayout
+                    android:layout_gravity="center_horizontal"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/dateofchatstart"
+
+                        android:padding="3dp"
+
+                        android:textSize="12sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/accback"
+
+
+                        />
+                </RelativeLayout>
+
+
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

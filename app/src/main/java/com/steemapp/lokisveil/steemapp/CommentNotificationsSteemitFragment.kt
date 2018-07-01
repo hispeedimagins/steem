@@ -98,7 +98,7 @@ class CommentNotificationsSteemitFragment : Fragment() {
             }
         }
 
-        adapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(), recy, view as View, AdapterToUseFor.replyNoti)
+        adapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(), recy, view, AdapterToUseFor.replyNoti)
         //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
 
         recy.setItemAnimator(DefaultItemAnimator())
@@ -157,7 +157,7 @@ class CommentNotificationsSteemitFragment : Fragment() {
         refreshcontent()
     })
 
-    swipecommonactionsclass = swipecommonactionsclass(swipeRefreshLayout)
+    swipecommonactionsclass = swipecommonactionsclass(swipeRefreshLayout!!)
     fragmentActivity = getActivity()
 
     /*val sharedPreferences = context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
@@ -236,24 +236,7 @@ class CommentNotificationsSteemitFragment : Fragment() {
         adapter?.clear()
     }
 
-    fun displayMessage(result: FeedArticleDataHolder.CommentHolder) {
 
-        adapter?.add(result)
-
-    }
-    fun displayMessage(result: List<FeedArticleDataHolder.CommentHolder>) {
-
-
-        loading = false
-
-        for (a in result){
-
-            displayMessage(a)
-        }
-        swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(questionsList)
-
-    }
 
 
 
@@ -268,7 +251,7 @@ class CommentNotificationsSteemitFragment : Fragment() {
 
             displayMessage(a)
         }*/
-        adapter?.add(result)
+        adapter?.repliesHelperFunctions?.add(result)
         if(result.isNotEmpty()){
             var lc = result[result.size - 1]
             if(lc != null){

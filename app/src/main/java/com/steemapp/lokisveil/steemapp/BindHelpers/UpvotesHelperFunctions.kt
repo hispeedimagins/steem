@@ -34,14 +34,16 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperat
 import com.steemapp.lokisveil.steemapp.jsonclasses.Block
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import org.json.JSONObject
+import java.util.ArrayList
 
 /**
  * Created by boot on 3/13/2018.
  */
-class UpvotesHelperFunctions(context : Context, username:String?, adapter: AllRecyclerViewAdapter){
+class UpvotesHelperFunctions(context : Context, username:String?, adapter: AllRecyclerViewAdapter,dateHolder: FloatingDateHolder? = null){
     val con:Context = context
     var name:String? = username
     val adaptedcomms: arvdinterface = adapter
+    var floatingDateHolder:FloatingDateHolder? = dateHolder
     //val and = AndDown()
     private var selectedPos = -1
     val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
@@ -54,6 +56,17 @@ class UpvotesHelperFunctions(context : Context, username:String?, adapter: AllRe
     }
 
 
+    fun add(vote:feed.avtiveVotes){
+        floatingDateHolder?.checktimeandaddQuestions(vote.date!!)
+        adaptedcomms?.add(vote)
+        adaptedcomms.notifyitemcinserted(adaptedcomms.getSize())
+    }
+
+    fun add(list:List<feed.avtiveVotes>){
+        for(x in list){
+            add(x)
+        }
+    }
 
     // val globallist = ArrayList<Any>()
 

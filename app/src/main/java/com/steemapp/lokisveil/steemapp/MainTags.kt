@@ -93,7 +93,7 @@ class MainTags : AppCompatActivity(), TagsInterface {
         username = sharedPreferences?.getString(CentralConstants.username, null)
         key = sharedPreferences?.getString(CentralConstants.key, null)
 
-        adapter = AllRecyclerViewAdapter(this@MainTags, ArrayList(), list, null, AdapterToUseFor.feed)
+        adapter = AllRecyclerViewAdapter(this@MainTags, ArrayList(), list, dateanim, AdapterToUseFor.feed)
         //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
 
         list.setItemAnimator(DefaultItemAnimator())

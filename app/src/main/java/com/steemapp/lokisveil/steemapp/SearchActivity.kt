@@ -71,7 +71,7 @@ class SearchActivity : AppCompatActivity() {
         followersDatabase = FollowersDatabase(this@SearchActivity)
         recyclerView = list
         sw  = swipecommonactionsclass(swiperefreshsearch)
-        adapter = AllRecyclerViewAdapter(this, ArrayList(), recyclerView as RecyclerView, null, AdapterToUseFor.search)
+        adapter = AllRecyclerViewAdapter(this, ArrayList(), recyclerView as RecyclerView, dateanim, AdapterToUseFor.search)
         recyclerView?.itemAnimator = DefaultItemAnimator()
         recyclerView?.adapter = adapter
         FabHider(list,fab)
@@ -168,7 +168,7 @@ class SearchActivity : AppCompatActivity() {
         //adapter?.notifyDataSetChanged()
         adapter?.add("Posts ${posts.size}")
         for(x in posts){
-            adapter?.add(getprocessedfeed(x))
+            adapter?.feedHelperFunctions?.add(getprocessedfeed(x))
         }
     }
 
@@ -237,7 +237,8 @@ class SearchActivity : AppCompatActivity() {
         //var du = DateUtils.getRelativeDateTimeString(contex,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var d = calendarcalculations() //2018-02-03T13:58:18
-        d.setDateOfTheData((SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(post.created) ))
+        var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(post.created) )
+        d.setDateOfTheData(dd)
         var du = DateUtils.getRelativeDateTimeString(this@SearchActivity,d.getGmtToNormal()!!.timeInMillis, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
@@ -253,6 +254,7 @@ class SearchActivity : AppCompatActivity() {
                 category = jsonMetadata?.tags?.first()!!,
                 children = post.children,
                 created = post.created,
+                date = dd,
                 createdcon = d.getDateTimeString(),
                 depth = 0,
                 id = 0,

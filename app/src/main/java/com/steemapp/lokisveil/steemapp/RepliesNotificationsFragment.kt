@@ -222,10 +222,6 @@ class RepliesNotificationsFragment : Fragment() {
         swipecommonactionsclass?.makeswipestop()
         adapter?.clear()
         adapter?.notifyDataSetChanged()
-        /*adapter = new MyquestionslistRecyclerViewAdapter(new ArrayList<ForReturningQuestionsLite>(), mListener);
-        recyclerView.setAdapter(adapter);*/
-        //getQuestionsNow(false)
-
         GetFeed()
     }
 
@@ -233,25 +229,6 @@ class RepliesNotificationsFragment : Fragment() {
     fun clear(){
         adapter?.clear()
     }
-
-    /*fun displayMessage(result: FeedArticleDataHolder.CommentHolder) {
-
-        adapter?.add(result)
-
-    }
-    fun displayMessage(result: List<FeedArticleDataHolder.CommentHolder>) {
-
-
-        loading = false
-
-        for (a in result){
-
-            displayMessage(a)
-        }
-        swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(questionsList)
-
-    }*/
 
 
 
@@ -266,7 +243,7 @@ class RepliesNotificationsFragment : Fragment() {
 
             displayMessage(a)
         }*/
-        adapter?.add(result)
+        adapter?.commentNotiHelperFunctions?.add(result)
         if(result.isNotEmpty()){
             var lc = result[result.size - 1]
             if(lc != null){

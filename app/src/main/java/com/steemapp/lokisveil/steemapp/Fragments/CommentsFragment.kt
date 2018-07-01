@@ -277,7 +277,7 @@ class CommentsFragment : Fragment(),GlobalInterface {
 
             }
         }
-        adapter?.add(result)
+        adapter?.commentHelperFunctions?.add(result)
         if( bo ){
             recyclerView?.smoothScrollToPosition(if(scrollToPosition != null) scrollToPosition as Int else 0)
         }

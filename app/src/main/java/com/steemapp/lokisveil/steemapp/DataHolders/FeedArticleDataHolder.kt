@@ -136,7 +136,8 @@ class FeedArticleDataHolder {
         var activeVotes: JSONArray? = null,
         var displayName:String = "",
         var rootAuthor: String? = null,
-        var rootPermlink: String? = null
+        var rootPermlink: String? = null,
+        var date:Date? = null
         )/*: Parcelable{
 
     constructor(parcel: Parcel) : this(
@@ -290,7 +291,8 @@ class FeedArticleDataHolder {
             var paretn_author:String? = "",
             var rootAuthor: String?,
             var rootPermlink: String?,
-            var highlightThis:Boolean = false
+            var highlightThis:Boolean = false,
+            var date:Date? = null
     )/*: Parcelable{
         constructor(parcel: Parcel) : this(
                 parcel.createStringArrayList(),

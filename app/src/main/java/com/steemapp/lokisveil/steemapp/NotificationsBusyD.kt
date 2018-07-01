@@ -52,7 +52,7 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
 
         //adapter?.notificationsBusyHelperFunctions?.add(db.GetAllQuestions().reversed())
         adapter?.notificationsBusyHelperFunctions?.add(sortList(db.GetAllQuestions()))
-        adapter?.notifyDataSetChanged()
+        //adapter?.notifyDataSetChanged()
         sw?.makeswipestop()
     }
 
@@ -69,7 +69,7 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
         setSupportActionBar(toolbar)
 
         sw  = swipecommonactionsclass(actvity_notifications_refresh)
-        adapter = AllRecyclerViewAdapter(this, ArrayList(), list, null, AdapterToUseFor.notifications)
+        adapter = AllRecyclerViewAdapter(this, ArrayList(), list, dateanim, AdapterToUseFor.notifications)
         //var sw = swipecommonactionsclass(activity_feed_swipe_refresh_layout_favs)
         val db = NotificationsBusyDb(applicationContext)
         actvity_notifications_refresh.setOnRefreshListener {
@@ -120,6 +120,7 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
         var obs = ob.toString()
         ws?.send(obs)
         adapter?.clear()
+        adapter?.notifyDataSetChanged()
         //client?.dispatcher()?.executorService()?.shutdown()
     }
 

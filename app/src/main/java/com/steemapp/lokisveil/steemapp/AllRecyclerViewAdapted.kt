@@ -18,6 +18,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.gson.Gson
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import com.steemapp.lokisveil.steemapp.BindHelpers.*
+import com.steemapp.lokisveil.steemapp.DataHolders.DateTypeAndStringHolder
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.DataHolders.GetReputationDataHolder
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
@@ -102,6 +103,7 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
     private val isBeneficaryView = 800
     private val isHeader = 900
     private val isSearchUser = 1000
+    private val isDate = 1100
     /*private val isdateview = 65
     private val ischatview = 72
     private val isadview = 74
@@ -134,6 +136,7 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
     var beneficiaryHelperFunctionsOb : beneficiaryHelperFunctions? = null
     var headerHelperFunctions : HeaderHelperFunctions? = null
     var searchUsersHelperFunctions:SearchUsersHelperFunctions? = null
+    var floatingDateHolder : FloatingDateHolder? = null
     //var otherguy = otherguy
     /*var peopleFunctionsList: PeopleFunctionsList
     var openAQuestionHelperFunctions: OpenAQuestionHelperFunctions
@@ -182,17 +185,19 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
             AdapterToUseFor.feed -> {
                 //this.floatingDateHolder = FloatingDateHolder(context, view, recyclerView, this.fontSingleton, this@AllRecyclerViewAdapter)
                 //this.chatMessageFunctions = ChatMessageFunctions(metrics, context, floatingDateHolder, this@AllRecyclerViewAdapter)
-                this.feedHelperFunctions = FeedHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this,AdapterToUseFor.feed)
+                this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
+                this.feedHelperFunctions = FeedHelperFunctions(context as Context,appUserName!!,this,AdapterToUseFor.feed,this.floatingDateHolder)
             }
             AdapterToUseFor.blog -> {
-               // this.floatingDateHolder = FloatingDateHolder(context, view, recyclerView, this.fontSingleton, this@AllRecyclerViewAdapter)
+                this.floatingDateHolder = FloatingDateHolder(context!!, view!!, recyclerView!!, this@AllRecyclerViewAdapter)
               //  this.questionListFunctions = QuestionListFunctions(context, this@AllRecyclerViewAdapter, floatingDateHolder)
                // this.peopleFunctionsList = PeopleFunctionsList(mValues, this@AllRecyclerViewAdapter)
-                this.blogHelperFunctions = FeedHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this,AdapterToUseFor.blog)
+                this.blogHelperFunctions = FeedHelperFunctions(context as Context,appUserName!!,this,AdapterToUseFor.blog,this.floatingDateHolder)
             }
 
             AdapterToUseFor.notifications -> {
-                this.notificationsBusyHelperFunctions = NotificationsBusyHelperFundtions(context as Context,appUserName as String,this)
+                this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
+                this.notificationsBusyHelperFunctions = NotificationsBusyHelperFundtions(context as Context,appUserName!!,this,this.floatingDateHolder)
                 //this.peopleFunctionsList = PeopleFunctionsList(mValues, this@AllRecyclerViewAdapter)
             }
             AdapterToUseFor.wallet -> {
@@ -203,10 +208,12 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
 
             }
             AdapterToUseFor.comments ->{
-                this.commentHelperFunctions = CommentsHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this,scale as Float,metrics as DisplayMetrics)
+                this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
+                this.commentHelperFunctions = CommentsHelperFunctions(context as Context,appUserName!!,this,scale as Float,metrics as DisplayMetrics,this.floatingDateHolder)
             }
             AdapterToUseFor.upvotes ->{
-                this.upvotesHelperFunctions = UpvotesHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this)
+                this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
+                this.upvotesHelperFunctions = UpvotesHelperFunctions(context as Context,appUserName!!,this,this.floatingDateHolder)
             }
             AdapterToUseFor.followers ->{
                 this.followDisplayHelperFunctions = FollowDisplayHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this,AdapterToUseFor.followers)
@@ -218,17 +225,20 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
                 this.draftHelperFunctionss = draftHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this,AdapterToUseFor.draft)
             }
             AdapterToUseFor.replyNoti ->{
-                this.repliesHelperFunctions = FeedHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this,apptype)
+                this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
+                this.repliesHelperFunctions = FeedHelperFunctions(context as Context,appUserName!!,this,apptype,this.floatingDateHolder)
             }
             AdapterToUseFor.commentNoti ->{
-                this.commentNotiHelperFunctions = FeedHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this,apptype)
+                this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
+                this.commentNotiHelperFunctions = FeedHelperFunctions(context as Context,appUserName!!,this,apptype,this.floatingDateHolder)
             }
             AdapterToUseFor.beneficiaries -> {
                 this.beneficiaryHelperFunctionsOb = beneficiaryHelperFunctions(context as Context,if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null),this)
             }
             AdapterToUseFor.search ->{
                 //initialize all the classes needed for searches
-                this.feedHelperFunctions = FeedHelperFunctions(context as Context,appUserName,this,AdapterToUseFor.feed)
+                this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
+                this.feedHelperFunctions = FeedHelperFunctions(context as Context,appUserName,this,AdapterToUseFor.feed,this.floatingDateHolder)
                 this.searchUsersHelperFunctions = SearchUsersHelperFunctions(context as Context,appUserName as String ,this,AdapterToUseFor.followers)
                 this.headerHelperFunctions = HeaderHelperFunctions(context as Context,appUserName as String,this,apptype)
             }
@@ -303,6 +313,10 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
             //initialize the layout here for search users
             v = LayoutInflater.from(parent.context).inflate(R.layout.follow_view_resource, parent, false)
             vh = followViewHolder(v)
+        }
+        else if(viewType == isDate){
+            v = LayoutInflater.from(parent.context).inflate(R.layout.dateresourceforchat, parent, false)
+            vh = DateViewHolder(v)
         }
         /*else if (viewType == ischatview) {
             v = LayoutInflater.from(parent.context).inflate(R.layout.chat_message_layout, parent, false)
@@ -388,6 +402,9 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
             //if the object is a search user, use the search bind function
             searchUsersHelperFunctions?.Bind(holder,position)
         }
+        else if( ht == isDate){
+            floatingDateHolder?.BindDateToDateTitle(holder,position)
+        }
 
 
 
@@ -450,6 +467,9 @@ public class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>,
         else if(ins is GetReputationDataHolder){
             //if object is of GetReputationDataHolder return isSearchUser
             return isSearchUser
+        }
+        else if(ins is DateTypeAndStringHolder){
+            return isDate
         }
 
         return isFeedView

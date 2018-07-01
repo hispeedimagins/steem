@@ -24,5 +24,7 @@
             tools:context=".SearchActivity"
             tools:listitem="@layout/article_preview" />
     </android.support.v4.widget.SwipeRefreshLayout>
+    <include android:id="@+id/dateanim" layout="@layout/dateholderandanimator" />
+
 
 </android.support.constraint.ConstraintLayout>

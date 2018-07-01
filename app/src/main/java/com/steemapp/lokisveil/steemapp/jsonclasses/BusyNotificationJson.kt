@@ -2,6 +2,7 @@ package com.steemapp.lokisveil.steemapp.jsonclasses
 import android.content.Intent
 import com.google.gson.annotations.SerializedName
 import com.steemapp.lokisveil.steemapp.Enums.NotificationType
+import java.util.*
 
 
 class BusyNotificationJson {
@@ -33,7 +34,8 @@ data class Result(
 		//added to make life easier
 		var title:String = "",
 		var body : String = "",
-		var notiIntent: Intent? = null
+		var notiIntent: Intent? = null,
+		var date: Date? = null
 
         /*public bool? is_root_post { get; set; }
     public string follower { get; set; }

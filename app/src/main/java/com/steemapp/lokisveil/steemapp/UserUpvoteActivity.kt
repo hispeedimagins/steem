@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_user_upvote.*
 import kotlinx.android.synthetic.main.content_user_upvote.*
 import org.json.JSONArray
 import java.text.SimpleDateFormat
-import java.util.ArrayList
+import java.util.*
 
 class UserUpvoteActivity : AppCompatActivity() {
     private var adapter: AllRecyclerViewAdapter? = null
@@ -45,7 +45,7 @@ class UserUpvoteActivity : AppCompatActivity() {
 
         recyclerView = list
 
-        adapter = AllRecyclerViewAdapter(this, ArrayList(), recyclerView as RecyclerView, null, AdapterToUseFor.upvotes)
+        adapter = AllRecyclerViewAdapter(this, ArrayList(), recyclerView as RecyclerView, dateanim, AdapterToUseFor.upvotes)
         //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
 
         recyclerView?.itemAnimator = DefaultItemAnimator()
@@ -71,7 +71,8 @@ class UserUpvoteActivity : AppCompatActivity() {
         var al = ArrayList<feed.avtiveVotes>()
         for(x in 0 until jsonArray.length()){
             var jo = jsonArray.getJSONObject(x)
-            var du = DateUtils.getRelativeDateTimeString(applicationContext,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(jo.getString("time"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+            var dat : Date = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(jo.getString("time")))
+            var du = DateUtils.getRelativeDateTimeString(applicationContext,dat.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
             /*if(!con.following.isEmpty() && con.following.any { p -> p.following == jo.getString("voter") }){
                 //x.followInternal = MyOperationTypes.unfollow
             }
@@ -88,6 +89,7 @@ class UserUpvoteActivity : AppCompatActivity() {
                     calculatedtime = "",
                     calculatedvotepercent = "Vote power :"+ (jo.getString("weight").toInt() / 100).toString(),
                     dateString = du.toString(),
+                    date = dat,
                     namewithrep = "${jo.getString("voter")} (${StaticMethodsMisc.CalculateRepScore(jo.getString("reputation"))})",
                     percent = "",
                     reputation = "",
@@ -99,8 +101,8 @@ class UserUpvoteActivity : AppCompatActivity() {
             al.add(av)
 
         }
-
-        adapter?.add(sortList(al))
+        adapter?.upvotesHelperFunctions?.add(sortList(al))
+        //adapter?.add(sortList(al))
         /*for(x in activevotes){
             x.namewithrep = "${x.voter} (${StaticMethodsMisc.CalculateRepScore(x.reputation)})"
             x.calculatedpercent = "Vote percent :"+  ((x.percent as String).toInt() / 100).toString()

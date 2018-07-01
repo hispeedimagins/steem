@@ -57,6 +57,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName
 import eu.bittrade.libs.steemj.base.models.Permlink*/
 import org.joou.UInteger
 import org.json.JSONObject
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutionException
 import kotlin.collections.ArrayList
@@ -65,7 +66,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by boot on 2/4/2018.
  */
-class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecyclerViewAdapter ,adpterType:AdapterToUseFor) {
+class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecyclerViewAdapter ,adpterType:AdapterToUseFor,dateHolder: FloatingDateHolder? = null) {
     val con:Context = context
     var name:String? = username
     var textColorMineTheme: Int = 0
@@ -73,12 +74,14 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
     val and = AndDown()
     var selectedPos = -1
     val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
-
+    var calcs: calendarcalculations = calendarcalculations()
     var key = sharedpref.getString(CentralConstants.key,null)
     //val globallist = ArrayList<Any>()
     val adaptype = adpterType
+    var floatingDateHolder:FloatingDateHolder? = null
 
     init {
+        floatingDateHolder = dateHolder
         if(name == null){
             name = sharedpref.getString(CentralConstants.username,null)
 
@@ -98,6 +101,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
     }
 
     public fun add(article : FeedArticleDataHolder.FeedArticleHolder){
+        if(article.date != null) floatingDateHolder?.checktimeandaddQuestions(article.date!!)
         adaptedcomms.add(article)
         //adapter.notifyDataSetChanged();
         adaptedcomms.notifyitemcinserted(adaptedcomms.getSize())

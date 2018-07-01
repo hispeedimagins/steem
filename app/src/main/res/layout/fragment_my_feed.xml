@@ -36,7 +36,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 </android.support.v4.widget.SwipeRefreshLayout>
-<!--<include layout="@layout/dateholderandanimator" />-->
+<include layout="@layout/dateholderandanimator" />
 
 
 <!--<android.support.design.widget.FloatingActionButton

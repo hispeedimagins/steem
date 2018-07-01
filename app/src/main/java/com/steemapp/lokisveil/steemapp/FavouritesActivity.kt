@@ -37,7 +37,7 @@ class FavouritesActivity : AppCompatActivity() {
         }*/
         recyclerView = list
         var sw  = swipecommonactionsclass(activity_feed_swipe_refresh_layout_favs)
-        adapter = AllRecyclerViewAdapter(this, ArrayList(), recyclerView as RecyclerView, null, AdapterToUseFor.feed)
+        adapter = AllRecyclerViewAdapter(this, ArrayList(), recyclerView as RecyclerView, dateanim, AdapterToUseFor.feed)
         //var sw = swipecommonactionsclass(activity_feed_swipe_refresh_layout_favs)
         val db = FavouritesDatabase(applicationContext)
         activity_feed_swipe_refresh_layout_favs.setOnRefreshListener {

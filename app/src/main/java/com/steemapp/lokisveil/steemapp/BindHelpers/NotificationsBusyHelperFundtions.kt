@@ -16,13 +16,15 @@ import com.steemapp.lokisveil.steemapp.Enums.NotificationType
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
 import com.steemapp.lokisveil.steemapp.MyViewHolders.NotificationBusyViewHolder
 import com.steemapp.lokisveil.steemapp.jsonclasses.BusyNotificationJson
+import java.util.*
 
-class NotificationsBusyHelperFundtions(context : Context, username:String?, adapter: AllRecyclerViewAdapter)  {
+class NotificationsBusyHelperFundtions(context : Context, username:String?, adapter: AllRecyclerViewAdapter,dateHolder: FloatingDateHolder? = null)  {
 
     val con: Context = context
     var name:String? = username
     val adaptedcomms: arvdinterface = adapter
     val and = AndDown()
+    var floatingDateHolder:FloatingDateHolder? = dateHolder
     /*internal var scale: Float = scale
     internal var metrics: DisplayMetrics = metrics*/
     var selectedPos = -1
@@ -58,6 +60,8 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
 
 
     public fun add(article : BusyNotificationJson.Result){
+
+        if(article.date != null) floatingDateHolder?.checktimeandaddQuestions(article.date!!) else floatingDateHolder?.checktimeandaddQuestions(Date((article.timestamp!!*1000).toLong()))
         adaptedcomms.add(article)
         //adapter.notifyDataSetChanged();
         adaptedcomms.notifyitemcinserted(adaptedcomms.getSize())

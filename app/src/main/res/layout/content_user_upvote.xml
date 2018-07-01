@@ -20,5 +20,6 @@
         tools:context="com.steemapp.lokisveil.steemapp.UserUpvoteActivity"
         tools:listitem="@layout/likes_layout" />
 
+
 </android.support.constraint.ConstraintLayout>
 

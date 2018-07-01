@@ -160,8 +160,8 @@ class NotificationsBusyDb (context : Context) : SQLiteOpenHelper(context, Databa
             var ty = cursor.getString(cursor.getColumnIndex(DatabaseColoumnType))
             var noty = NotificationType.valueOf(ty)
 
-
-            var du = DateUtils.getRelativeDateTimeString(context,(Date((cursor.getString(cursor.getColumnIndex(DatabaseColoumnDate))+"000").toLong())).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+            var dd = (Date((cursor.getString(cursor.getColumnIndex(DatabaseColoumnDate))+"000").toLong()))
+            var du = DateUtils.getRelativeDateTimeString(context,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
             val q = BusyNotificationJson.Result(
 
                     author = cursor.getString(cursor.getColumnIndex(DatabaseColoumnAuthor)),
@@ -180,7 +180,8 @@ class NotificationsBusyDb (context : Context) : SQLiteOpenHelper(context, Databa
                     type = noty,
                     isRootPost = ispo,
                     showdate =  du.toString(),
-                    timestamp = cursor.getInt(cursor.getColumnIndex(DatabaseColoumnDate))
+                    timestamp = cursor.getInt(cursor.getColumnIndex(DatabaseColoumnDate)),
+                    date = dd
             )
 
             questionsLites.add(q)
