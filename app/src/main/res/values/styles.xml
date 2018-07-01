@@ -47,11 +47,12 @@
 
 
     <style name="Plaid.AlertDialog.AppCompat" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:popupBackground">@color/background_light</item>
         <item name="android:background">@color/background_light</item>
     </style>
 
     <style name="Plaid.AlertDialog.AppCompat.Dark" parent="Theme.AppCompat.Light.Dialog.Alert">
-
+        <item name="android:popupBackground">@color/background_dark</item>
         <item name="android:background">@color/background_dark</item>
     </style>
 
