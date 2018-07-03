@@ -71,7 +71,7 @@ class drafts(context : Context) : SQLiteOpenHelper(context, DatabaseName,null, D
         values.put(DatabaseColoumnTitle, title)
         values.put(DatabaseColoumnTags, tags)
         values.put(DatabaseColoumnContent, content)
-        values.put(DatabaseColoumnPostValue, postvalue)
+        //values.put(DatabaseColoumnPostValue, postvalue)
         var date = Date()
 
         values.put(DatabaseColoumnDate, date.time.toString())

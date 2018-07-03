@@ -17,6 +17,7 @@ import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
 import com.steemapp.lokisveil.steemapp.MyViewHolders.DraftViewHolder
 import com.steemapp.lokisveil.steemapp.jsonclasses.OperationJson
+import org.json.JSONObject
 
 class draftHelperFunctions (context : Context, username:String?, adapter: AllRecyclerViewAdapter, adpterType: AdapterToUseFor) {
     val con: Context = context
@@ -82,9 +83,25 @@ class draftHelperFunctions (context : Context, username:String?, adapter: AllRec
         //mholder.openarticle
         mholder.openarticle?.setOnClickListener(View.OnClickListener {
             //ForReturningQuestionsLite q = item;
+            //var db = drafts(con)
 
+            //var dbid = db.Insert(holder?.article?.title!!,tags,holder?.article?.body!!,jso.toString())
             val myIntent = Intent(con, Post::class.java)
             myIntent.putExtra("db", holder.article?.dbid)
+            if(holder.article?.payouttype != ""){
+                var jso = JSONObject(holder.article?.payouttype)
+                var ised:Boolean = if(jso.has("isedit")) jso.getBoolean("isedit") else false
+                if(ised){
+                    myIntent.putExtra("isedit",ised)
+                    myIntent.putExtra("permlink",jso.getString("permlink"))
+                    myIntent.putExtra("category",jso.getString("category"))
+                }
+
+            }
+
+
+            /*val myIntent = Intent(con, Post::class.java)
+            myIntent.putExtra("db", holder.article?.dbid)*/
            /* myIntent.putExtra("tag", holder.article?.category)
             myIntent.putExtra("permlink", holder.article?.permlink)*/
             con.startActivity(myIntent)
