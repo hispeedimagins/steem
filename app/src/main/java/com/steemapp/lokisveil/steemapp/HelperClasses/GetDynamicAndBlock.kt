@@ -312,10 +312,12 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
 
         var obs2 = ArrayList<Any>()
         obs2.add(MyOperationTypes.comment_options.name)
-        obs2.add(ops[1])
+        if(ops.size >= 2){
+            obs2.add(ops[1])
+        }
         var obss = ArrayList<Any>()
         obss.add(obs)
-        obss.add(obs2)
+        if(obs2.any()) obss.add(obs2)
 
         /*var obssm = ArrayList<Any>()
         obssm.add(obss)*/

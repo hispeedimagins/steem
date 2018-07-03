@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.*
+import android.text.Editable
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import com.steemapp.lokisveil.steemapp.Fragments.dummy.DummyContent.DummyItem
 import com.steemapp.lokisveil.steemapp.HelperClasses.TextInputLayoutErrorHandler
 import android.text.Selection.getSelectionEnd
 import android.text.Selection.getSelectionStart
+import android.text.TextWatcher
 import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
 import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
@@ -31,6 +33,9 @@ import com.steemapp.lokisveil.steemapp.HelperClasses.FabHider
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import java.util.ArrayList
+import android.text.method.TextKeyListener.clear
+
+
 
 
 /**
@@ -68,6 +73,8 @@ class WritePost : Fragment() {
     internal var beneficiaryAdapter : AllRecyclerViewAdapter? = null
     internal var beneficiaryBottomSheet : BottomSheetBehavior<LinearLayout>? = null
     var dbid : Long? = -1
+    var isedit:Boolean? = false
+    var categoryedit:String? = null
     var dbcom : Long? = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +82,8 @@ class WritePost : Fragment() {
         if (arguments != null) {
             mColumnCount = arguments!!.getInt(ARG_COLUMN_COUNT)
             dbid = arguments?.getInt("db", -1)?.toLong()
+            isedit = arguments?.getBoolean("isedit",false)
+            categoryedit = arguments?.getString("category",null)
         }
     }
 
@@ -95,6 +104,13 @@ class WritePost : Fragment() {
             }
             //view.adapter = MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener)
         }
+
+        if(savedInstanceState != null){
+            dbid = savedInstanceState.getLong("dbid",-1)
+            isedit = savedInstanceState.getBoolean("isedit",false)
+            categoryedit = savedInstanceState.getString("category",null)
+        }
+
         return view
     }
 
@@ -121,6 +137,8 @@ class WritePost : Fragment() {
         EditTextMainTwo = v.findViewById(R.id.EditMainTextTwo) as EditText
         EditTextMainThree = v.findViewById(R.id.EditMainTextThree) as EditText
 
+
+
         /*EditTextMainThree?.setScroller(Scroller(context))
         EditTextMainThree?.setVerticalScrollBarEnabled(true)
         EditTextMainThree?.setMovementMethod(ScrollingMovementMethod())*/
@@ -137,6 +155,44 @@ class WritePost : Fragment() {
         EditTextMainTwohandler = TextInputLayoutErrorHandler(v.findViewById(R.id.EditMainTextTwoTextLayout) as TextInputLayout)
         EditTextMainThreehandler = TextInputLayoutErrorHandler(v.findViewById(R.id.EditMainTextThreeTextLayout) as TextInputLayout)
 
+
+        EditTextMainTwo?.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+
+                if(categoryedit != null && !s.toString().startsWith(categoryedit!!)){
+                    EditTextMainTwo?.setText("$categoryedit ${s.toString().trim()}")
+                } else{
+                    checkString(s.toString())
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+
+            }
+        })
+
+        EditTextMainTwo?.setOnFocusChangeListener({v, hasFocus ->
+            var tagsth = gettags()
+            if(tagsth != null && tagsth.isNotEmpty()){
+
+                if(categoryedit != null && !tagsth.startsWith(categoryedit!!)){
+                    EditTextMainTwo?.setText("$categoryedit ${tagsth.trim()}")
+                }
+                else{
+                    checkString(gettags())
+                }
+
+
+            }
+        })
+
         if(dbid != dbcom){
             var dr = drafts(context as Context)
             var ops = dr.Get(dbid?.toInt())
@@ -152,10 +208,12 @@ class WritePost : Fragment() {
     }
 
 
-    /*override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("body",univBody)
-    }*/
+        outState.putLong("dbid",dbid!!)
+        outState.putBoolean("isedit",isedit!!)
+        outState.putString("category",categoryedit)
+    }
 
     override fun onStop() {
         super.onStop()
@@ -187,7 +245,34 @@ class WritePost : Fragment() {
         }
     }
 
+    fun checkString(tagsth:String?){
+        //var tagsth = gettags()
+        if(tagsth != null && tagsth.isNotEmpty()){
+            var wc = tagsth.split("\\s".toRegex())
+            var wcc = wc.count()
+            var maxlim = 10
+            /*if(isedit!!){
+                maxlim -= 1
+            }*/
+            if(wcc > maxlim){
+                EditTextMainTwohandler?.addError("No more than $maxlim tags please")
+            } else if(wcc < 1){
+                EditTextMainTwohandler?.addError("Please add atleast one tag")
+            } else {
+                EditTextMainTwohandler?.clearError()
+            }
 
+            /*if(categoryedit != null && !tagsth.startsWith(categoryedit!!)){
+                EditTextMainTwo?.setText("$categoryedit $tagsth")
+            }
+            else{
+
+            }*/
+
+
+        }
+
+    }
 
     fun getList():List<FeedArticleDataHolder.beneficiariesDataHolder>?{
         var arl = ArrayList<FeedArticleDataHolder.beneficiariesDataHolder>()

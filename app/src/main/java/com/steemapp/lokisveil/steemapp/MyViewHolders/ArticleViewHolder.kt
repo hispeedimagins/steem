@@ -36,7 +36,8 @@ class ArticleViewHolder constructor(view: View) : RecyclerView.ViewHolder(view) 
     val article_reblog_now : LinearLayout? = view.findViewById(R.id.article_reblog_now)
     val shareTextView = view.findViewById<TextView>(R.id.textViewOptions)
     val progressbar = view.findViewById<ProgressBar>(R.id.progressbar)
-
+    val article_edits : TextView? = view.findViewById(R.id.article_edits)
+    val article_edit : LinearLayout? = view.findViewById(R.id.article_edit)
     val markdownView = view.findViewById<br.tiagohm.markdownview.MarkdownView>(R.id.markdown_view)
     //val article_summary_markdown : eu.fiskur.markdownview.MarkdownView = view.findViewById(R.id.article_summary_markdown) as eu.fiskur.markdownview.MarkdownView
 

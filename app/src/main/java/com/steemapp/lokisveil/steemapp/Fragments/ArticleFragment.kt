@@ -53,6 +53,7 @@ import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
+import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
@@ -352,6 +353,45 @@ class ArticleFragment : Fragment() , GlobalInterface {
         if(holder.article?.uservoted != null && holder.article?.uservoted as Boolean == true){
             holder.article_likes?.setTextColor(ContextCompat.getColor(activity as Context, R.color.colorAccent))
             holder.article_likes?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumb_up_likeint_24px,0,0,0)
+        }
+
+
+
+        if(username != null && username == holder.article?.author){
+            holder.article_edit?.visibility = View.VISIBLE
+            holder.article_edit?.setOnClickListener(View.OnClickListener {
+                if(context != null){
+                    var tags = ""
+                    if(holder.article?.tags != null){
+                        var sb = StringBuilder()
+                        for(x in holder.article?.tags!!){
+                            sb.append("$x ")
+                        }
+                        tags = sb.toString().trim()
+                        var db = drafts(context!!)
+                        var jso = JSONObject()
+                        jso.put("isedit",true)
+                        jso.put("permlink",holder?.article?.permlink)
+                        jso.put("category",holder?.article?.category)
+                        var dbid = db.Insert(holder?.article?.title!!,tags,holder?.article?.body!!,jso.toString())
+                        val myIntent = Intent(context, Post::class.java)
+                        myIntent.putExtra("db", dbid)
+                        myIntent.putExtra("isedit",true)
+                        myIntent.putExtra("permlink",holder?.article?.permlink)
+                        myIntent.putExtra("category",holder?.article?.category)
+                        /* myIntent.putExtra("tag", holder.article?.category)
+                         myIntent.putExtra("permlink", holder.article?.permlink)*/
+                        context?.startActivity(myIntent)
+                    }
+                }
+
+
+
+
+            })
+        }
+        else{
+            holder.article_edit?.visibility = View.GONE
         }
 
         holder.article_likes?.text = holder.article?.netVotes.toString()

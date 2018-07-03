@@ -144,6 +144,9 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
     val PICK_IMAGE_REQUEST = 1
     var filePath: String? = null
     var dbid : Int = -1
+    var isedit: Boolean = false
+    var permlinkedit:String? = null
+    var categoryedit:String? = null
     var edittitle:String? = null
     var edittags :String? = null
     var editpost:String? = null
@@ -221,11 +224,18 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
                 if(posttr){
 
 
+                    if(isedit){
+                        var ops = mine.updatePost(AccountName(username),Permlink(permlinkedit),title,content, tags?.split(" ")?.toTypedArray())
+                        val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.edit_comment, writePost?.progressBar, this@Post)
+                        block.GetDynamicGlobalProperties()
+                    }
+                    else{
+                        val ops = mine.createPost(AccountName(username), title,content,tags?.split(" ")?.toTypedArray(),ben)
 
-                    val ops = mine.createPost(AccountName(username), title,content,tags?.split(" ")?.toTypedArray(),ben)
+                        val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.post, writePost?.progressBar, this@Post)
+                        block.GetDynamicGlobalProperties()
+                    }
 
-                    val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.post, writePost?.progressBar, this@Post)
-                    block.GetDynamicGlobalProperties()
                 }
 
 
@@ -245,8 +255,22 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
 
         if(intent != null && intent.extras != null){
             dbid = intent.extras.getInt("db",-1)
+            if(dbid == -1){
+                dbid = intent.extras.getLong("db",-1).toInt()
+            }
+            isedit = intent.extras.getBoolean("isedit",false)
+            permlinkedit = intent.extras.getString("permlink",null)
+            categoryedit = intent.extras.getString("category",null)
+
             //edittitle =
             //useOtherGuy = intent.extras.getBoolean(CentralConstants.OtherGuyUseOtherGuyOnly,false)
+        }
+
+        if(savedInstanceState != null){
+            dbid = savedInstanceState.getInt("db",-1)
+            isedit = savedInstanceState.getBoolean("isedit",false)
+            permlinkedit = savedInstanceState.getString("permlink",null)
+            categoryedit = savedInstanceState.getString("category",null)
         }
 
 
@@ -329,10 +353,13 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
 
     }
 
-    /*override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("body",univBody)
-    }*/
+        outState.putInt("dbid",dbid)
+        outState.putBoolean("isedit",isedit)
+        outState.putString("permlink",permlinkedit)
+        outState.putString("category",categoryedit)
+    }
 
 
     //sort the list by default and return it, alphabetically
@@ -599,6 +626,8 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
 
         val args = Bundle()
         args.putInt("db",dbid)
+        args.putBoolean("isedit",isedit)
+        args.putString("category",categoryedit)
         //boolean tokenisrefreshingHoldon = false;
         //args.putBoolean("isrefreshing",tokenisrefreshingHoldon)
         if (writePost == null) {
