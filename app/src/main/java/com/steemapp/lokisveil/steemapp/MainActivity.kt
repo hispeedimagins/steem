@@ -268,7 +268,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     //this is normal text probably
                     //if contains words send it to the Post activity for making an article/post
-                    if(potu.contains("\\w+".toRegex())){
+                    if(potu.contains("\\s+".toRegex())){
 
                         var db = drafts(this@MainActivity)
                         var di = db.Insert("","",potu,"")
