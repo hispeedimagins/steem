@@ -47,13 +47,20 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
     }
 
     override fun dbLoaded() {
-        client = null
-        val db = NotificationsBusyDb(this@NotificationsBusyD)
+        //client = null
+        runOnUiThread {
+            adapter?.notificationsBusyHelperFunctions?.resetDate()
+            val db = NotificationsBusyDb(this@NotificationsBusyD)
+            //var ite = db.GetAllQuestions()
+            //var sor = sortList(ite)
+            //adapter?.notificationsBusyHelperFunctions?.add(sor)
+            //adapter?.notificationsBusyHelperFunctions?.add(db.GetAllQuestions().reversed())
+            adapter?.notificationsBusyHelperFunctions?.add(sortList(db.GetAllQuestions()))
+            //adapter?.notifyDataSetChanged()
+            sw?.makeswipestop()
+        }
 
-        //adapter?.notificationsBusyHelperFunctions?.add(db.GetAllQuestions().reversed())
-        adapter?.notificationsBusyHelperFunctions?.add(sortList(db.GetAllQuestions()))
-        //adapter?.notifyDataSetChanged()
-        sw?.makeswipestop()
+
     }
 
     private var adapter: AllRecyclerViewAdapter? = null
@@ -99,7 +106,7 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
      * returns sorted according to timestamp
      */
     private fun sortList(data:List<BusyNotificationJson.Result>):List<BusyNotificationJson.Result>{
-        return data.sortedWith(compareBy({it.timestamp})).reversed()
+        return data.sortedWith(compareByDescending({it.timestamp}))
     }
 
 

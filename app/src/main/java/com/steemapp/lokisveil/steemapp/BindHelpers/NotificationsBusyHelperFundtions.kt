@@ -74,6 +74,9 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
     }
 
 
+    public fun resetDate(){
+        floatingDateHolder?.prevdate = Calendar.getInstance()
+    }
 
 
     fun Bind(mholder: RecyclerView.ViewHolder, position:Int) {

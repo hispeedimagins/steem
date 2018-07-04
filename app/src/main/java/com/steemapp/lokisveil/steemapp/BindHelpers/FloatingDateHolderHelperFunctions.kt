@@ -27,7 +27,7 @@ class FloatingDateHolder {
     internal var view: View? = null
     internal var recyclerView: RecyclerView
     //List<Object> mValues;
-    private var prevdate: Calendar? = null
+    var prevdate: Calendar? = null
     //private final AllRecyclerViewAdapter adapter;
     //private DateTypeAndStringHolder holderOldUniv = null;
     private var holderOldUniv: String? = null
@@ -310,8 +310,8 @@ class FloatingDateHolder {
 
 
 
-
         mStickyHeader.text = newdate
+
 
         //next
         if (holderOldUniv == null) {

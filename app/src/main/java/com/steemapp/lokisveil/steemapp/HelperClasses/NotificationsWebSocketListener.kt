@@ -187,7 +187,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
         //We need that. Got pretty annoying when you get a lot of notifications
         // and individual vibrates
         stackBuilderSum.addParentStack(MainActivity::class.java)
-        stackBuilderSum.addNextIntent(Intent(context, NotificationsBusyD::class.java))
+        stackBuilderSum.addNextIntent(Intent(context?.applicationContext, NotificationsBusyD::class.java))
         val resultPendingIntentSum = stackBuilderSum.getPendingIntent(
                 0,
                 PendingIntent.FLAG_UPDATE_CURRENT
@@ -204,7 +204,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
 
                 //.setGroupAlertBehavior(GROUP_ALERT_SUMMARY)
 
-                .setWhen((om.first().timestamp!!.toLong() * 1000))
+                .setWhen(((if(om.firstOrNull() != null) om.firstOrNull()?.timestamp!!.toLong() else 1) * 1000))
                 .setGroupSummary(true)
         var s = NotificationCompat.InboxStyle()
 
