@@ -25,16 +25,15 @@ import java.util.regex.Pattern
 /**
  * Created by boot on 2/10/2018.
  */
-class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : TypeOfRequest?){
+class JsonRpcResultConversion(val json :JSONObject?,var username :String, val requestType: TypeOfRequest?){
     var contex : Context? = null
     constructor(json :JSONObject?,username :String,requestType : TypeOfRequest?,context: Context) : this(json,username,requestType){
         contex = context
         followersDatabase = FollowersDatabase(context)
         followingDatabase = FollowingDatabase(context)
     }
-    val json = json
-    val username : String = username
-    val requestType : TypeOfRequest? = requestType
+    //val json = json
+    //val username : String = username.toLowerCase()
     var gson : Gson = Gson()
     var followersDatabase : FollowersDatabase? = null
     var followingDatabase : FollowingDatabase? = null
@@ -117,7 +116,10 @@ class JsonRpcResultConversion(json :JSONObject?,username :String,requestType : T
 
         var content = result.getJSONObject("content")
         var accounts = result.getJSONObject("accounts")
-        var user = accounts.getJSONObject(username)
+        var user = if(accounts.has(username)) accounts.getJSONObject(username) else null
+        if(user == null){
+            return ArrayList()
+        }
         var getthis = "feed"
         if(requestType == TypeOfRequest.blog){
             getthis = "blog"

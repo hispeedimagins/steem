@@ -1,6 +1,7 @@
 package com.steemapp.lokisveil.steemapp
 
 import android.app.Activity
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -604,6 +605,12 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
 
                             }
                         }
+                    } else{
+                        var inte = Intent(this@OpenOtherGuyBlog,SearchActivity::class.java)
+                        inte.putExtra(SearchManager.QUERY,username)
+                        inte.action = Intent.ACTION_SEARCH
+                        startActivity(inte)
+                        finish()
                     }
 
 
