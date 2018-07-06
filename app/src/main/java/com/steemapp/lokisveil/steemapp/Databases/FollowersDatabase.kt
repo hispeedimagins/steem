@@ -69,6 +69,7 @@ class FollowersDatabase(context : Context) : SQLiteOpenHelper(context, CentralCo
     }
 
 
+    //For deleting with Id
     fun deleteContact(id: Long?): Int? {
         val db = this.writableDatabase
 
@@ -102,6 +103,7 @@ class FollowersDatabase(context : Context) : SQLiteOpenHelper(context, CentralCo
                 follower = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollower)),
                 following = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollowing)),
                     what = rl,
+                    //return dbid as well for deletion
                     dbid = cursor.getLong(cursor.getColumnIndex(DatabaseColoumnId))
             )
 

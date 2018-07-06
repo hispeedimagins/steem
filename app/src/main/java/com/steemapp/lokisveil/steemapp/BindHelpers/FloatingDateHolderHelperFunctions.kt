@@ -42,6 +42,7 @@ class FloatingDateHolder {
             super.onScrollStateChanged(recyclerView, newState)
         }
 
+        //listner to the recycleview so the date can be updated in the frame layout
         override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
             val visibleItemCount = recyclerView!!.childCount
@@ -124,6 +125,7 @@ class FloatingDateHolder {
 
     }
 
+    //the only constructor used atm
     constructor(con: Context, view: View, recyclerView: RecyclerView, recyclerViewAdapter: AllRecyclerViewAdapter) {
 
         this.view = view
@@ -172,6 +174,10 @@ class FloatingDateHolder {
     }
 
 
+    //Used to add a DateYpeAndString into the recyclerview
+    /*
+    for adding the datetypeandstring object to the class
+     */
     fun add(datetosend: String, cd: Calendar): DateTypeAndStringHolder {
         val h = DateTypeAndStringHolder()
         h.cdate = cd
@@ -214,6 +220,7 @@ class FloatingDateHolder {
     }
 
 
+    //Used to check if the date is in the past,now, or for an empty view
     fun checktimeandaddQuestions(oldcc: Date) {
 
         /*Calendar oldc = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
@@ -253,6 +260,7 @@ class FloatingDateHolder {
         prevdate = oldc
     }
 
+    //for getting only the date back, no time,hour,minute second or milliseconds.
     fun getZeroDate(od: Calendar?): Calendar {
         val calendar = Calendar.getInstance()
 
@@ -265,6 +273,7 @@ class FloatingDateHolder {
         return calendar
     }
 
+    //Bind function called by the main recyclerview adapter to bind the view
     fun BindDateToDateTitle(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder !is DateViewHolder) {
             return
@@ -281,6 +290,7 @@ class FloatingDateHolder {
     }
 
 
+    //for animating the view
     private fun animateToEnd() {
         val animation = TranslateAnimation(0f, 0f, 0f, 200f)
         animation.duration = 1000
@@ -290,6 +300,7 @@ class FloatingDateHolder {
     }
 
 
+    //called for updating the main sticky frame layout
     private fun updateStickyHeader(prevdate: String, newdate: String, holder: DateTypeAndStringHolder, previsbiggerthannext: Boolean) {
 
         if (holderOldUnivDate != null && holder.equals(holderOldUnivDate)) {

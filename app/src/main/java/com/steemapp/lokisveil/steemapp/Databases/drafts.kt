@@ -71,6 +71,7 @@ class drafts(context : Context) : SQLiteOpenHelper(context, DatabaseName,null, D
         values.put(DatabaseColoumnTitle, title)
         values.put(DatabaseColoumnTags, tags)
         values.put(DatabaseColoumnContent, content)
+        //do not update the postvalue
         //values.put(DatabaseColoumnPostValue, postvalue)
         var date = Date()
 

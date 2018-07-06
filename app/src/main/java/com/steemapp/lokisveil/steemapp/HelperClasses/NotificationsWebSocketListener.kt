@@ -204,6 +204,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
 
                 //.setGroupAlertBehavior(GROUP_ALERT_SUMMARY)
 
+                //Will not let it crash. use FirstOrNull instead of first
                 .setWhen(((if(om.firstOrNull() != null) om.firstOrNull()?.timestamp!!.toLong() else 1) * 1000))
                 .setGroupSummary(true)
         var s = NotificationCompat.InboxStyle()

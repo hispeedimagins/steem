@@ -213,8 +213,10 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
                         for(x in followers){
                             x.followInternal = MyOperationTypes.follow
                             if(fold.Insert(x)){
+                                //search for the user and delte from the list
                                 alldbpeople.remove(alldbpeople.find { t -> t.follower == x.follower })
                             } else {
+                                //search for the user and delte from the list
                                 alldbpeople.remove(alldbpeople.find { t -> t.follower == x.follower })
                             }
                         }
@@ -287,8 +289,10 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
                         for(x in following){
                             x.followInternal = MyOperationTypes.follow
                             if(fold.Insert(x)){
+                                //search for the user and delte from the list
                                 alldbpeople.remove(alldbpeople.find { t -> t.following == x.following })
                             } else {
+                                //search for the user and delte from the list
                                 alldbpeople.remove(alldbpeople.find { t -> t.following == x.following })
                             }
                         }

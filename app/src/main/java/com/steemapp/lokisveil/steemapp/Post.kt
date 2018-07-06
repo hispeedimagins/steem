@@ -225,6 +225,8 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
 
 
                     if(isedit){
+                        //a different function called if it is for editing a post
+                        //different enum used for GetDynamicAndBlock
                         var ops = mine.updatePost(AccountName(username),Permlink(permlinkedit),title,content, tags?.split(" ")?.toTypedArray())
                         val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.edit_comment, writePost?.progressBar, this@Post)
                         block.GetDynamicGlobalProperties()

@@ -156,13 +156,16 @@ class WritePost : Fragment() {
         EditTextMainThreehandler = TextInputLayoutErrorHandler(v.findViewById(R.id.EditMainTextThreeTextLayout) as TextInputLayout)
 
 
+        //for listening if the text has changed
         EditTextMainTwo?.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
 
+                //if the first tag has changed, put it back
                 if(categoryedit != null && !s.toString().startsWith(categoryedit!!)){
                     EditTextMainTwo?.setText("$categoryedit ${s.toString().trim()}")
                 } else{
+                    //if not check the string length and show and error if more than the limit for 10
                     checkString(s.toString())
                 }
 
@@ -178,6 +181,7 @@ class WritePost : Fragment() {
             }
         })
 
+        //focus on edittextmaintwo listner
         EditTextMainTwo?.setOnFocusChangeListener({v, hasFocus ->
             var tagsth = gettags()
             if(tagsth != null && tagsth.isNotEmpty()){
@@ -245,6 +249,10 @@ class WritePost : Fragment() {
         }
     }
 
+    /**
+     * checks the length of the tags and inserts errors where needed.
+     * @var tagsth is the tag string
+     */
     fun checkString(tagsth:String?){
         //var tagsth = gettags()
         if(tagsth != null && tagsth.isNotEmpty()){

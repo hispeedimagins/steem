@@ -214,6 +214,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
                     //.error(R.drawable.error)
                     .priority(Priority.HIGH)
 
+            //use first of null so the app does not crash if not images exist
             Glide.with(con).load(holder.article?.image?.firstOrNull()).apply(optionss)
                     //.placeholder(R.drawable.common_full_open_on_phone)
                     .into(holder.article_image as ImageView)

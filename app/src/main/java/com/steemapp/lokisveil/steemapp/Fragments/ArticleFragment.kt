@@ -357,6 +357,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
 
 
+        // decide if edit is to be used
         if(username != null && username == holder.article?.author){
             holder.article_edit?.visibility = View.VISIBLE
             holder.article_edit?.setOnClickListener(View.OnClickListener {
@@ -364,16 +365,20 @@ class ArticleFragment : Fragment() , GlobalInterface {
                     var tags = ""
                     if(holder.article?.tags != null){
                         var sb = StringBuilder()
+                        //flatten the tags
                         for(x in holder.article?.tags!!){
                             sb.append("$x ")
                         }
                         tags = sb.toString().trim()
                         var db = drafts(context!!)
+                        //json object for saving additional information
                         var jso = JSONObject()
                         jso.put("isedit",true)
                         jso.put("permlink",holder?.article?.permlink)
                         jso.put("category",holder?.article?.category)
+                        //save to db
                         var dbid = db.Insert(holder?.article?.title!!,tags,holder?.article?.body!!,jso.toString())
+                        //add to intent and start the view
                         val myIntent = Intent(context, Post::class.java)
                         myIntent.putExtra("db", dbid)
                         myIntent.putExtra("isedit",true)

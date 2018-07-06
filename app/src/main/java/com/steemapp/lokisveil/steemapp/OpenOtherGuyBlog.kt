@@ -606,10 +606,14 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
                             }
                         }
                     } else{
+                        //Start the intent creation
                         var inte = Intent(this@OpenOtherGuyBlog,SearchActivity::class.java)
+                        //used to easy compatibility
                         inte.putExtra(SearchManager.QUERY,username)
+                        //add so not extra code has to be written
                         inte.action = Intent.ACTION_SEARCH
                         startActivity(inte)
+                        //close this activity
                         finish()
                     }
 

@@ -88,10 +88,13 @@ class draftHelperFunctions (context : Context, username:String?, adapter: AllRec
             //var dbid = db.Insert(holder?.article?.title!!,tags,holder?.article?.body!!,jso.toString())
             val myIntent = Intent(con, Post::class.java)
             myIntent.putExtra("db", holder.article?.dbid)
+            //check for older version saved data
             if(holder.article?.payouttype != ""){
+                //simply put the string in the constructor to get JSOnObject
                 var jso = JSONObject(holder.article?.payouttype)
                 var ised:Boolean = if(jso.has("isedit")) jso.getBoolean("isedit") else false
                 if(ised){
+                    //add additional parameters to intent
                     myIntent.putExtra("isedit",ised)
                     myIntent.putExtra("permlink",jso.getString("permlink"))
                     myIntent.putExtra("category",jso.getString("category"))

@@ -48,6 +48,7 @@ class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
 
     override fun dbLoaded() {
         //client = null
+        //websocket is run on the background thread so run ui updates on the right thread
         runOnUiThread {
             adapter?.notificationsBusyHelperFunctions?.resetDate()
             val db = NotificationsBusyDb(this@NotificationsBusyD)
