@@ -102,10 +102,10 @@ class MiscConstants{
         fun CorrectUsernamesK(value:String):String{
             //val regex = Regex("(@{1})([a-z0-9.-]{3,30})")
             val regex = Regex("(^|[^a-zA-Z0-9_!#\$%&*@＠/]|(^|[^a-zA-Z0-9_+~.-/#]))[@＠]([a-z][-.a-z\\d]+[a-z\\d])")
-            var s = regex.replace(value,{matchResult ->
+            var s = regex.replace(value) { matchResult ->
                 " <a class=\"mylink\" href=\"steemer://@${matchResult.groupValues[3]}\" >@${matchResult.groupValues[3]}</a> "
 
-            })
+            }
 
             return s
         }
@@ -122,14 +122,13 @@ class MiscConstants{
         fun CorrectLinks(value:String):String{
             //val regex = Regex("(@{1})([a-z0-9.-]{3,30})")
             val regex = Links.any()
-            var s = regex.replace(value,{matchResult ->
+            var s = regex.replace(value) { matchResult ->
                 //matchResult.destructured.component2()
                 if(Physhy.isPhyshy(matchResult.groupValues[2])){
                     matchResult.groupValues[1]+"<div class=\"phishy\">"+
-                           "This seems phishy. Be careful. \n\n"+ matchResult.groupValues[2]+
-                    "</div>"
-                }
-                else if(Links.image().matches(matchResult.value)){
+                            "This seems phishy. Be careful. \n\n"+ matchResult.groupValues[2]+
+                            "</div>"
+                } else if(Links.image().matches(matchResult.value)){
 
                     if(Links.local().matches(matchResult.groupValues[2].trim())){
                         matchResult.groupValues[1]+"<img src=\"${ProxifyUrl.proxyurl(matchResult.groupValues[2].trim(),true)}\" />"
@@ -140,7 +139,7 @@ class MiscConstants{
                 }
                 //" <a class=\"mylink\" href=\"steemer://@${matchResult.groupValues[3]}\" >@${matchResult.groupValues[3]}</a> "
 
-            })
+            }
 
             return s
         }
@@ -154,7 +153,7 @@ class MiscConstants{
          */
         fun CorrectHashtags(value:String):String{
             val regex = "(^|\\s)(#[-a-z\\d]+)".toRegex()
-            var s = regex.replace(value,{matchResult ->
+            var s = regex.replace(value) { matchResult ->
                 if ("/#[\\d]+$/".toRegex().matches(matchResult.value)) matchResult.value; // Don't allow numbers to be tags
                 val space = if("^\\s/".toRegex().matches(matchResult.value)) matchResult.groupValues[1] else ""
                 val tag2 = matchResult.value.trim().substring(1);
@@ -162,7 +161,7 @@ class MiscConstants{
                 "$space<a class=\"mytag\" href=\"steemer://#$tagLower\" >${matchResult.value}</a> "
                 //"<a href=\"/trending/$tagLower\">$matchResult.value</a>"
 
-            })
+            }
 
             return s
         }
@@ -177,11 +176,11 @@ class MiscConstants{
         fun CorrectOtherImgProxies(value:String):String{
             //val regex = Regex("(@{1})([a-z0-9.-]{3,30})")
             val urs = Links.urlwithoutex()
-            val regex = Regex("[!]\\[([\\w\\d\\s.]*)]\\(($urs)\\)")
-            var s = regex.replace(value,{matchResult ->
+            val regex = Regex("[!]\\[([\\w\\d\\s().-]*)]\\(($urs)\\)")
+            var s = regex.replace(value) { matchResult ->
                 "![${matchResult.groupValues[1]}](${ProxifyUrl.proxyurl(matchResult.groupValues[3])})"
 
-            })
+            }
 
             return s
         }

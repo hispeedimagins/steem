@@ -65,7 +65,8 @@ function UserClickedK(user) {
 }
 
 //reg ex to use [!]\[([\w\d\s.-]*)]\(((https?:\/\/(?:[-a-zA-Z0-9\._]*[-a-zA-Z0-9])(?::\d{2,5})?(?:[\/\?#](?:[^"<>\]\[\(\)]*[^"<>\]\[\(\)])?)?))\)
-
+//reg ex to use 29.07.2018 12:44 [!]\[([\w\d\s().-]*)]\(((https?:\/\/(?:[-a-zA-Z0-9\._]*[-a-zA-Z0-9])(?::\d{2,5})?(?:[\/\?#](?:[^"<>\]\[\(\)]*[^"<>\]\[\(\)])?)?))\)
+//reg ex to use 29.07.2018 01:09  [!]\[([\w\d\s().-]*)]\(((https?:\/\/(?:[-a-zA-Z0-9\._]*[-a-zA-Z0-9])(?::\d{2,5})?(?:[\/\?#](?:[^"<>\]\[]*[^"<>\]\[\(\)])?)?))\)
 function loadremark(mar) {
     console.log("got mar");
     var remarkable = new Remarkable({
@@ -76,7 +77,7 @@ function loadremark(mar) {
         quotes: '“”‘’'
     });
     //console.log("going to render now" + remarkable.render(mar.body));
-    var reg = new RegExp("[!]\\[([\\w\\d\\s.-]*)]\\(((https?:\\/\\/(?:[-a-zA-Z0-9\\._]*[-a-zA-Z0-9])(?::\\d{2,5})?(?:[\\/\\?#](?:[^\"<>\\]\\[\\(\\)]*[^\"<>\\]\\[\\(\\)])?)?))\\)",'g');
+    var reg = new RegExp("[!]\\[([\\w\\d\\s().-]*)]\\(((https?:\\/\\/(?:[-a-zA-Z0-9\\._]*[-a-zA-Z0-9])(?::\\d{2,5})?(?:[\\/\\?#](?:[^\"<>\\]\\[]*[^\"<>\\]\\[\\(\\)])?)?))\\)",'g');
     var reb = remarkable.render(mar.body).replace(reg,
         '<img src="$3" />'
     );
