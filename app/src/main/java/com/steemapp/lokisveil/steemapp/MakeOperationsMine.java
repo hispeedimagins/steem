@@ -7,7 +7,9 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Asset;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.CommentPayoutBeneficiaries;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink;
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.SignedTransaction;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.BeneficiaryRouteType;
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.ClaimRewardBalanceOperation;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.CommentOperation;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.CommentOptionsExtension;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.CommentOptionsOperation;
@@ -293,4 +295,75 @@ public class MakeOperationsMine {
 
         return operations;
     }
+
+
+
+
+
+
+
+
+
+    /**
+     * Claim all available Steem, SDB and VEST (Steam Power) rewards for the
+     * specified account.
+     *
+     * <b>Attention</b> This method will write data on the blockchain if a
+     * reward balance is available to be claimed. As with all writing
+     * operations, a private key is required to sign the transaction. See
+     * {@link SteemJConfig#getPrivateKeyStorage() PrivateKeyStorage}.
+     *
+     * @param accountName
+     *            The account to claim rewards for.
+     * @return The ClaimOperation for reward balances found. This will only have
+     *         been broadcast if one of the balances is non-zero.
+     * throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     */
+//throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException
+    public ClaimRewardBalanceOperation claimRewards(AccountName accountName,String sbd,String steem,String vesting,String vestingsteemsp) {
+        // Get extended account info to determine reward balances
+        //ExtendedAccount extendedAccount = this.getAccounts(Lists.newArrayList(accountName)).get(0);
+        Asset steemReward = new Asset(steem);
+        Asset sbdReward = new Asset(sbd);
+        Asset vestingReward = new Asset(vesting);
+
+        // Create claim operation based on available reward balances
+        ClaimRewardBalanceOperation claimOperation = new ClaimRewardBalanceOperation(accountName, steemReward,
+                sbdReward, vestingReward);
+
+        // Broadcast claim operation if there are any balances available
+        /*if (steemReward.getAmount() > 0 || sbdReward.getAmount() > 0 || vestingReward.getAmount() > 0) {
+            ArrayList<Operation> operations = new ArrayList<>();
+            operations.add(claimOperation);
+            DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
+            SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                    null);
+            signedTransaction.sign();
+            this.broadcastTransaction(signedTransaction);
+        }*/
+
+        return claimOperation;
+    }
+
+
+
+
+
+
+
 }

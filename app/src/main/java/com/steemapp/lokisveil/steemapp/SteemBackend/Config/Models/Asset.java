@@ -36,6 +36,20 @@ public class Asset  implements ByteTransformable {
         this.setAmount(amount);
     }
 
+    public Asset(String amount){
+        String[] sp = amount.split(" ");
+
+        if(sp[1].equals("SBD")){
+            this.setSymbol(AssetSymbolType.SBD);
+        } else if(sp[1].equals("STEEM")){
+            this.setSymbol(AssetSymbolType.STEEM);
+        } else if(sp[1].equals("VESTS")){
+            this.setSymbol(AssetSymbolType.VESTS);
+        }
+        Double db = Double.valueOf(sp[0]);
+        this.setAmount(db);
+    }
+
     /**
      * Create a new asset object by providing all required fields.
      *
@@ -53,7 +67,8 @@ public class Asset  implements ByteTransformable {
 
     public String getAssetString(){
         Double s = toReal();
-        return String.format( "%.3f", toReal() ) +" "+ this.symbol.toString();
+        //return toReal().toString()+ " " + this.symbol.toString();
+        return String.format( "%."+this.getPrecision()+"f", toReal() ) +" "+ this.symbol.toString();
     }
 
     /**

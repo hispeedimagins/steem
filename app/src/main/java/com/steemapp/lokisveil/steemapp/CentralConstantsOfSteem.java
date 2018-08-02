@@ -26,6 +26,9 @@ public class CentralConstantsOfSteem {
     private prof.Resultfo followcount = null;
     private JSONArray jsonArray = null;
     private prof.FollowCount OtherGuyFollowCount = null;
+    private double voteval = 0;
+    private double rshares = 0;
+    //private int vpercent = 0;
     private List<String> trendingTags = new ArrayList();
     private CentralConstantsOfSteem() {
     }
@@ -78,6 +81,18 @@ public class CentralConstantsOfSteem {
     }
     public List<String> getTrendingTags(){
         return this.trendingTags;
+    }
+    public void setVoteval(Double vote){
+        this.voteval = vote;
+    }
+    public Double getVoteval(){
+        return this.voteval;
+    }
+    public void setRshares(Double rshare){
+        this.rshares = rshare;
+    }
+    public Double getRshares(){
+        return this.rshares;
     }
 
 

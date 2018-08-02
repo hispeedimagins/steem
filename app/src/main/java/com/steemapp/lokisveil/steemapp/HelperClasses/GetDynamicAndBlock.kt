@@ -6,6 +6,7 @@ import android.opengl.Visibility
 import android.os.AsyncTask
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -42,7 +43,7 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import org.apache.commons.lang3.tuple.ImmutablePair
 import org.json.JSONObject
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.ExecutionException
 
 /**
@@ -71,8 +72,9 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
     val position = position
     val applicationContext : Context = context
     val sharedpref : SharedPreferences = applicationContext.getSharedPreferences(CentralConstants.sharedprefname,0)
-
+    //var username = sharedpref.getString(CentralConstants.username,null)
     var key = sharedpref.getString(CentralConstants.key,null)
+    //var accountrep = if(CentralConstantsOfSteem.getInstance() != null && CentralConstantsOfSteem.getInstance().profile != null) CentralConstantsOfSteem.getInstance()?.profile?.reputation else sharedpref.getString(CentralConstants.accountrep,null)
     /*val listner = listner*/
     val toastString = toastString
     val votefullper = 2
@@ -193,6 +195,9 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
         else if(myOperationTypes == MyOperationTypes.edit_comment){
             re1j = getOperationsEdit(vop,signedtra)
         }
+        else if(myOperationTypes == MyOperationTypes.claim_reward_balance){
+            re1j = getOperationClaim(vop[0],signedtra)
+        }
         else{
             re1j = getOperations(vop[0],signedtra)
         }
@@ -227,10 +232,25 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
                                 if(holder is FeedArticleDataHolder.FeedArticleHolder){
                                     holder?.uservoted = true
                                     holder?.netVotes = holder?.netVotes + 1
+                                    if(holder.already_paid == "0.000 SBD"){
+                                        var pendvs = holder.pending_payout_value
+                                        var pendvsp = pendvs?.split(" ")
+                                        var penddo = pendvsp!![0].toDouble()
+                                        penddo += CentralConstantsOfSteem.getInstance().voteval
+                                        holder.pending_payout_value = StaticMethodsMisc.FormatVotingValueToSBD(penddo)
+                                    }
+
                                 }
                                 else if (holder is FeedArticleDataHolder.CommentHolder){
                                     holder?.uservoted = true
-                                    holder?.netVotes = +1
+                                    holder?.netVotes = holder?.netVotes + 1
+                                    if(holder.already_paid == "0.000 SBD"){
+                                        var pendvs = holder.pending_payout_value
+                                        var pendvsp = pendvs?.split(" ")
+                                        var penddo = pendvsp!![0].toDouble()
+                                        penddo += CentralConstantsOfSteem.getInstance().voteval
+                                        holder.pending_payout_value = StaticMethodsMisc.FormatVotingValueToSBD(penddo)
+                                    }
                                 }
 
                                 //holder?.uservoted = true
@@ -266,7 +286,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
                                 fc.Insert(pfa)
                                 var fpc = FollowApiConstants.getInstance()
                                 //fpc.following += pfa
-                               // fpc.following.add(pfa)
+                                // fpc.following.add(pfa)
                                 fpc.AddToFollowing(pfa)
                             }
                             else if(myOperationTypes == MyOperationTypes.unfollow){
@@ -289,7 +309,8 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
                         mglobalInterfaces?.notifyRequestMadeError()
                     }
 
-                }, Response.ErrorListener {
+                }
+                , Response.ErrorListener {
             globalInterfaces?.notifyRequestMadeError()
             //swipecommonactionsclassT.makeswipestop()
             //mTextView.setText("That didn't work!");
@@ -299,6 +320,27 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
         //queue.add(s)
         volleyre.addToRequestQueue(s)
     }
+
+
+
+    /*fun addtovotes(){
+        *//*"voter": "ausbitbank",
+        "weight": 152113,
+        "rshares": "213718695929",
+        "percent": 400,
+        "reputation": "175284787298869",
+        "time": "2018-05-14T18:38:39"*//*
+
+        *//*var vop = ops[0] as VoteOperation
+        var jso = JSONObject()
+        jso.put("voter",vop.voter)
+        jso.put("weight",)
+        jso.put("rshares",CentralConstantsOfSteem.getInstance().rshares)
+        jso.put("percent",vop.weight)
+        jso.put("reputation",accountrep)
+        jso.put("time",)*//*
+    }*/
+
 
     fun getOperations(vop:List<Operation>,signedtra: SignedTransaction) : JSONObject?{
         val d = MakeJsonRpc.getInstance()
@@ -321,6 +363,19 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
 
         /*var obssm = ArrayList<Any>()
         obssm.add(obss)*/
+        var json = gsons.toJson(obss)
+        return d.networkBroadcaseSynchronous(json,signedtra.expirationDate.dateTime,signedtra.refBlockNum.toString(),signedtra.refBlockPrefix.toString(),signedtra.signatures[0])
+    }
+
+
+    fun getOperationClaim(vop:Operation,signedtra: SignedTransaction) : JSONObject?{
+        val d = MakeJsonRpc.getInstance()
+        val gsons =  GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+        var obs =  ArrayList<Any>()
+        obs.add(MyOperationTypes.claim_reward_balance.name)
+        obs.add(ops[0])
+        var obss = ArrayList<Any>()
+        obss.add(obs)
         var json = gsons.toJson(obss)
         return d.networkBroadcaseSynchronous(json,signedtra.expirationDate.dateTime,signedtra.refBlockNum.toString(),signedtra.refBlockPrefix.toString(),signedtra.signatures[0])
     }
@@ -439,6 +494,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
             Log.i("startingsignmaasy", "mainasync post mostly connected is " + mostlyconnected.toString())
             if(!result.signedtra.signatures.isEmpty()){
                 //BroadcastSynchronous(result.vop,result.signedtra)
+                Toast.makeText(applicationContext,"Signed",Toast.LENGTH_SHORT).show()
                 BroadcastSynchronous(result.vop,result.signedtra)
             }
 

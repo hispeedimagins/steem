@@ -11,6 +11,12 @@ public class CentralConstants {
     public static final String about = "about";
     public static final String pfp = "pfp";
     public static final String cover = "cover";
+    public static final String lastvotetime = "lastvotetime";
+    public static final String votingpower = "votingpower";
+    public static final String vestingshares = "vestingshares";
+    public static final String delegatedvestingshares = "delegatedvestingshares";
+    public static final String receivedvestingshares = "receivedvestingshares";
+    public static final String accountrep = "accountrep";
 
 
     public static final String baseUrl = "https://api.steemit.com/";

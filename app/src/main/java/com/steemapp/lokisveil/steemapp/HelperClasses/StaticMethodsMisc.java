@@ -13,9 +13,11 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -331,41 +333,52 @@ public class StaticMethodsMisc {
      * @return java date
      */
     public static Date ConvertSteemDateToDate(String date){
-        try{
-            return (new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(date) );
-        }
-        catch (ParseException ex){
+        return FormatDateGmt(date);
+    }
 
-        }
-        return null;
+    public static Date ConvertSteemDateToDate(Long date){
+        return (new Date(date) );
     }
 
     public static long CalculateVotingPower(int votingpower,long lastvotetimes){
-        /*try{
-
-            //Date lastvotetime  = (new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(lastvotetimes) );
-            long sub = (new Date().getTime() - lastvotetimes) / 1000;
-           // long subf = sub / CentralConstants.FiveDaysInSeconds;
-            long subm = (sub / CentralConstants.FiveDaysInSeconds) * 10000;
-            long subff = votingpower + subm;
-            if(subff > CentralConstants.SteemFullVote){
-                return CentralConstants.SteemFullVote;
-            }
-            return subff;
-        }
-        catch (ParseException ex){
-
-        }*/
-        //Date lastvotetime  = (new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(lastvotetimes) );
-        long sub = (new Date().getTime() - lastvotetimes) / 1000;
-        // long subf = sub / CentralConstants.FiveDaysInSeconds;
-        long subm = (sub / CentralConstants.FiveDaysInSeconds) * 10000;
-        long subff = votingpower + subm;
+        //long sys = System.currentTimeMillis();
+        //float bl = lastvotetimes/1000;
+        //float dybl = (dt/1000);
+        //float sysblbl = (sys/1000);
+        //float shi = dybl - bl;
+        //float bshi = sysblbl - bl;
+        //float sub = ((float)((System.currentTimeMillis() - lastvotetimes) / 1000));
+        //float subff = votingpower +((((float)((System.currentTimeMillis() - lastvotetimes) / 1000)) / CentralConstants.FiveDaysInSeconds) * 10000);
+        //float subf = sub / CentralConstants.FiveDaysInSeconds;
+        //float subm = subf * 10000;
+        //float subff = votingpower + subf;
+        float subff = votingpower +((((float)((System.currentTimeMillis() - lastvotetimes) / 1000)) / CentralConstants.FiveDaysInSeconds) * 10000);
         if(subff > CentralConstants.SteemFullVote){
             return CentralConstants.SteemFullVote;
+        } else if(0 > subff){
+            return votingpower;
         }
-        return subff;
+        return (long) subff;
         //return votingpower;
+    }
+
+    public static Date FormatDateGmt(String date){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            return sdf.parse(date+"+0000");
+        } catch (ParseException pa){
+            String ecs = pa.getMessage();
+            throw new RuntimeException(pa.getMessage());
+           // int i = 0;
+        }
+        //return new Date();
+    }
+
+    public static String FormatDateAsSteemString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return sdf.format(date);
     }
 
     public static String FormatVotingValueToSBD(Double sbshare){
@@ -406,9 +419,22 @@ public class StaticMethodsMisc {
 
     public static Double CalculateEffectiveVestsUser(){
         CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
-        Double vesting = Double.valueOf(ins.getProfile().getVestingShares().replace("VESTS",""));
+        /*Double vesting = Double.valueOf(ins.getProfile().getVestingShares().replace("VESTS",""));
         Double rvesting = Double.valueOf(ins.getProfile().getReceivedVestingShares().replace("VESTS",""));
         Double dvesting = Double.valueOf(ins.getProfile().getDelegatedVestingShares().replace("VESTS",""));
+
+        return (vesting + rvesting - dvesting) * 1000000;*/
+        return CalculateEffectiveVestsUser(ins.getProfile().getVestingShares(),ins.getProfile().getDelegatedVestingShares(),ins.getProfile().getReceivedVestingShares());
+
+
+
+    }
+
+    public static Double CalculateEffectiveVestsUser(String vesh,String deleves,String receves){
+        CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
+        Double vesting = Double.valueOf(vesh.replace("VESTS",""));
+        Double rvesting = Double.valueOf(receves.replace("VESTS",""));
+        Double dvesting = Double.valueOf(deleves.replace("VESTS",""));
 
         return (vesting + rvesting - dvesting) * 1000000;
 
@@ -416,12 +442,31 @@ public class StaticMethodsMisc {
 
     }
 
-    public static String CalculateVoteRshares(int votingpower,int voteweight){
+    public static int CalculateUsedVotingPower(int votingpower,int voteweight){
         CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
         int maxdenom = ins.getDynamicglobalprops().getVotePowerReserveRate() * 5;
         int wvp = CalculateWeightedVotingPower(votingpower,voteweight);
         int usedvotingpower = (wvp + maxdenom - 1) / maxdenom;
-        return String.valueOf((usedvotingpower * CalculateEffectiveVestsUser())/CentralConstants.SteemFullVote);
+        return usedvotingpower;
+    }
+
+    public static String CalculateVoteRshares(int votingpower,int voteweight){
+        /*CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
+        int maxdenom = ins.getDynamicglobalprops().getVotePowerReserveRate() * 5;
+        int wvp = CalculateWeightedVotingPower(votingpower,voteweight);
+        int usedvotingpower = (wvp + maxdenom - 1) / maxdenom;*/
+        //return String.valueOf((usedvotingpower * CalculateEffectiveVestsUser())/CentralConstants.SteemFullVote);
+        return String.valueOf((CalculateUsedVotingPower(votingpower,voteweight) * CalculateEffectiveVestsUser())/CentralConstants.SteemFullVote);
+    }
+
+    public static String CalculateVoteRshares(int votingpower,int voteweight,String vesh,String delegves,String receves){
+
+
+        return String.valueOf((CalculateUsedVotingPower(votingpower,voteweight) * CalculateEffectiveVestsUser(vesh,delegves,receves))/CentralConstants.SteemFullVote);
+    }
+
+    public static String FormatVoteAsStringSbd(Double val){
+        return String.format("%.3f",val)  + " SBD";
     }
 
 

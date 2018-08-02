@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.FloatingActionButton
@@ -43,6 +44,9 @@ import com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.TagsInterface
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
 import kotlinx.android.synthetic.main.nav_header_main.*
 /*import eu.bittrade.libs.steemj.base.models.AccountName
 import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation
@@ -50,7 +54,7 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig
 import eu.bittrade.libs.steemj.enums.PrivateKeyType*/
 import java.text.SimpleDateFormat
 import java.util.*
-
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,TagsInterface,GlobalInterface {
@@ -144,8 +148,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(i)
         }
         Mint.initAndStartSession(this.application, "dd37aa8e")
-        val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        val toggle = object : ActionBarDrawerToggle(
+                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            override fun onDrawerClosed(drawerView: View) {
+                /*val headv = nav_view.getHeaderView(0)
+                val pfp : ImageView? = headv.findViewById(R.id.pfp)
+                val name:TextView? = headv.findViewById(R.id.name)
+                val status:TextView? = headv.findViewById(R.id.status)
+                val vote_power = headv.findViewById<TextView>(R.id.vote_power)
+                val vote_value = headv.findViewById<ProgressBar>(R.id.vote_value)*/
+                //pfp?.setImageBitmap(null)
+                //cover?.setImageBitmap(null)
+                super.onDrawerClosed(drawerView)
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                //var sh = getSharedPreferences(CentralConstants.sharedprefname,0)
+                var vp = CentralConstantsOfSteem.getInstance().currentvotingpower
+                vp /= 100;
+                vote_power.text = "Voting power : $vp%";
+                vote_value.progress = vp
+                super.onDrawerOpened(drawerView)
+            }
+        }
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -155,7 +180,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         username = sharedPreferences.getString(CentralConstants.username, null)
         key = sharedPreferences.getString(CentralConstants.key, null)
 
-
+        if(!(sharedPreferences.getBoolean("updatefortrim",false))){
+            var shae = sharedPreferences.edit()
+            shae.putString(CentralConstants.username,username?.trim())
+            shae.putString(CentralConstants.key,key?.trim())
+            shae.putBoolean("updatefortrim",true)
+            shae.apply()
+        }
 
 
         if(username.isNullOrEmpty() or key.isNullOrEmpty()){
@@ -200,7 +231,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             GetProfile()
             //addAccount()
 
-            runs.GetFollowCount(username as String,null,null,null)
+            runs.GetFollowCount(username!!,null,null,null)
             //check the intent if, someone shared links then we can open them
             //this happens if the app was not running
             extractLinks(intent)
@@ -402,6 +433,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         this.startActivity(i)
     }
 
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -582,6 +614,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val pfp : ImageView? = headv.findViewById(R.id.pfp)
         val name:TextView? = headv.findViewById(R.id.name)
         val status:TextView? = headv.findViewById(R.id.status)
+        val vote_power = headv.findViewById<TextView>(R.id.vote_power)
+        val vote_value = headv.findViewById<ProgressBar>(R.id.vote_value)
         val url = "https://api.steemjs.com/get_accounts?names[]=[\"$username\"]"
         val stringRequest = StringRequest(Request.Method.GET, url,
                 Response.Listener { response ->
@@ -606,19 +640,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         if(result != null){
                             CentralConstantsOfSteem.getInstance().profile = resulto
                             name?.text = "${resulto.name} (${StaticMethodsMisc.CalculateRepScore(resulto.reputation)})"
-                            var lastvotetime  = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(resulto.lastVoteTime) )
+                            //var lastvotetime  = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(resulto.lastVoteTime) )
+                            var lastvotetime  = StaticMethodsMisc.FormatDateGmt(resulto.lastVoteTime)
                             var votingpower = resulto.votingPower
-                            var sub = (Date().time - lastvotetime.time) / 1000
+                            val ed = getSharedPreferences(CentralConstants.sharedprefname,0)
+                            var ei = ed.edit()
+                            ei.putInt(CentralConstants.votingpower,votingpower)
+                            ei.putLong(CentralConstants.lastvotetime,lastvotetime.time)
+                            ei.putString(CentralConstants.vestingshares,resulto.vestingShares)
+                            ei.putString(CentralConstants.delegatedvestingshares,resulto.delegatedVestingShares)
+                            ei.putString(CentralConstants.receivedvestingshares,resulto.receivedVestingShares)
+                            //ei.putString(CentralConstants.accountrep,resulto.reputation)
+                            ei.apply()
+                            /*var sub = (Date().time - lastvotetime.time) / 1000
                             var subf = sub / CentralConstants.FiveDaysInSeconds
                             var subm = subf * 10000
-                            votingpower = (votingpower + subm).toInt()
+                            votingpower = (votingpower + subm).toInt()*/
                             resulto.lastVoteTimeLong = lastvotetime.time
                             CentralConstantsOfSteem.getInstance().currentvotingpower = StaticMethodsMisc.CalculateVotingPower(resulto.votingPower,lastvotetime.time).toInt()
+                            val cal = CentralConstantsOfSteem.getInstance().currentvotingpower / 100
+                            vote_power.text = "Voting power : $cal%"
+                            vote_value.progress = cal
                             /*var reps = resulto.reputation.toDouble()
                             var replog = Math.log10(reps)
                             var subni = replog - 9
                             val mulni = subni * 9
                             val addtf = mulni + 25*/
+                            if(resulto.rewardSbdBalance != "0.000 SBD" ||
+                               resulto.rewardSteemBalance != "0.000 STEEM" ||
+                               resulto.rewardVestingSteem != "0.000 STEEM" ||
+                               resulto.rewardVestingBalance != "0.000000 VESTS"){
+                                openRewardAlert(resulto)
+                            }
                             val resultp = gson.fromJson<prof.profiledata>(resulto.jsonMetadata,prof.profiledata::class.java)
                             if(resultp != null){
                                 status?.text = resultp.profile.about
@@ -655,6 +708,45 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         volleyre.addToRequestQueue(stringRequest)
 
+    }
+
+
+    fun openRewardAlert(profile:prof.profile){
+        val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@MainActivity))
+        //val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)
+        alertDialogBuilder.setTitle("Claim Rewards?")
+
+        val inflater = layoutInflater
+        val dialogView : View = inflater.inflate(R.layout.dialog_open_a_blog, null)
+
+        alertDialogBuilder.setView(dialogView)
+        val edittext = dialogView.findViewById<EditText>(R.id.name)
+        edittext.setText("${profile.rewardSbdBalance} , ${profile.rewardSteemBalance} , ${profile.rewardVestingSteem}")
+        edittext.isEnabled = false
+        alertDialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener{ diin, num ->
+            //vote.weight = numberPicker.value as Short
+            if(edittext.text != null){
+                //val u : Int = edittext.text
+                //sendToOtherGuy(edittext.text.toString())
+                var ms = MakeOperationsMine()
+                var ope = ms.claimRewards(AccountName(username),profile.rewardSbdBalance,profile.rewardSteemBalance,profile.rewardVestingBalance,profile.rewardVestingSteem)
+                var opl = ArrayList<Operation>()
+                opl.add(ope)
+                var dy = GetDynamicAndBlock(this@MainActivity,null,0,opl,"Rewards claimed",MyOperationTypes.claim_reward_balance,null,null)
+                dy.GetDynamicGlobalProperties()
+                diin.dismiss()
+
+            }
+
+
+        })
+
+        alertDialogBuilder.setNegativeButton("No", DialogInterface.OnClickListener { diin, num ->
+
+        })
+        val alertDialog = alertDialogBuilder.create()
+
+        alertDialog.show()
     }
 
 
