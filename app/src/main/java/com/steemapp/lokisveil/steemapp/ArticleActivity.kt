@@ -35,10 +35,7 @@ import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.Fragments.ArticleFragment
 import com.steemapp.lokisveil.steemapp.Fragments.CommentsFragment
 import com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment
-import com.steemapp.lokisveil.steemapp.HelperClasses.GetDynamicAndBlock
-import com.steemapp.lokisveil.steemapp.HelperClasses.JsonRpcResultConversion
-import com.steemapp.lokisveil.steemapp.HelperClasses.MakeJsonRpc
-import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
+import com.steemapp.lokisveil.steemapp.HelperClasses.*
 import com.steemapp.lokisveil.steemapp.Interfaces.ArticleActivityInterface
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.BlockId
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.SignedTransaction
@@ -135,6 +132,8 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
         key = sharedPreferences.getString(CentralConstants.key, null)
 
 
+        val runs = GeneralRequestsFeedIntoConstants(applicationContext)
+        runs.RunThemAll()
 
 
         var i = intent

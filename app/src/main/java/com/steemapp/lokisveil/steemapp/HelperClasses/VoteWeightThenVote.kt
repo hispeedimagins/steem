@@ -13,6 +13,7 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperation
 import org.apache.commons.lang3.Conversion
 import android.widget.SeekBar.OnSeekBarChangeListener
+import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.MiscConstants
@@ -27,10 +28,28 @@ class VoteWeightThenVote(context: Context, activity: Activity, vote:VoteOperatio
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         //reassign variables for calculating power in callback so you get the live value on each vote now
         val stem = CentralConstantsOfSteem.getInstance()
-        stem.profile.lastVoteTimeLong = Date().time
+        if(stem.profile != null) stem.profile.lastVoteTimeLong = Date().time
         var per = Math.abs(votepercentused)
         var subper = (per * 2) / 100
-        stem.profile.votingPower -= subper
+        var vps = 0
+        val ed = context.getSharedPreferences(CentralConstants.sharedprefname,0)
+        if(stem.profile != null){
+            stem.profile.votingPower -= subper
+            vps = stem.profile.votingPower
+        } else{
+            vps = ed.getInt(CentralConstants.votingpower,0)
+            vps -= subper
+        }
+
+
+
+        if(ed != null){
+            var ei = ed.edit()
+            ei.putInt(CentralConstants.votingpower,vps)
+            ei.putLong(CentralConstants.lastvotetime,Date().time)
+            ei.apply()
+
+        }
 
     }
 
@@ -101,17 +120,45 @@ class VoteWeightThenVote(context: Context, activity: Activity, vote:VoteOperatio
 
                val stem = CentralConstantsOfSteem.getInstance()
                var com : Long = 0
-               if(stem.profile.lastVoteTimeLong == com){
+               var lastvotingtime:Long? = null
+               var votingpower:Int = 0
+               var veshsh :String? = null
+               var deleveshsh :String? = null
+               var receveshsh :String? = null
+               /*if(stem.profile == null){
+                   return
+               }*/
+               if(stem.profile!= null && stem.profile.lastVoteTimeLong == com){
                    stem.profile.lastVoteTimeLong = StaticMethodsMisc.ConvertSteemDateToDate(stem.profile.lastVoteTime).time
+
                }
-               var vshare = StaticMethodsMisc.CalculateVoteRshares(StaticMethodsMisc.CalculateVotingPower(stem.profile.votingPower,stem.profile.lastVoteTimeLong).toInt(),seekbp * 100)
+                var vshare : String? = null
+               if(stem.profile != null){
+                   lastvotingtime = stem.profile.lastVoteTimeLong
+                   votingpower = stem.profile.votingPower
+                   vshare = StaticMethodsMisc.CalculateVoteRshares(StaticMethodsMisc.CalculateVotingPower(votingpower,lastvotingtime).toInt(),seekbp * 100)
+
+               } else{
+                   var ed = context.getSharedPreferences(CentralConstants.sharedprefname,0)
+                   lastvotingtime = ed.getLong(CentralConstants.lastvotetime,0L)
+                   votingpower = ed.getInt(CentralConstants.votingpower,0)
+                   veshsh = ed.getString(CentralConstants.vestingshares,null)
+                   deleveshsh = ed.getString(CentralConstants.delegatedvestingshares,null)
+                   receveshsh = ed.getString(CentralConstants.receivedvestingshares,null)
+                   vshare = StaticMethodsMisc.CalculateVoteRshares(StaticMethodsMisc.CalculateVotingPower(votingpower,lastvotingtime).toInt(),seekbp * 100,veshsh,deleveshsh,receveshsh)
+
+               }
+               //var vshare = StaticMethodsMisc.CalculateVoteRshares(StaticMethodsMisc.CalculateVotingPower(votingpower,lastvotingtime).toInt(),seekbp * 100)
+               if(vshare == null) return
                var share = StaticMethodsMisc.CalculateVotingValueRshares(vshare)
                var sbshare = StaticMethodsMisc.VotingValueSteemToSd(share)
-               sbdworth.text = String.format("%.3f",sbshare)  + " SBD"
+               CentralConstantsOfSteem.getInstance().voteval = sbshare
+               CentralConstantsOfSteem.getInstance().rshares = share
+               sbdworth.text = String.format("%.3f", sbshare) + " SBD"
 
 
 
-               text.text = "Vote percentage : " +seekbp.toString() + "%"
+               text.text = "Vote percentage : $seekbp%"
                /*t1.setTextSize(progress)
                Toast.makeText(getApplicationContext(), progress.toString(), Toast.LENGTH_LONG).show()*/
 
