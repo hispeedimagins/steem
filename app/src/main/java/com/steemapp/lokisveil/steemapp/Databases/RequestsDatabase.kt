@@ -142,10 +142,19 @@ class RequestsDatabase  (context : Context) : SQLiteOpenHelper(context, Database
         }
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
+            var addit = createRequestDataClass(cursor)
+            if(addit != null) questionsLites.add(addit)
 
+            if(!cursor.moveToNext()) break
+        }
 
+        return questionsLites
+    }
 
-            /*val q = Request(
+    //made the creation of the class to a common function as it was needed in another place
+    fun createRequestDataClass(cursor:Cursor):Request?{
+        try{
+            return Request(
 
                     json = cursor.getString(cursor.getColumnIndex(DatabaseColoumnJson)),
                     dateLong =  cursor.getString(cursor.getColumnIndex(DatabaseColoumnDate)).toLong(),
@@ -155,28 +164,11 @@ class RequestsDatabase  (context : Context) : SQLiteOpenHelper(context, Database
                     typeOfRequest = cursor.getString(cursor.getColumnIndex(DatabaseColoumnTypeOfRequest))
 
 
-            )*/
+            )
+        } catch (ex:Exception){
 
-            questionsLites.add(createRequestDataClass(cursor))
-            cursor.moveToNext()
         }
-
-        return questionsLites
-    }
-
-    //made the creation of the class to a common function as it was needed in another place
-    fun createRequestDataClass(cursor:Cursor):Request{
-        return Request(
-
-                json = cursor.getString(cursor.getColumnIndex(DatabaseColoumnJson)),
-                dateLong =  cursor.getString(cursor.getColumnIndex(DatabaseColoumnDate)).toLong(),
-                reqnumber = cursor.getInt(cursor.getColumnIndex(DatabaseColoumnReqId)),
-                dbId = cursor.getInt(cursor.getColumnIndex(DatabaseColoumnId)).toLong(),
-                otherInfo = cursor.getString(cursor.getColumnIndex(DatabaseColoumnOtherInfo)),
-                typeOfRequest = cursor.getString(cursor.getColumnIndex(DatabaseColoumnTypeOfRequest))
-
-
-        )
+        return null
 
     }
 
