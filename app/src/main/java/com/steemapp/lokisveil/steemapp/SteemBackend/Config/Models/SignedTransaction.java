@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -205,6 +206,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
         boolean isCanonical = false;
 
         Sha256Hash messageAsHash;
+        int nonce = 0;
+        //long t = System.currentTimeMillis();
         while (!isCanonical) {
             try {
                 messageAsHash = Sha256Hash.of(this.toByteArray(chainId));
@@ -216,10 +219,16 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
             String signature = k.signMessage(messageAsHash);
             byte[] signatureAsByteArray = Base64.decode(signature);
 
+
             if (isCanonical(signatureAsByteArray)) {
-                this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 1000);
+                nonce++;
+                this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 31);
+                Log.d("nonce",String.valueOf(nonce));
+                //nonce++;
             } else {
                 isCanonical = true;
+                //long et = System.currentTimeMillis();
+                //Log.d("sign time", "signMy: elapsed ms - "+String.valueOf(et - t));
                 this.signatures.add(CryptoUtils.HEX.encode(signatureAsByteArray));
             }
         }
@@ -355,6 +364,44 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
             for (FutureExtensions futureExtensions : this.getExtensions()) {
                 serializedTransaction.write(futureExtensions.toByteArray());
             }
+
+            return serializedTransaction.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "A problem occured while transforming the transaction into a byte array.", e);
+        }
+    }
+
+    protected byte[] toByteArray(String chainId,int nonce) {
+        try (ByteArrayOutputStream serializedTransaction = new ByteArrayOutputStream()) {
+            if (chainId != null && !chainId.isEmpty()) {
+                serializedTransaction.write(CryptoUtils.HEX.decode(chainId));
+            }
+            serializedTransaction.write(Utilities.transformShortToByteArray(this.getRefBlockNum().shortValue()));
+            serializedTransaction.write(Utilities.transformIntToByteArray(this.getRefBlockPrefix().intValue()));
+            serializedTransaction.write(this.getExpirationDate().toByteArray());
+
+            serializedTransaction.write(Utilities.transformLongToVarIntByteArray(this.getOperations().size()));
+            int opsi = this.getOperations().size();
+            for (Operation operation : this.getOperations()) {
+                /*
+                 * Validate all Operations
+                 *
+                 * TODO: Add a validation method to the Transaction Object?
+                 */
+                operation.validate(SteemJConfig.getInstance().getValidationLevel());
+                serializedTransaction.write(operation.toByteArray());
+            }
+
+            serializedTransaction.write(Utilities.transformIntToVarIntByteArray(this.getExtensions().size()));
+            for (FutureExtensions futureExtensions : this.getExtensions()) {
+                serializedTransaction.write(futureExtensions.toByteArray());
+            }
+
+            /*if(nonce != 0){
+                //serializedTransaction.write(Utilities.transformIntToByteArray(nonce));
+                serializedTransaction.write(Byte.valueOf(String.valueOf(nonce)));
+            }*/
 
             return serializedTransaction.toByteArray();
         } catch (IOException e) {
