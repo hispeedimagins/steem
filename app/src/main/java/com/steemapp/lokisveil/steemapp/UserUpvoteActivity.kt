@@ -20,6 +20,7 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import kotlinx.android.synthetic.main.activity_user_upvote.*
 import kotlinx.android.synthetic.main.content_user_upvote.*
 import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -70,35 +71,45 @@ class UserUpvoteActivity : AppCompatActivity() {
         var con = FollowApiConstants.getInstance()
         var al = ArrayList<feed.avtiveVotes>()
         for(x in 0 until jsonArray.length()){
-            var jo = jsonArray.getJSONObject(x)
-            var dat : Date = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(jo.getString("time")))
-            var du = DateUtils.getRelativeDateTimeString(applicationContext,dat.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
-            /*if(!con.following.isEmpty() && con.following.any { p -> p.following == jo.getString("voter") }){
-                //x.followInternal = MyOperationTypes.unfollow
+            var jo : JSONObject? = null
+            try {
+                jo = jsonArray.getJSONObject(x)
+            } catch (ex:Exception){
+
             }
-            else {
-                //x.followInternal = MyOperationTypes.follow
-            }*/
-            var votvalr = StaticMethodsMisc.VotingValueSteemToSd(StaticMethodsMisc.CalculateVotingValueRshares(jo.getString("rshares")))
-            var av = feed.avtiveVotes(
-                    voter = jo.getString("voter"),
-                    calculatedpercent = "Vote percent :"+  (jo.getString("percent").toInt() / 100).toString(),
-                    calculatedrep = StaticMethodsMisc.CalculateRepScore(jo.getString("reputation")),
-                    calculatedrshares = StaticMethodsMisc.FormatVotingValueToSBD(votvalr),
-                    votevalforsorting = votvalr,
-                    calculatedtime = "",
-                    calculatedvotepercent = "Vote power :"+ (jo.getString("weight").toInt() / 100).toString(),
-                    dateString = du.toString(),
-                    date = dat,
-                    namewithrep = "${jo.getString("voter")} (${StaticMethodsMisc.CalculateRepScore(jo.getString("reputation"))})",
-                    percent = "",
-                    reputation = "",
-                    rshares = "",
-                    time = "",
-                    weight = "",
-                    followInternal = if(!con.following.isEmpty() && con.following.any { p -> p.following == jo.getString("voter") }) MyOperationTypes.unfollow else MyOperationTypes.follow
-            )
-            al.add(av)
+
+            if(jo != null){
+                var dat : Date = StaticMethodsMisc.FormatDateGmt(jo.getString("time"))
+                var du = DateUtils.getRelativeDateTimeString(applicationContext,dat.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+                /*if(!con.following.isEmpty() && con.following.any { p -> p.following == jo.getString("voter") }){
+                    //x.followInternal = MyOperationTypes.unfollow
+                }
+                else {
+                    //x.followInternal = MyOperationTypes.follow
+                }*/
+                var votvalr = StaticMethodsMisc.VotingValueSteemToSd(StaticMethodsMisc.CalculateVotingValueRshares(jo.getString("rshares")))
+                var av = feed.avtiveVotes(
+                        voter = jo.getString("voter"),
+                        calculatedpercent = "Vote percent :"+  (jo.getString("percent").toInt() / 100).toString(),
+                        calculatedrep = StaticMethodsMisc.CalculateRepScore(jo.getString("reputation")),
+                        calculatedrshares = StaticMethodsMisc.FormatVotingValueToSBD(votvalr),
+                        votevalforsorting = votvalr,
+                        calculatedtime = "",
+                        calculatedvotepercent = "Vote power :"+ (jo.getString("weight").toInt() / 100).toString(),
+                        dateString = du.toString(),
+                        date = dat,
+                        namewithrep = "${jo.getString("voter")} (${StaticMethodsMisc.CalculateRepScore(jo.getString("reputation"))})",
+                        percent = "",
+                        reputation = "",
+                        rshares = "",
+                        time = "",
+                        weight = "",
+                        followInternal = if(!con.following.isEmpty() && con.following.any { p -> p.following == jo.getString("voter") }) MyOperationTypes.unfollow else MyOperationTypes.follow
+                )
+                al.add(av)
+            }
+            /*jo = jsonArray.getJSONObject(x)*/
+
 
         }
         adapter?.upvotesHelperFunctions?.add(sortList(al))
