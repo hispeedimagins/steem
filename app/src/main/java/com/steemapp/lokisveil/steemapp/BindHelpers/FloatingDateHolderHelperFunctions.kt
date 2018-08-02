@@ -63,10 +63,11 @@ class FloatingDateHolder {
                             break;
                         }
                     }*/
+                previsbiggerthannext = true
 
             } else {
                 //down
-                pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                 /*if (mValues.size() > 0) {
                         for(int i = pastVisiblesItems; i >= 0; i--){
 
@@ -228,44 +229,59 @@ class FloatingDateHolder {
         val cal = calendarcalculations()
         cal.setDateOfTheData(oldcc)
         val oldc = cal.returnCalendarOfData()
+        //val oldc = cal.getGmtToNormal()
+        var ad = oldc?.get(Calendar.DATE)
         //oldc.setTime(oldcc);
 
-        var com = getZeroDate(prevdate).compareTo(getZeroDate(oldc))
-        if ( com > 0) {
-            val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)
-            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)
+        val com = getZeroDate(prevdate).compareTo(getZeroDate(oldc))
+        if ( com > 0 && prevdate?.get(Calendar.DATE) != oldc?.get(Calendar.DATE)) {
+            /*val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
+            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
 
-            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US), oldc!!)
+            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()), oldc!!)
 
-            updateStickyHeader(pd, nd, h, false)
+            updateStickyHeader(pd, nd, h, false)*/
+            AddChangedDate(prevdate!!,oldc!!,false)
         }
 
-        else if ( com < 0) {
-            val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)
-            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)
+        else if ( com < 0  && prevdate?.get(Calendar.DATE) != oldc?.get(Calendar.DATE)) {
+            /*val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
+            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
 
-            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US), oldc!!)
+            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()), oldc!!)
 
-            updateStickyHeader(pd, nd, h, true)
+            updateStickyHeader(pd, nd, h, true)*/
+            AddChangedDate(prevdate!!,oldc!!,true)
         }
 
         else if (arvdinterface != null && (arvdinterface!!.getSize() === 0 || arvdinterface!!.getSize() === 1)) {
-            val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)
-            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)
+            /*val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
+            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
 
-            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US), oldc!!)
+            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()), oldc!!)
 
-            updateStickyHeader(pd, nd, h, false)
+            updateStickyHeader(pd, nd, h, false)*/
+            AddChangedDate(prevdate!!,oldc!!,false)
         }
         prevdate = oldc
+    }
+
+
+    fun AddChangedDate(prevdate:Calendar,oldc:Calendar,previsbiggerthannext: Boolean){
+        val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
+        val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
+
+        val h = add(nd, oldc)
+
+        updateStickyHeader(pd, nd, h, previsbiggerthannext)
     }
 
     //for getting only the date back, no time,hour,minute second or milliseconds.
     fun getZeroDate(od: Calendar?): Calendar {
         val calendar = Calendar.getInstance()
 
-        calendar.time = od!!.time
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.timeInMillis = od!!.timeInMillis
+        //calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
@@ -304,9 +320,16 @@ class FloatingDateHolder {
     private fun updateStickyHeader(prevdate: String, newdate: String, holder: DateTypeAndStringHolder, previsbiggerthannext: Boolean) {
 
         if (holderOldUnivDate != null && holder.equals(holderOldUnivDate)) {
-            val animation = TranslateAnimation(0f, 0f, 0f, 5f)
-            animation.duration = 1000
+            var animmoy = 10f
+            if(previsbiggerthannext){
+                animmoy *= -1
+            } else{
+                /*animmoy = 10f*/
+            }
+            val animation = TranslateAnimation(0f, 0f, 0f, animmoy)
+            animation.duration = 700
             animation.fillAfter = false
+
             mStickyHeader.startAnimation(animation)
             return
         }
