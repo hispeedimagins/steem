@@ -144,6 +144,10 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
 
         })
         startAlphaAnimation(toolbar_linear, 0, View.INVISIBLE)*/
+        val runs = GeneralRequestsFeedIntoConstants(applicationContext)
+        runs.RunThemAll()
+
+
         var too : ShowHideCollapsingToolbar = ShowHideCollapsingToolbar(appbar,main_linearlayout_title,toolbar_linear)
         too.startAlphaAnimation(toolbar_linear,0,View.INVISIBLE)
         if(intent != null && intent.extras != null){
@@ -560,8 +564,8 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
                             val mulni = subni * 9
                             val addtf = mulni + 25*/
                             val resultp = gson.fromJson<prof.profiledata>(resulto.jsonMetadata, prof.profiledata::class.java)
-                            if(resultp != null){
-                                if(resultp.profile.name != null){
+                            if(resultp?.profile != null){
+                                if(resultp.profile.name != null && resultp.profile.name.isNotEmpty()){
                                     activity_username.text = resultp.profile.name
 
                                     activity_username_toolbar.text = resultp.profile.name
