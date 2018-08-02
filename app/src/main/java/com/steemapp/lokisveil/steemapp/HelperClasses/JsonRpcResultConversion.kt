@@ -287,7 +287,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
         //var st : String = commstr.getString("body")
         var st : String = ""
-        var builder = StringBuilder()
+        //var builder = StringBuilder()
         if(!bodyasis){
             try{
                 st = commstr.getString("body").substring(IntRange(0,400))
@@ -319,13 +319,10 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         }
 
         var autho = "$author (${StaticMethodsMisc.CalculateRepScore(commstr.getString("author_reputation"))})"
+        var tfollowsYou = false
         if(followersDatabase != null){
             if(author != username){
-                autho += if(followersDatabase?.simpleSearch(author) as Boolean){
-                    " follows you"
-                } else{
-                    ""
-                }
+                tfollowsYou = followersDatabase?.simpleSearch(author) as Boolean
             }
         }
 
@@ -341,10 +338,11 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
         //var du = DateUtils.getRelativeDateTimeString(contex,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
-        var d = calendarcalculations() //2018-02-03T13:58:18
-        var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")))
-        d.setDateOfTheData(dd)
-        var du = DateUtils.getRelativeDateTimeString(contex,d.getGmtToNormal()!!.timeInMillis, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+        //var d = calendarcalculations() //2018-02-03T13:58:18
+        //var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")))
+        var dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
+        //d.setDateOfTheData(dd)
+        var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
                 displayName = autho,
@@ -387,7 +385,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 replies = repl,
                 activeVotes = commstr.getJSONArray("active_votes"),
                 rootAuthor = if(commstr.has("root_author")) commstr.getString("root_author") else null,
-                rootPermlink = if(commstr.has("root_permlink")) commstr.getString("root_permlink") else null
+                rootPermlink = if(commstr.has("root_permlink")) commstr.getString("root_permlink") else null,
+                followsYou = tfollowsYou
 
         )
         //adapter?.feedHelperFunctions?.add(fd)
@@ -546,10 +545,11 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
         //var du = DateUtils.getRelativeDateTimeString(contex,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
-        var d = calendarcalculations() //2018-02-03T13:58:18
-        var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")) )
-        d.setDateOfTheData(dd)
-        var du = DateUtils.getRelativeDateTimeString(contex,d.getGmtToNormal()!!.timeInMillis, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+        //var d = calendarcalculations() //2018-02-03T13:58:18
+        //var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")) )
+        var dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
+        //d.setDateOfTheData(dd)
+        var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var rpb = commstr.getJSONArray("reblogged_by")
         val collectionType = object : TypeToken<List<String>>() {
@@ -565,16 +565,15 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         //val s : String = and.markdownToHtml(bod, AndDown.HOEDOWN_EXT_AUTOLINK, 0)
         var author = commstr.getString("author")
         var autho = "$author (${StaticMethodsMisc.CalculateRepScore(commstr.getString("author_reputation"))})"
+        var tfollowsYou = false
         if(followersDatabase != null){
             if(author != username){
-                autho += if(followersDatabase?.simpleSearch(author) as Boolean){
-                    " follows you"
-
-                } else{
-                    ""
-                }
+                tfollowsYou = followersDatabase?.simpleSearch(author) as Boolean
             }
         }
+
+
+
 
         var fd : FeedArticleDataHolder.CommentHolder = FeedArticleDataHolder.CommentHolder(
                 displayName = autho,
@@ -588,7 +587,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 category = commstr.getString("category"),
                 children = commstr.getInt("children"),
                 created = commstr.getString("created"),
-                createdcon = d.getDateTimeString(),
+                createdcon = dd.toString(),
                 date = dd,
                 depth = commstr.getInt("depth"),
                 id = commstr.getInt("id"),
@@ -620,7 +619,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 parent_tag = parentTag,
                 paretn_author = parentAuthor,
                 rootAuthor = if(commstr.has("root_author")) commstr.getString("root_author") else null,
-                rootPermlink = if(commstr.has("root_permlink")) commstr.getString("root_permlink") else null
+                rootPermlink = if(commstr.has("root_permlink")) commstr.getString("root_permlink") else null,
+                followsYou = tfollowsYou
                 //datespan = du.toString()
         )
         //adapter?.add(fd)
