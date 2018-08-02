@@ -228,6 +228,14 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
         this.comment = content;
     }
 
+    public boolean checkforempty(){
+        String con = EditTextMainTwo.getText().toString();
+        if(con.isEmpty()){
+            Toast.makeText(context,"Comment cannot be empty.",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
 
     public void makeCommentRequest(){
         //MakeOperationsMine mine = new MakeOperationsMine();
@@ -382,13 +390,16 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
 
 
     private void FabIntermediary(View view){
-        switch (myOperationTypes){
-            case comment:
-                makeCommentRequest();
-                break;
-            case edit_comment:
-                makeCommentEditRequest();
+        if(checkforempty()){
+            switch (myOperationTypes){
+                case comment:
+                    makeCommentRequest();
+                    break;
+                case edit_comment:
+                    makeCommentEditRequest();
+            }
         }
+
         //makeCommentRequest();
         /*switch (decider){
             case addQuestion:
