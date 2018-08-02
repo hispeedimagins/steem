@@ -5,7 +5,8 @@ package com.steemapp.lokisveil.steemapp.HelperClasses
 class Links {
 
     companion object {
-        var urlChar = "[^\\s\"<>\\]\\[\\(\\)]"
+        //var urlChar = "[^\\s\"<>\\]\\[\\(\\)]"
+        var urlChar = "[^\\s\"<>\\]\\[]"
         var urlCharEnd = urlChar.replace("/]$/".toRegex(), ".,']"); // insert bad chars to end on
         var imagePath ="(?:(?:\\.(?:tiff?|jpe?g|gif|png|svg|ico)|ipfs/[a-z\\d]{40,}))"
         var domainPath = "(?:[-a-zA-Z0-9\\._]*[-a-zA-Z0-9])";

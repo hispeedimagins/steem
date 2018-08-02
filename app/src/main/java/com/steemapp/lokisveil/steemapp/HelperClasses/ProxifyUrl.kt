@@ -8,7 +8,7 @@ class ProxifyUrl {
         val rProxyDomain = "^http(s)?://steemit(dev|stage)?images.com/"
         val rProxyDomainsDimensions = "http(s)?://steemit(dev|stage)?images.com/([0-9]+x[0-9]+)/"
         val NATURAL_SIZE = "0x0/"
-        val img_proxy_prefix = "https://steemitdevimages.com/"
+        val img_proxy_prefix = "https://steemitimages.com/"
 
 
         //returns the url which will be rendered
