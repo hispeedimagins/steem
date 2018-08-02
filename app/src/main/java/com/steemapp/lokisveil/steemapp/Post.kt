@@ -223,20 +223,24 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
                 }
                 if(posttr){
 
+                    try{
+                        if(isedit){
+                            //a different function called if it is for editing a post
+                            //different enum used for GetDynamicAndBlock
+                            var ops = mine.updatePost(AccountName(username),Permlink(permlinkedit),title,content, tags?.split(" ")?.toTypedArray())
+                            val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.edit_comment, writePost?.progressBar, this@Post)
+                            block.GetDynamicGlobalProperties()
+                        }
+                        else{
+                            val ops = mine.createPost(AccountName(username), title,content,tags?.split(" ")?.toTypedArray(),ben)
 
-                    if(isedit){
-                        //a different function called if it is for editing a post
-                        //different enum used for GetDynamicAndBlock
-                        var ops = mine.updatePost(AccountName(username),Permlink(permlinkedit),title,content, tags?.split(" ")?.toTypedArray())
-                        val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.edit_comment, writePost?.progressBar, this@Post)
-                        block.GetDynamicGlobalProperties()
+                            val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.post, writePost?.progressBar, this@Post)
+                            block.GetDynamicGlobalProperties()
+                        }
+                    } catch(ex:Exception){
+                        Toast.makeText(applicationContext,ex.message,Toast.LENGTH_LONG).show()
                     }
-                    else{
-                        val ops = mine.createPost(AccountName(username), title,content,tags?.split(" ")?.toTypedArray(),ben)
 
-                        val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.post, writePost?.progressBar, this@Post)
-                        block.GetDynamicGlobalProperties()
-                    }
 
                 }
 
@@ -418,9 +422,16 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
                         }*/
                         class someTask() : AsyncTask<Void, Void, String>() {
                             override fun doInBackground(vararg params: Void?): String? {
-                                var result = SteemImageUpload.uploadImage(AccountName(username),key,file,filePath )
+                                try{
+                                    var result = SteemImageUpload.uploadImage(AccountName(username),key,file,filePath )
 
-                                return result
+                                    return result
+                                } catch (ex:Exception){
+                                    runOnUiThread( {
+                                        Toast.makeText(applicationContext,ex.message,Toast.LENGTH_LONG)
+                                    })
+                                }
+                                return null
                             }
 
                             override fun onPostExecute(result: String?) {
@@ -440,11 +451,13 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
                                 }
 
                                 webView.loadUrl("https://steemit.com/");*/
+                                if(result != null){
+                                    var db = ImageUploadedUrls(applicationContext)
+                                    var ins = db.Insert(result!!)
+                                    writePost?.addtexturl(result,file.name)
+                                    writePost?.progress(View.GONE)
+                                }
 
-                                var db = ImageUploadedUrls(applicationContext)
-                                var ins = db.Insert(result!!)
-                                writePost?.addtexturl(result,file.name)
-                                writePost?.progress(View.GONE)
                                 super.onPostExecute(result)
                             }
                         }
