@@ -200,9 +200,9 @@ class WritePost : Fragment() {
         if(dbid != dbcom){
             var dr = drafts(context as Context)
             var ops = dr.Get(dbid?.toInt())
-            EditTextMainOne?.setText(ops.title)
-            EditTextMainTwo?.setText(ops.tags)
-            EditTextMainThree?.setText(ops.content)
+            EditTextMainOne?.setText(ops?.title)
+            EditTextMainTwo?.setText(ops?.tags)
+            EditTextMainThree?.setText(ops?.content)
         }
         /*cardviewOne = v.findViewById(R.id.cardviewOne) as CardView
         cardviewTwo = v.findViewById(R.id.cardviewTwo) as CardView

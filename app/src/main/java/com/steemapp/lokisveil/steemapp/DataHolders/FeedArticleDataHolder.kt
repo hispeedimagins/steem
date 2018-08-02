@@ -124,7 +124,7 @@ class FeedArticleDataHolder {
         val app: String?, //steemit/0.1
         val format: String?, //markdown
 
-        val pending_payout_value : String?,
+        var pending_payout_value : String?,
         val total_pending_payout_value : String?,
         var uservoted : Boolean?,
         val authorreputation :String?,
@@ -137,7 +137,8 @@ class FeedArticleDataHolder {
         var displayName:String = "",
         var rootAuthor: String? = null,
         var rootPermlink: String? = null,
-        var date:Date? = null
+        var date:Date? = null,
+        var followsYou:Boolean = false
         )/*: Parcelable{
 
     constructor(parcel: Parcel) : this(
@@ -273,7 +274,7 @@ class FeedArticleDataHolder {
             val app: String?, //steemit/0.1
             val format: String?, //markdown
 
-            val pending_payout_value : String?,
+            var pending_payout_value : String?,
             val total_pending_payout_value : String?,
             var uservoted : Boolean?,
             val authorreputation :String?,
@@ -292,7 +293,8 @@ class FeedArticleDataHolder {
             var rootAuthor: String?,
             var rootPermlink: String?,
             var highlightThis:Boolean = false,
-            var date:Date? = null
+            var date:Date? = null,
+            var followsYou:Boolean = false
     )/*: Parcelable{
         constructor(parcel: Parcel) : this(
                 parcel.createStringArrayList(),

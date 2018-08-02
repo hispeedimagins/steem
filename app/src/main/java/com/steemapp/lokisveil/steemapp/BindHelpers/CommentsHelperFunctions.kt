@@ -45,6 +45,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
     val con: Context = context
     var name:String? = username
     val adaptedcomms: arvdinterface = adapter
+    var textColorMineTheme: Int = 0
     val and = AndDown()
     internal var scale: Float = scale
     internal var metrics: DisplayMetrics = metrics
@@ -55,6 +56,11 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
             val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
             name = sharedpref.getString(CentralConstants.username,null)
         }
+        var attrs  = intArrayOf(R.attr.textColorMine)
+        var ta = context.obtainStyledAttributes(attrs)
+        var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
+        ta.recycle()
+        textColorMineTheme = ContextCompat.getColor(con, textColorMineThemeint)
     }
 
     fun GetPx(dp : Float) : Int{
@@ -129,6 +135,11 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
         //holder.article_name?.text = "${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
         //holder.article_name?.text = "${holder.article?.author} (${holder.article?.authorreputation})"
         holder.article_name?.text = holder.article?.displayName
+        if(holder.article?.followsYou!!){
+            holder.article_name?.setTextColor(ContextCompat.getColor(con, R.color.colorAccent))
+        } else{
+            holder.article_name?.setTextColor(textColorMineTheme)
+        }
         holder.article_payout?.text = pay
         //val d = Calendar.getInstance()
         //d.time = holder.article?.createdcon

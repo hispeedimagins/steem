@@ -9,16 +9,17 @@ import java.util.*
  * Created by boot on 2/6/2018.
  */
 class calendarcalculations {
-    private var calendarForData: Calendar? = null
-    private var calendarForNow: Calendar? = null
+    var calendarForData: Calendar? = null
+    var calendarForNow: Calendar? = null
     internal var timeZone: TimeZone? = null
     internal var offset: Int = 0
     init {
 
         calendarForNow = Calendar.getInstance()
         //timeZone = calendarForNow.getTimeZone();
-        calendarForNow?.timeZone = TimeZone.getTimeZone("GMT")
         timeZone = TimeZone.getTimeZone("GMT")
+        calendarForNow?.timeZone = timeZone
+
         //timeZone = TimeZone.getDefault()
 
         offset = TimeZone.getDefault().getOffset(Date().time)
@@ -28,10 +29,21 @@ class calendarcalculations {
     }
 
     fun getGmtToNormal():Calendar?{
-
+        //var bc = Date(calendarForData?.timeInMillis!!)
         calendarForData?.add(Calendar.MILLISECOND,offset)
+        calendarForData?.timeZone = TimeZone.getDefault()
+        //var ad = Date(calendarForData?.timeInMillis!!)
 
         return calendarForData
+    }
+
+    fun getGmtToNormal(calender:Calendar?):Calendar?{
+        //var bc = Date(calendarForData?.timeInMillis!!)
+        calender?.add(Calendar.MILLISECOND,offset)
+        calender?.timeZone = TimeZone.getDefault()
+        //var ad = Date(calendarForData?.timeInMillis!!)
+
+        return calender
     }
     /*public calendarcalculations(Date datefdata){
         offset = TimeZone.getDefault().getOffset(new Date().getTime());
@@ -59,16 +71,38 @@ class calendarcalculations {
 
     }
 
+    fun setDateOfTheData(datefdatas: Long?) {
 
-    /*public void setDateOfTheDataOffset(Date dateofdatas){
-        calendarForData = null;
-        calendarForData = new GregorianCalendar(timeZone);
+        if (datefdatas == null) {
+            return
+        }
+        calendarForData = null
+        calendarForData = GregorianCalendar(timeZone)
 
-        calendarForData.setTime(dateofdatas);
-        calendarForData.add(Calendar.MILLISECOND,offset);
-        int i = 0;
-        i++;
-    }*/
+        calendarForData!!.timeInMillis = datefdatas
+
+
+        //calendarForData.add(Calendar.MILLISECOND,offset);
+        //int i = 0;
+        //i++;
+
+    }
+
+    fun getDiffBetweenDates():Long{
+        return (calendarForNow?.timeInMillis!! - getGmtToNormal(calendarForData)?.timeInMillis!!)
+    }
+
+
+    fun setDateOfTheDataOffset(dateofdatas:Date?){
+        if (dateofdatas == null) {
+            return
+        }
+        calendarForData = null
+        calendarForData = GregorianCalendar(timeZone)
+
+        calendarForData!!.time = dateofdatas
+        getGmtToNormal()
+    }
 
 
     fun returnCalendarOfData(): Calendar? {
@@ -81,7 +115,7 @@ class calendarcalculations {
             return ""
         }
         val ye = calendarForData!!.get(Calendar.YEAR)
-        var dateString = calendarForData!!.get(Calendar.DATE).toString() + " " + calendarForData!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US)
+        var dateString = calendarForData!!.get(Calendar.DATE).toString() + " " + calendarForData!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
 
         if (ye != calendarForNow?.get(Calendar.YEAR)) {
             dateString += " " + ye.toString()

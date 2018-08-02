@@ -124,11 +124,14 @@ class draftHelperFunctions (context : Context, username:String?, adapter: AllRec
             alertDialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener{ diin, num ->
                 //vote.weight = numberPicker.value as Short
                 //if yes remove from db first
-                var db = drafts(con)
-                db.deleteContact(mholder?.article?.dbid)
+                try{
+                    var db = drafts(con)
+                    db.deleteContact(mholder?.article?.dbid)
+                    adaptedcomms?.removeAt(position)
+                } catch (ex:Exception){
+                    adaptedcomms?.notifydatachanged()
+                }
 
-                //then remove from the adapter
-                adaptedcomms?.removeAt(position)
             })
 
             alertDialogBuilder.setNegativeButton("No", DialogInterface.OnClickListener { diin, num ->

@@ -497,7 +497,8 @@ class FeedFragment : Fragment() {
     }
 
     fun addMoreItems(response:JSONObject,nametouse:String){
-        val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,context as Context)
+        if (context == null) return
+        val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,context!!)
         //con.ParseJsonBlog()
         val result = con.ParseJsonBlogMore()
         //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
@@ -512,7 +513,8 @@ class FeedFragment : Fragment() {
     }
 
     fun addItems(response:JSONObject,nametouse:String){
-        val con = JsonRpcResultConversion(response,nametouse as String,TypeOfRequest.feed,context as Context)
+        if (context == null) return
+        val con = JsonRpcResultConversion(response,nametouse,TypeOfRequest.feed,context!!)
         //con.ParseJsonBlog()
         val result = con.ParseJsonBlog()
         //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)

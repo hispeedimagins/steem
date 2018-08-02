@@ -152,7 +152,13 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:AllRecycler
         }
         holder.article_likes?.text = holder.article?.netVotes.toString()
        // holder.article_name?.text = "${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
+
         holder.article_name?.text = holder.article?.displayName
+        if(holder.article?.followsYou!!){
+            holder.article_name?.setTextColor(ContextCompat.getColor(con, R.color.colorAccent))
+        } else{
+            holder.article_name?.setTextColor(textColorMineTheme)
+        }
         holder.article_name?.setOnClickListener(View.OnClickListener {
             val i = Intent(con, OpenOtherGuyBlog::class.java)
             i.putExtra(CentralConstants.OtherGuyNamePasser,holder.article?.author)

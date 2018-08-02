@@ -1091,7 +1091,11 @@ public class ECKey {
         }
         if (recId == -1)
             throw new RuntimeException("Could not construct a recoverable key. This should never happen.");
-        int headerByte = recId + 27 + (isCompressed() ? 4 : 0);
+        //int headerByte = recId + 27 + (isCompressed() ? 4 : 0);
+        //change later added on 23/7/2018 22:23 top is real
+        Log.d("iscompressed",String.valueOf( isCompressed()));
+
+        int headerByte = recId + 0 + 27;
         byte[] sigData = new byte[65]; // 1 header + 32 bytes for R + 32 bytes
                                        // for S
         sigData[0] = (byte) headerByte;

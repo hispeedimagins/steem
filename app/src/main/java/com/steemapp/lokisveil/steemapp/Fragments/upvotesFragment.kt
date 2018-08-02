@@ -199,7 +199,7 @@ class upvotesFragment : Fragment() {
             x.namewithrep = "${x.voter} (${StaticMethodsMisc.CalculateRepScore(x.reputation)})"
             x.calculatedpercent = "Vote percent :"+  ((x.percent as String).toInt() / 100).toString()
             x.calculatedvotepercent = "Vote power :"+ ((x.weight as String).toInt() / 100).toString()
-            var du = DateUtils.getRelativeDateTimeString(context,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(x.time)).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+            var du = DateUtils.getRelativeDateTimeString(context,StaticMethodsMisc.FormatDateGmt(x.time).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
             x.dateString = du.toString()
 
             x.calculatedrshares = StaticMethodsMisc.FormatVotingValueToSBD(StaticMethodsMisc.VotingValueSteemToSd(StaticMethodsMisc.CalculateVotingValueRshares(x.rshares)))

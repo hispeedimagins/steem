@@ -17,5 +17,6 @@ public enum MyOperationTypes {
     post,
     comment_options,
     edit_post,
-    edit_comment
+    edit_comment,
+    claim_reward_balance
 }

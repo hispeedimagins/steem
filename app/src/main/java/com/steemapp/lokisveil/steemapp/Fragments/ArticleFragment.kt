@@ -402,6 +402,11 @@ class ArticleFragment : Fragment() , GlobalInterface {
         holder.article_likes?.text = holder.article?.netVotes.toString()
         //holder.article_name?.text = holder.article?.author
         holder.article_name?.text = "${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
+        if(holder.article?.followsYou!!){
+            holder.article_name?.setTextColor(ContextCompat.getColor(context!!, R.color.colorAccent))
+        } else{
+            holder.article_name?.setTextColor(texcolormine!!)
+        }
         holder.article_payout?.text = pay
         //val d = Calendar.getInstance()
         //d.time = holder.article?.createdcon
