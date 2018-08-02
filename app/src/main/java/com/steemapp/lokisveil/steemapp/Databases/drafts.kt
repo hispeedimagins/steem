@@ -139,7 +139,7 @@ class drafts(context : Context) : SQLiteOpenHelper(context, DatabaseName,null, D
         return questionsLites
     }
 
-    fun Get(id: Int?):OperationJson.draftholder{
+    fun Get(id: Int?):OperationJson.draftholder?{
         //SELECT EXISTS(SELECT 1 FROM myTbl WHERE u_tag="tag" LIMIT 1);
         var db = this.readableDatabase
 
@@ -154,19 +154,25 @@ class drafts(context : Context) : SQLiteOpenHelper(context, DatabaseName,null, D
         cursor.columnNames
         cursor.moveToFirst()
 
-        val q = OperationJson.draftholder(
-                title = cursor.getString(cursor.getColumnIndex(DatabaseColoumnTitle)),
-                tags = cursor.getString(cursor.getColumnIndex(DatabaseColoumnTags)),
-                content = cursor.getString(cursor.getColumnIndex(DatabaseColoumnContent)),
-                payouttype = cursor.getString(cursor.getColumnIndex(DatabaseColoumnPostValue)),
-                dbid = cursor.getInt(cursor.getColumnIndex(DatabaseColoumnId)),
-                date = Date().time.toString()
+        try {
+            val q = OperationJson.draftholder(
+                    title = cursor.getString(cursor.getColumnIndex(DatabaseColoumnTitle)),
+                    tags = cursor.getString(cursor.getColumnIndex(DatabaseColoumnTags)),
+                    content = cursor.getString(cursor.getColumnIndex(DatabaseColoumnContent)),
+                    payouttype = cursor.getString(cursor.getColumnIndex(DatabaseColoumnPostValue)),
+                    dbid = cursor.getInt(cursor.getColumnIndex(DatabaseColoumnId)),
+                    date = Date().time.toString()
 
-        )
+            )
+            return q
+        } catch (ex:Exception){
+            return null
+        }
+
         //var cus = cur.getString(0)
         //var ses = curs.getString(1)
         //var re = HelperQuestionsList(curs)
-        return q
+        //return q
 
     }
 }
