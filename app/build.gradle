@@ -15,8 +15,8 @@ android {
         applicationId "com.steemapp.lokisveil.steemapp"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 37
-        versionName "1.4.5"
+        versionCode 38
+        versionName "1.4.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
