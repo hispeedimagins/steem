@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.opengl.Visibility
 import android.os.AsyncTask
+import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
@@ -74,6 +75,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
     val sharedpref : SharedPreferences = applicationContext.getSharedPreferences(CentralConstants.sharedprefname,0)
     //var username = sharedpref.getString(CentralConstants.username,null)
     var key = sharedpref.getString(CentralConstants.key,null)
+    var signingnonce = PreferenceManager.getDefaultSharedPreferences(context).getString("signing_nonce","51").toInt()
     //var accountrep = if(CentralConstantsOfSteem.getInstance() != null && CentralConstantsOfSteem.getInstance().profile != null) CentralConstantsOfSteem.getInstance()?.profile?.reputation else sharedpref.getString(CentralConstants.accountrep,null)
     /*val listner = listner*/
     val toastString = toastString
@@ -458,6 +460,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
                 key = sharedpref.getString(CentralConstants.key,null)
             }
             Log.i("startingsignmaasy", "mainasync pre")
+            Log.d("startsigningback","nonce is $signingnonce")
             //useIfOne++;
         }
 
@@ -467,7 +470,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
             try {
 
                 //params[0].signedtra.sign(ImmutablePair(PrivateKeyType.POSTING,key))
-                params[0].signedtra.signMy(SteemJConfig.getInstance().getChainId(), ImmutablePair(PrivateKeyType.POSTING,params[0].key))
+                params[0].signedtra.signMy(SteemJConfig.getInstance().getChainId(), ImmutablePair(PrivateKeyType.POSTING,params[0].key),signingnonce)
             } catch (e: InterruptedException) {
 
 

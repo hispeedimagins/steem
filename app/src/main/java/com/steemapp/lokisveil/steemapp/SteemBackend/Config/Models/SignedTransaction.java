@@ -195,7 +195,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
 
 
-    public void signMy(String chainId,ImmutablePair<PrivateKeyType, String> keys) {
+    public void signMy(String chainId,ImmutablePair<PrivateKeyType, String> keys,int signingnonce) {
         /*if (!SteemJConfig.getInstance().getValidationLevel().equals(ValidationType.SKIP_VALIDATION)) {
             this.validate();
         }*///getRequiredSignatureKeys()
@@ -222,7 +222,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
             if (isCanonical(signatureAsByteArray)) {
                 nonce++;
-                this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 31);
+                this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + signingnonce);
                 Log.d("nonce",String.valueOf(nonce));
                 //nonce++;
             } else {
