@@ -56,29 +56,14 @@ class FloatingDateHolder {
             //scroll by hand is down
             if (dy > 0) {
                 pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                /*for(int i = pastVisiblesItems; i >= mValues.size(); i++){
-                        Object re = mValues.get(i);
-                        if(re instanceof String){
-                            updateStickyHeader((String) mValues.get(i),(String) mValues.get(i),true);
-                            break;
-                        }
-                    }*/
+
                 previsbiggerthannext = true
 
             } else {
                 //down
+                //use the last visible items, may change it back to the first visible items
                 pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                /*if (mValues.size() > 0) {
-                        for(int i = pastVisiblesItems; i >= 0; i--){
 
-                            Object re = mValues.get(i);
-                            if(re instanceof String){
-                                updateStickyHeader((String) mValues.get(i),(String) mValues.get(i),true);
-
-                                break;
-                            }
-                        }
-                    }*/
 
                 previsbiggerthannext = false
             }
@@ -233,40 +218,27 @@ class FloatingDateHolder {
         var ad = oldc?.get(Calendar.DATE)
         //oldc.setTime(oldcc);
 
+        //new behaviour, if the date is the same do not do a thing
         val com = getZeroDate(prevdate).compareTo(getZeroDate(oldc))
         if ( com > 0 && prevdate?.get(Calendar.DATE) != oldc?.get(Calendar.DATE)) {
-            /*val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
-            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
 
-            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()), oldc!!)
-
-            updateStickyHeader(pd, nd, h, false)*/
             AddChangedDate(prevdate!!,oldc!!,false)
         }
 
         else if ( com < 0  && prevdate?.get(Calendar.DATE) != oldc?.get(Calendar.DATE)) {
-            /*val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
-            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
 
-            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()), oldc!!)
-
-            updateStickyHeader(pd, nd, h, true)*/
             AddChangedDate(prevdate!!,oldc!!,true)
         }
 
         else if (arvdinterface != null && (arvdinterface!!.getSize() === 0 || arvdinterface!!.getSize() === 1)) {
-            /*val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
-            val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
 
-            val h = add(oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()), oldc!!)
-
-            updateStickyHeader(pd, nd, h, false)*/
             AddChangedDate(prevdate!!,oldc!!,false)
         }
         prevdate = oldc
     }
 
 
+    //calculates and adds the correct date
     fun AddChangedDate(prevdate:Calendar,oldc:Calendar,previsbiggerthannext: Boolean){
         val nd = oldc?.get(Calendar.DATE).toString() + " " + oldc?.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
         val pd = prevdate!!.get(Calendar.DATE).toString() + " " + prevdate!!.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
@@ -280,6 +252,7 @@ class FloatingDateHolder {
     fun getZeroDate(od: Calendar?): Calendar {
         val calendar = Calendar.getInstance()
 
+        //hour of the day seems to be needed for now
         calendar.timeInMillis = od!!.timeInMillis
         //calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
@@ -319,6 +292,7 @@ class FloatingDateHolder {
     //called for updating the main sticky frame layout
     private fun updateStickyHeader(prevdate: String, newdate: String, holder: DateTypeAndStringHolder, previsbiggerthannext: Boolean) {
 
+        //this function updates the date while scrolling and animtes it up or down after stopping
         if (holderOldUnivDate != null && holder.equals(holderOldUnivDate)) {
             var animmoy = 10f
             if(previsbiggerthannext){

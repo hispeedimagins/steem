@@ -148,6 +148,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(i)
         }
         Mint.initAndStartSession(this.application, "dd37aa8e")
+
+        //for updating the value of the voting power when the drawer is opened
+        //and readding the images and removing them to save RAM - next build
         val toggle = object : ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             override fun onDrawerClosed(drawerView: View) {
@@ -180,6 +183,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         username = sharedPreferences.getString(CentralConstants.username, null)
         key = sharedPreferences.getString(CentralConstants.key, null)
 
+        //trim usernames so any spaces are removed from the previous versions as well
         if(!(sharedPreferences.getBoolean("updatefortrim",false))){
             var shae = sharedPreferences.edit()
             shae.putString(CentralConstants.username,username?.trim())
@@ -711,6 +715,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
+    //function to open an alert if there are rewards
+    //if the user wishes to claim them then a request will be made
     fun openRewardAlert(profile:prof.profile){
         val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@MainActivity))
         //val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)

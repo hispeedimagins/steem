@@ -88,14 +88,6 @@ public class StaticMethodsMisc {
     }
 
     public static String CorrectBeforeMainLinks(String value,List<String> links){
-
-        //String newtegex = "\\[(\\w+|[^\\\\]*\\.(\\w+))\\]\\((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|]\\)";
-        //String newtegex = "\\[(\\w+|[^\\\\]*\\.(\\w+))\\]\\(\\)";
-        //String regexmatch = "!\\[[\\w\\W]]\\([\\w\\W]\\)";
-        //value = value.replaceAll(newtegex,"<img([\\w\\W]+?)/>");
-        /*while (urlMatcher.find()) {
-             value = value.replace(value.substring(urlMatcher.start(0), urlMatcher.end(0)),"<img([\\w\\W]+?)/>"); //containedUrls.add(content.substring(urlMatcher.start(0), urlMatcher.end(0)));
-        }*/
         if(links != null){
             /*Pattern pattern = Pattern.compile(
                         "\\[(\\w+|[^\\\\]*\\.(\\w+)|\\w+ \\w+)\\]\\(()\\)",
@@ -151,76 +143,7 @@ public class StaticMethodsMisc {
        // return value;
     }
 
-    /*public static String CorrectMarkDownUsers(String value){
 
-        //match pattern from steemit condenser
-        *//*Pattern pattern = Pattern.compile(
-                "/(^|[^a-zA-Z0-9_!#$%&*@＠/]|(^|[^a-zA-Z0-9_+~.-/#]))[@＠]([a-z][-.a-z\\d]+[a-z\\d])/gi",
-                Pattern.CASE_INSENSITIVE);
-        Matcher urlMatcher = pattern.matcher(value);
-        while (urlMatcher.find()) {
-            String name = value.substring(urlMatcher.start(3), urlMatcher.end(3));
-            String reps = " <a class=\"mylink\" href=\"steemer://@"+name+"\" >"+name+"</a> ";
-            value = value.replace(name,reps);
-
-        }*//*
-
-        Pattern pattern = Pattern.compile("(@{1})([a-z0-9.-]{3,16})", Pattern.CASE_INSENSITIVE);
-        Matcher urlMatcher = pattern.matcher(value);
-        int fin = 0;
-        while (urlMatcher.find(fin)) {
-            int end = urlMatcher.end(0);
-            fin = end;
-            String name = value.substring(urlMatcher.start(0), end);
-            String reps = " <a class=\"mylink\" href=\"steemer://@"+name+"\" >"+name+"</a> ";
-            value = value.replace(name,reps);
-            //containedUrls.add(content.substring(urlMatcher.start(2), urlMatcher.end(2)));
-        }
-
-        return value;
-    }*/
-
-    public static String CorrectMarkDownUsers(String value,List<String> users){
-        if(users != null){
-            for(int i = 0; i < users.size(); i++){
-                //String reps = "<a  class=\"users\" href=\"steemer://@"+users.get(i)+"\" >"+"@"+users.get(i)+"</a>";
-                /*Pattern pattern = Pattern.compile(
-                        "[^/|^!]("+"@" + users.get(i)+")[^/|]",
-                        Pattern.CASE_INSENSITIVE);
-            Matcher urlMatcher = pattern.matcher(value);
-            while (urlMatcher.find()) {
-
-
-            }*/
-                //[^/|^!]@insideoutlet[^/|^!]
-                String check = "[^/|^!]("+"@" + users.get(i)+")[^/|]";
-                String remcheck = "[>]("+"@" + users.get(i)+")[<]";
-                String remcheckL = "[>]("+"@" + users.get(i)+")";
-                String remcheckR = "("+"@" + users.get(i)+")[<]";
-                //String reps = " <a onClick=\"UserClickedK(\'"+users.get(i)+"\')\"  class=\"users\" href=\"steemer://@"+users.get(i)+"\" >"+"@"+users.get(i)+"</a> ";
-                String reps = " <a class=\"mylink\" href=\"steemer://@"+users.get(i)+"\" >"+"@"+users.get(i)+"</a> ";
-                //String reps = " <a onClick=\"UserClickedK(\'"+users.get(i)+"\')\"  class=\"users\" href=\"#\" >"+"@"+users.get(i)+"</a> ";
-                //String reps = " <a onClick=\"UserClickedK(\'"+users.get(i)+"\')\"  class=\"users\" href=\"#\" >"+"@"+users.get(i)+"</a> ";
-                //String reps = " <a class=\"mylink\" href=\""+users.get(i)+"\" >"+"@"+users.get(i)+"</a> ";
-                //String reps = " <a onClick=\""+users.get(i)+"\"  class=\"users\" href=\"#\" >"+"@"+users.get(i)+"</a> ";
-                value = value.replaceAll(remcheck, "> @"+users.get(i)+" <");
-                value = value.replaceAll(remcheckL, "> @"+users.get(i));
-                value = value.replaceAll(remcheckR, "@"+users.get(i)+" <");
-                value = value.replaceAll(check,reps);
-
-                /*if(value != null && value.contains(check)  ){
-                    String reps = "<a  class=\"users\" href=\"steemer://@"+users.get(i)+"\" >"+check+"</a>";
-                    value = value.replace(check,reps);
-                }*/
-            }
-            return value;
-        }
-        return value;
-    }
-
-    public static String CorrectBr(String value){
-        return value.replaceAll("<br>","<br/>");
-    }
 
     public static String CorrectAfterMainImages(String value){
         /*Pattern pattern = Pattern.compile(
@@ -228,7 +151,7 @@ public class StaticMethodsMisc {
                 Pattern.CASE_INSENSITIVE);*/
         //pattern.pattern()
         //Matcher urlMatcher = pattern.matcher(value);
-       // String regexmatchm = "<img([\\w\\W]+?)/>";
+        // String regexmatchm = "<img([\\w\\W]+?)/>";
         //String regexmatch = "\\b(!\\[\\w]\\((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]\\))";
         //String newtegex = "!\\[(\\w+|[^\\\\]*\\.(\\w+))\\]\\((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|]\\)";
         //String newtegex = "!\\[(\\w+|\\w*\\.(\\w+))\\]\\((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|]\\)";
@@ -244,24 +167,10 @@ public class StaticMethodsMisc {
         return value;
     }
 
-    public static int GetImageIndex(String value,List<String> images){
-        int i = 0;
-        for(String image : images){
-            String[] spiliatzerozeroarr = images.get(i).split("/0x0/");
-            String spiliatzerozero = null;
-            if(spiliatzerozeroarr != null && spiliatzerozeroarr.length == 2){
-                spiliatzerozero =  spiliatzerozeroarr[1];
-            }
-            if(value.contains(image)){
-                return i;
-            }
-            else if(spiliatzerozero != null && value.contains(spiliatzerozero)){
-                return i;
-            }
-            i++;
-        }
-        return i;
-    }
+
+
+
+
 
     public static List<Object> ConvertTextToList(String value,List<String> images){
 
@@ -304,12 +213,7 @@ public class StaticMethodsMisc {
      * @return string
      */
     public static String CalculateRepScore(String reputation){
-        /*Double resp = Double.valueOf(reputation);
-        Double replog = Math.log10(resp);
-        Double subni = replog - 9;
-        Double mulni = subni * 9;
-        Double addtf = mulni + 25;
-        return String.valueOf( addtf.intValue());*/
+
         return String.valueOf(CalculateRepScoreRetInt(reputation));
     }
 
@@ -328,7 +232,7 @@ public class StaticMethodsMisc {
     }
 
     /**
-     *
+     * converts it to  yyyy-MM-dd'T'hh:mm:ssZ and return gmt date
      * @param date string yyyy-MM-dd'T'hh:mm:ss
      * @return java date
      */
@@ -341,17 +245,6 @@ public class StaticMethodsMisc {
     }
 
     public static long CalculateVotingPower(int votingpower,long lastvotetimes){
-        //long sys = System.currentTimeMillis();
-        //float bl = lastvotetimes/1000;
-        //float dybl = (dt/1000);
-        //float sysblbl = (sys/1000);
-        //float shi = dybl - bl;
-        //float bshi = sysblbl - bl;
-        //float sub = ((float)((System.currentTimeMillis() - lastvotetimes) / 1000));
-        //float subff = votingpower +((((float)((System.currentTimeMillis() - lastvotetimes) / 1000)) / CentralConstants.FiveDaysInSeconds) * 10000);
-        //float subf = sub / CentralConstants.FiveDaysInSeconds;
-        //float subm = subf * 10000;
-        //float subff = votingpower + subf;
         float subff = votingpower +((((float)((System.currentTimeMillis() - lastvotetimes) / 1000)) / CentralConstants.FiveDaysInSeconds) * 10000);
         if(subff > CentralConstants.SteemFullVote){
             return CentralConstants.SteemFullVote;
@@ -362,6 +255,11 @@ public class StaticMethodsMisc {
         //return votingpower;
     }
 
+    /**
+     * Function adds +0000 to the steem date to make it compatible yyyy-MM-dd'T'HH:mm:ssZ
+     * @param date format yyyy-MM-dd'T'HH:mm:ss
+     * @return Date
+     */
     public static Date FormatDateGmt(String date){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -375,6 +273,11 @@ public class StaticMethodsMisc {
         //return new Date();
     }
 
+    /**
+     * converts current date to mirror steem date format
+     * @param date java date
+     * @return String
+     */
     public static String FormatDateAsSteemString(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -386,13 +289,7 @@ public class StaticMethodsMisc {
     }
 
     public static Double CalculateVotingValueRshares(String rshares){
-        //CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
-        /*long rshare = Long.valueOf(rshares);
-        long recentclaims = Long.valueOf(ins.getResultfund().getRecentClaims());
-        long rsharedivclaim = rshare/recentclaims;
-        Double rewardbalance = Double.valueOf(ins.getResultfund().getRewardBalance().replace("STEEM",""));
-        Double shareSteem = rsharedivclaim * rewardbalance;
-        return shareSteem;*/
+
         return CalculateVotingValueRshares(Double.valueOf(rshares));
     }
 
@@ -419,11 +316,7 @@ public class StaticMethodsMisc {
 
     public static Double CalculateEffectiveVestsUser(){
         CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
-        /*Double vesting = Double.valueOf(ins.getProfile().getVestingShares().replace("VESTS",""));
-        Double rvesting = Double.valueOf(ins.getProfile().getReceivedVestingShares().replace("VESTS",""));
-        Double dvesting = Double.valueOf(ins.getProfile().getDelegatedVestingShares().replace("VESTS",""));
 
-        return (vesting + rvesting - dvesting) * 1000000;*/
         return CalculateEffectiveVestsUser(ins.getProfile().getVestingShares(),ins.getProfile().getDelegatedVestingShares(),ins.getProfile().getReceivedVestingShares());
 
 
@@ -451,11 +344,7 @@ public class StaticMethodsMisc {
     }
 
     public static String CalculateVoteRshares(int votingpower,int voteweight){
-        /*CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
-        int maxdenom = ins.getDynamicglobalprops().getVotePowerReserveRate() * 5;
-        int wvp = CalculateWeightedVotingPower(votingpower,voteweight);
-        int usedvotingpower = (wvp + maxdenom - 1) / maxdenom;*/
-        //return String.valueOf((usedvotingpower * CalculateEffectiveVestsUser())/CentralConstants.SteemFullVote);
+
         return String.valueOf((CalculateUsedVotingPower(votingpower,voteweight) * CalculateEffectiveVestsUser())/CentralConstants.SteemFullVote);
     }
 
@@ -470,64 +359,6 @@ public class StaticMethodsMisc {
     }
 
 
-
-    /*public static boolean MakeFollowRequests (prof.FollowCount followCount, Context context, Response.Listener<JSONObject> listener){
-        //int followers = followCount.getResult().getFollowerCount();
-        int following = followCount.getResult().getFollowingCount();
-
-        *//*GeneralRequestsFeedIntoConstants con = new GeneralRequestsFeedIntoConstants(context);
-        int sfa = 0;
-        int tfa = followers + 1000;
-        while (tfa > 1000){
-
-            con.GetFollowers(followCount.getResult().getAccount(),sfa,listener);
-            sfa += 1000;
-            tfa -= 1000;
-        }*//*
-
-
-        GeneralRequestsFeedIntoConstants cons = new GeneralRequestsFeedIntoConstants(context);
-        int sfas = 0;
-        int tfas = following + 100;
-        while (tfas > 100){
-
-            cons.GetFollowing(followCount.getResult().getAccount(),sfas,listener);
-            sfas += 100;
-            tfas -= 100;
-        }
-
-        return true;
-    }
-
-    public static boolean MakeFollowRequestsFollowers (prof.FollowCount followCount, Context context, Response.Listener<JSONObject> listener){
-        int followers = followCount.getResult().getFollowerCount();
-        //int following = followCount.getResult().getFollowingCount();
-
-        GeneralRequestsFeedIntoConstants con = new GeneralRequestsFeedIntoConstants(context);
-        int sfa = 0;
-        int tfa = followers + 1000;
-        while (tfa > 1000){
-
-            con.GetFollowers(followCount.getResult().getAccount(),sfa,listener);
-            sfa += 1000;
-            tfa -= 1000;
-        }
-
-
-        *//*GeneralRequestsFeedIntoConstants cons = new GeneralRequestsFeedIntoConstants(context);
-        int sfas = 0;
-        int tfas = following + 100;
-        while (tfas > 100){
-
-            cons.GetFollowing(followCount.getResult().getAccount(),sfas,listener);
-            sfas += 100;
-            tfas -= 100;
-        }*//*
-
-        return true;
-    }*/
-
-
     public static boolean CheckFollowing(String author, Context context){
         FollowingDatabase followingDatbase = new FollowingDatabase(context);
         return followingDatbase.simpleSearch(author);
@@ -537,6 +368,5 @@ public class StaticMethodsMisc {
         FollowersDatabase followingDatbase = new FollowersDatabase(context);
         return followingDatbase.simpleSearch(author);
     }
-
 
 }

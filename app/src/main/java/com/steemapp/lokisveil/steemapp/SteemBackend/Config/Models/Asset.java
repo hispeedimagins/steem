@@ -36,6 +36,10 @@ public class Asset  implements ByteTransformable {
         this.setAmount(amount);
     }
 
+    /**
+     * constructor for string amount
+     * @param amount sbd/steem/vests in string with theirm identifiers at the end
+     */
     public Asset(String amount){
         String[] sp = amount.split(" ");
 

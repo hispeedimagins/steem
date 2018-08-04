@@ -71,22 +71,18 @@ class UserUpvoteActivity : AppCompatActivity() {
         var con = FollowApiConstants.getInstance()
         var al = ArrayList<feed.avtiveVotes>()
         for(x in 0 until jsonArray.length()){
+
+            // try catch because some json which is not correctly made can crash the app
             var jo : JSONObject? = null
             try {
                 jo = jsonArray.getJSONObject(x)
             } catch (ex:Exception){
 
             }
-
+            //check for null
             if(jo != null){
                 var dat : Date = StaticMethodsMisc.FormatDateGmt(jo.getString("time"))
                 var du = DateUtils.getRelativeDateTimeString(applicationContext,dat.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
-                /*if(!con.following.isEmpty() && con.following.any { p -> p.following == jo.getString("voter") }){
-                    //x.followInternal = MyOperationTypes.unfollow
-                }
-                else {
-                    //x.followInternal = MyOperationTypes.follow
-                }*/
                 var votvalr = StaticMethodsMisc.VotingValueSteemToSd(StaticMethodsMisc.CalculateVotingValueRshares(jo.getString("rshares")))
                 var av = feed.avtiveVotes(
                         voter = jo.getString("voter"),

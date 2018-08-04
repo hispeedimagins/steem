@@ -6,6 +6,7 @@ class Links {
 
     companion object {
         //var urlChar = "[^\\s\"<>\\]\\[\\(\\)]"
+        //removed the () so images can be identified
         var urlChar = "[^\\s\"<>\\]\\[]"
         var urlCharEnd = urlChar.replace("/]$/".toRegex(), ".,']"); // insert bad chars to end on
         var imagePath ="(?:(?:\\.(?:tiff?|jpe?g|gif|png|svg|ico)|ipfs/[a-z\\d]{40,}))"

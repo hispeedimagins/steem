@@ -31,6 +31,8 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Utilities;
  */
 public class ClaimRewardBalanceOperation extends Operation {
     //@JsonProperty("account")
+
+    //only options with the expose annotations are converted to json via gson
     @Expose
     @SerializedName("account")
     private String account_name;

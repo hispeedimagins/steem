@@ -33,6 +33,8 @@ class VoteWeightThenVote(context: Context, activity: Activity, vote:VoteOperatio
         var subper = (per * 2) / 100
         var vps = 0
         val ed = context.getSharedPreferences(CentralConstants.sharedprefname,0)
+        //stem.profile will be null if the app was launched via a notification
+        //update the vote value either way
         if(stem.profile != null){
             stem.profile.votingPower -= subper
             vps = stem.profile.votingPower
@@ -43,6 +45,7 @@ class VoteWeightThenVote(context: Context, activity: Activity, vote:VoteOperatio
 
 
 
+        //save the changes in voting power for later use
         if(ed != null){
             var ei = ed.edit()
             ei.putInt(CentralConstants.votingpower,vps)
@@ -116,6 +119,8 @@ class VoteWeightThenVote(context: Context, activity: Activity, vote:VoteOperatio
            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                // TODO Auto-generated method stub
 
+               //variables now used
+               //so if app was not running then it can still sign and work
                var seekbp = getvoteseek(seekBar.progress)
 
                val stem = CentralConstantsOfSteem.getInstance()
@@ -152,6 +157,7 @@ class VoteWeightThenVote(context: Context, activity: Activity, vote:VoteOperatio
                if(vshare == null) return
                var share = StaticMethodsMisc.CalculateVotingValueRshares(vshare)
                var sbshare = StaticMethodsMisc.VotingValueSteemToSd(share)
+               //set them for retrieval later on
                CentralConstantsOfSteem.getInstance().voteval = sbshare
                CentralConstantsOfSteem.getInstance().rshares = share
                sbdworth.text = String.format("%.3f", sbshare) + " SBD"

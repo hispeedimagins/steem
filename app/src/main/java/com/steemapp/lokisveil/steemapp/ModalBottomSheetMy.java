@@ -228,6 +228,10 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
         this.comment = content;
     }
 
+    /**
+     * check of the comment field is not null before signing
+     * @return boolean
+     */
     public boolean checkforempty(){
         String con = EditTextMainTwo.getText().toString();
         if(con.isEmpty()){

@@ -230,6 +230,9 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
                             //vop as VoteOperation
                             if(adaptedcomms != null){
 
+
+                                //update the vote details of a comment or a article
+                                //update its votes, update the value of the total payout available
                                 val holder = adaptedcomms.getObject(position)
                                 if(holder is FeedArticleDataHolder.FeedArticleHolder){
                                     holder?.uservoted = true
@@ -279,6 +282,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
 
 
                             }
+
                             var invo = vop[0] as CustomJsonOperation
                             if(myOperationTypes == MyOperationTypes.follow){
                                 var s : List<String> = ArrayList()
@@ -370,6 +374,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
     }
 
 
+    //return the json for a claim operation
     fun getOperationClaim(vop:Operation,signedtra: SignedTransaction) : JSONObject?{
         val d = MakeJsonRpc.getInstance()
         val gsons =  GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()

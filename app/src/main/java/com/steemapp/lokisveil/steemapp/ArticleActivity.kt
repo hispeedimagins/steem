@@ -132,6 +132,8 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
         key = sharedPreferences.getString(CentralConstants.key, null)
 
 
+        //Run functions to retrieve the general constants for use while
+        //voting on a comment/article
         val runs = GeneralRequestsFeedIntoConstants(applicationContext)
         runs.RunThemAll()
 

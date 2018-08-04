@@ -161,6 +161,7 @@ class LoginActivity : AppCompatActivity() , GlobalInterface{
         password.error = null
 
         // Store values at the time of the login attempt.
+        // use trim to remove any unwanted spaces
         val emailStr = email.text.toString().trim()
         val passwordStr = password.text.toString().trim()
 

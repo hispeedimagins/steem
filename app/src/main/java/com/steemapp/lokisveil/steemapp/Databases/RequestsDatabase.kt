@@ -141,10 +141,11 @@ class RequestsDatabase  (context : Context) : SQLiteOpenHelper(context, Database
             return questionsLites
         }
         cursor.moveToFirst()
+        //if it is not after the last on continue
         while (!cursor.isAfterLast) {
             var addit = createRequestDataClass(cursor)
             if(addit != null) questionsLites.add(addit)
-
+            //if move to next is false then break
             if(!cursor.moveToNext()) break
         }
 
@@ -153,6 +154,8 @@ class RequestsDatabase  (context : Context) : SQLiteOpenHelper(context, Database
 
     //made the creation of the class to a common function as it was needed in another place
     fun createRequestDataClass(cursor:Cursor):Request?{
+        //catch exceptions while creating the class with the database cursor
+        //return a null and continue working without crashing
         try{
             return Request(
 

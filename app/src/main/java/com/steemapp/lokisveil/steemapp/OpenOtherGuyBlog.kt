@@ -549,22 +549,10 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
 
                             activity_posts.text = "${resulto.postCount.toString()} posts"
                             activity_username_toolbar.text = nam
-                           // toolbar.title =  "${resulto.name} (${StaticMethodsMisc.CalculateRepScore(resulto.reputation)})"
-                          //  supportActionBar?.title = "${resulto.name} (${StaticMethodsMisc.CalculateRepScore(resulto.reputation)})"
-                            var lastvotetime  = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(resulto.lastVoteTime) )
-                            /*var votingpower = resulto.votingPower
-                            var sub = (Date().time - lastvotetime.time) / 1000
-                            var subf = sub / CentralConstants.FiveDaysInSeconds
-                            var subm = subf * 10000
-                            votingpower = (votingpower + subm).toInt()
-                            CentralConstantsOfSteem.getInstance().currentvotingpower = StaticMethodsMisc.CalculateVotingPower(resulto.votingPower,resulto.lastVoteTime).toInt()*/
-                            /*var reps = resulto.reputation.toDouble()
-                            var replog = Math.log10(reps)
-                            var subni = replog - 9
-                            val mulni = subni * 9
-                            val addtf = mulni + 25*/
+
                             val resultp = gson.fromJson<prof.profiledata>(resulto.jsonMetadata, prof.profiledata::class.java)
                             if(resultp?.profile != null){
+                                //check if the name is not null
                                 if(resultp.profile.name != null && resultp.profile.name.isNotEmpty()){
                                     activity_username.text = resultp.profile.name
 

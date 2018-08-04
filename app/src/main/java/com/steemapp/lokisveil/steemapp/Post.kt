@@ -238,6 +238,7 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
                             block.GetDynamicGlobalProperties()
                         }
                     } catch(ex:Exception){
+                        //display any errors occured while signing and broadcasting the operation instead of crashing
                         Toast.makeText(applicationContext,ex.message,Toast.LENGTH_LONG).show()
                     }
 
@@ -413,44 +414,26 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
                         writePost?.progress(View.VISIBLE)
 
 
-                        //vote.weight = numberPicker.value as Short
-                        /*if(edittext.text != null){
-                            //val u : Int = edittext.text
-                            val i = Intent(this, OpenOtherGuyBlog::class.java)
-                            i.putExtra(CentralConstants.OtherGuyNamePasser,edittext.text.toString())
-                            this.startActivity(i)
-                        }*/
+
                         class someTask() : AsyncTask<Void, Void, String>() {
                             override fun doInBackground(vararg params: Void?): String? {
+                                //catch errors while signing and uploading the image and display them
                                 try{
                                     var result = SteemImageUpload.uploadImage(AccountName(username),key,file,filePath )
 
                                     return result
                                 } catch (ex:Exception){
-                                    runOnUiThread( {
-                                        Toast.makeText(applicationContext,ex.message,Toast.LENGTH_LONG)
-                                    })
+                                    runOnUiThread {
+                                        Toast.makeText(applicationContext,ex.message,Toast.LENGTH_LONG).show()
+                                    }
                                 }
                                 return null
                             }
 
                             override fun onPostExecute(result: String?) {
 
-                                /*var webView = WebView(this@Post)
-                                webView.getSettings().setJavaScriptEnabled(true)
 
-
-                                webView.webViewClient = object : WebViewClient() {
-
-                                    override fun onPageFinished(view: WebView, url: String) {
-
-
-
-                                        super.onPageFinished(view, url)
-                                    }
-                                }
-
-                                webView.loadUrl("https://steemit.com/");*/
+                                //check if the reult is not null before adding it to the database
                                 if(result != null){
                                     var db = ImageUploadedUrls(applicationContext)
                                     var ins = db.Insert(result!!)

@@ -195,6 +195,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
 
 
+
+    //sign the transaction with the nonce in settings
     public void signMy(String chainId,ImmutablePair<PrivateKeyType, String> keys,int signingnonce) {
         /*if (!SteemJConfig.getInstance().getValidationLevel().equals(ValidationType.SKIP_VALIDATION)) {
             this.validate();

@@ -335,6 +335,16 @@ public class MakeOperationsMine {
      *             If there is a problem while signing the transaction.
      */
 //throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException
+
+    /**
+     * Sets up the reward claim option with the data
+     * @param accountName users who wishes to claim the rewards
+     * @param sbd steem dollars value to claim
+     * @param steem steem value to claim
+     * @param vesting the steem power value - not used
+     * @param vestingsteemsp the steem power as vesting shares to claim
+     * @return ClaimRewardBalanceOperation
+     */
     public ClaimRewardBalanceOperation claimRewards(AccountName accountName,String sbd,String steem,String vesting,String vestingsteemsp) {
         // Get extended account info to determine reward balances
         //ExtendedAccount extendedAccount = this.getAccounts(Lists.newArrayList(accountName)).get(0);
@@ -346,16 +356,6 @@ public class MakeOperationsMine {
         ClaimRewardBalanceOperation claimOperation = new ClaimRewardBalanceOperation(accountName, steemReward,
                 sbdReward, vestingReward);
 
-        // Broadcast claim operation if there are any balances available
-        /*if (steemReward.getAmount() > 0 || sbdReward.getAmount() > 0 || vestingReward.getAmount() > 0) {
-            ArrayList<Operation> operations = new ArrayList<>();
-            operations.add(claimOperation);
-            DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
-            SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
-                    null);
-            signedTransaction.sign();
-            this.broadcastTransaction(signedTransaction);
-        }*/
 
         return claimOperation;
     }
