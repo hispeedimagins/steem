@@ -1,13 +1,21 @@
 package com.steemapp.lokisveil.steemapp
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.drawable.Drawable
 import android.preference.PreferenceManager
 import android.support.v7.view.ContextThemeWrapper
+import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
+import com.bumptech.glide.request.FutureTarget
 import com.steemapp.lokisveil.steemapp.HelperClasses.Links
 import com.steemapp.lokisveil.steemapp.HelperClasses.Physhy
 import com.steemapp.lokisveil.steemapp.HelperClasses.ProxifyUrl
+import java.net.URL
 import java.util.regex.Pattern
 
 class MiscConstants{
@@ -183,6 +191,91 @@ class MiscConstants{
             }
 
             return s
+        }
+
+
+
+
+        //This will fetch the btimap image
+        public fun getBitmap(context:Context, sh: FutureTarget<Drawable>, isPfp:Boolean = false): Bitmap?{
+            try{
+                var g  = sh.get()
+                //make a bitmap wit the height and width of the image
+                var bt = Bitmap.createBitmap(g.intrinsicWidth, g.intrinsicHeight, Bitmap.Config.ARGB_8888);
+                Log.d("bit map h and w ", "width : ${g.intrinsicWidth}, height: ${g.intrinsicHeight} ")
+                //load into the canvas
+                val canvas = Canvas(bt)
+                //fetch device metrics and height,width
+                val metrics = context.getResources().getDisplayMetrics()
+                val dWidth = metrics.widthPixels
+                val dHeight = metrics.heightPixels
+                Log.d("dev height","dHeight:${metrics.widthPixels}, dWidth:${metrics.heightPixels}")
+
+                var height = canvas.height
+
+                var width = canvas.width
+
+                Log.d("canvas height","cheight:$height, cwidth:$width")
+                var dwf = dWidth/4
+                var hwf = dHeight / 4
+                //do not scale the image if it is a pfp
+                if(!isPfp){
+                    //now all the conditions do the same thing, with more testing
+                    //it will be changed later on
+                    //reduce the height and width of the image by 4
+                    //this is done because the widget will crash if uses too much memory
+                    if(width > dwf && height > hwf){
+                        width /= 4
+                        height /= 4
+                    } else if(width > dwf){
+                        width /= 4
+                        height /= 4
+                    } else if(height > hwf){
+                        height /= 4
+                        width /= 4
+                    } else {
+
+                    }
+                    /*if(height > dHeight/4){
+                        height /= 4
+                    }*/
+                }
+
+                Log.d("n canvas height","cheight:$height, cwidth:$width")
+                g.setBounds(0, 0, canvas.width, canvas.height)
+                g.draw(canvas)
+                //start recaliming memory after drawing
+                canvas.setBitmap(null)
+                //var re = Bitmap.createScaledBitmap(bt,width,height,false)
+                //scale the bitmap
+                var re = getResizedBitmap(bt,width,height)
+                //bt.recycle()
+                return  re
+            } catch (ex:Exception){
+                Log.d("getBitmapWidget",ex.message)
+            }
+            return null
+
+        }
+
+        fun getResizedBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
+
+            val width = bm.width
+            val height = bm.height
+            val scaleWidth = newWidth.toFloat() / width
+            val scaleHeight = newHeight.toFloat() / height
+            // CREATE A MATRIX FOR THE MANIPULATION
+            val matrix = Matrix()
+            // RESIZE THE BIT MAP
+            matrix.postScale(scaleWidth, scaleHeight)
+
+            // "RECREATE" THE NEW BITMAP
+            val resizedBitmap = Bitmap.createBitmap(
+                    bm, 0, 0, width, height, matrix, false)
+            /*val resizedBitmap = Bitmap.createBitmap(
+                    bm, 0, 0, newWidth, newHeight, matrix, false)*/
+            bm.recycle()
+            return resizedBitmap
         }
 
 
