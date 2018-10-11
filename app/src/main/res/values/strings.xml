@@ -115,6 +115,19 @@
         <item>votes</item>
     </string-array>
 
+    <string-array name="main_tags_widget">
+        <item>feed</item>
+        <item>trending</item>
+        <item>hot</item>
+        <item>new</item>
+        <item>promoted</item>
+        <item>cashout</item>
+        <item>children</item>
+        <item>feed</item>
+        <item>payout</item>
+        <item>votes</item>
+    </string-array>
+
     <string-array name="multi_select_list_preference_default_value" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
@@ -143,4 +156,12 @@
     <string name="title_activity_notifications_busy_d">Notifications</string>
     <string name="searchprovidertitle">Search powered by AskSteem</string>
     <string name="title_activity_search">Search</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+
+
+    <string name="smartbulletin_provider_default_activity">
+        com.steemapp.lokisveil.steemapp/com.steemapp.lokisveil.steemapp.MainActivity         <!-- full screen activity -->
+    </string>
 </resources>

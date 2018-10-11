@@ -114,7 +114,12 @@
     <color name="search_background_scrim">#33000000</color>
 
 
-
+    <color name="smartbulletin_provider_bg_color">
+        #3b3f4a   <!-- background color -->
+    </color>
+    <color name="smartbulletin_provider_title_color">
+        #ffffffff   <!-- title text color -->
+    </color>
 
 
 </resources>
