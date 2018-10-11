@@ -54,13 +54,14 @@ class calendarcalculations {
     }*/
 
 
-    fun setDateOfTheData(datefdatas: Date?) {
+    fun setDateOfTheData(datefdatas: Date?,useDefault:Boolean = false) {
 
         if (datefdatas == null) {
             return
         }
         calendarForData = null
-        calendarForData = GregorianCalendar(timeZone)
+        //do not load gmt calender if not default
+        if(useDefault) calendarForData = GregorianCalendar(TimeZone.getDefault()) else calendarForData = GregorianCalendar(timeZone)
 
         calendarForData!!.time = datefdatas
 
@@ -71,13 +72,15 @@ class calendarcalculations {
 
     }
 
-    fun setDateOfTheData(datefdatas: Long?) {
+    fun setDateOfTheData(datefdatas: Long?,useDefault:Boolean = false) {
 
         if (datefdatas == null) {
             return
         }
         calendarForData = null
-        calendarForData = GregorianCalendar(timeZone)
+        //do not load gmt calender if not default
+        if(useDefault) calendarForData = GregorianCalendar(TimeZone.getDefault()) else calendarForData = GregorianCalendar(timeZone)
+
 
         calendarForData!!.timeInMillis = datefdatas
 

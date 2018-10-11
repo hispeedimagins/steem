@@ -12,6 +12,7 @@ import android.content.Intent
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
+import android.util.Log
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -106,6 +107,8 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
             }
+            //close db to prevent leakages
+            db.close()
 
         } else {
             handleIntent(intent)
@@ -251,7 +254,8 @@ class SearchActivity : AppCompatActivity() {
                 //body = if(bodyasis) st else builder.toString(),
                 body = st,
                 cashoutTime = "",
-                category = jsonMetadata?.tags?.first()!!,
+                //stability
+                category = if(jsonMetadata?.tags != null) jsonMetadata?.tags?.first()!! else "",
                 children = post.children,
                 created = post.created,
                 date = dd,
@@ -318,6 +322,8 @@ class SearchActivity : AppCompatActivity() {
 
                     val req = RequestsDatabase(this@SearchActivity)
                     //req.DeleteOld()
+                    //close db to prevent leakages
+                    req.close()
                     var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString() ,dateLong = Date().time, typeOfRequest = TypeOfRequest.SearchUsers.name,otherInfo = "users"))
                     if(ad > 0){
 
@@ -357,15 +363,19 @@ class SearchActivity : AppCompatActivity() {
     //for adding posts, with page num
     //will implement if users need it
     fun addPosts(response:String,num:Int = 0){
-
-        val g = Gson()
-        var res = g.fromJson<AskSteemSearch.search>(response,AskSteemSearch.search::class.java)
-        if(res != null && !res.error){
-            if(num != 0){
-                pgnum += num
+        try{
+            val g = Gson()
+            var res = g.fromJson<AskSteemSearch.search>(response,AskSteemSearch.search::class.java)
+            if(res != null && !res.error){
+                if(num != 0){
+                    pgnum += num
+                }
+                display(res.results)
             }
-            display(res.results)
+        } catch(ex:Exception){
+            Log.d("err",ex.message)
         }
+
     }
 
     fun GetPosts(query:String,page:Int = 1){
@@ -387,6 +397,8 @@ class SearchActivity : AppCompatActivity() {
             val req = RequestsDatabase(this@SearchActivity)
             //req.DeleteOld()
             var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response ,dateLong = Date().time, typeOfRequest = TypeOfRequest.SearchPosts.name,otherInfo = "posts"))
+            //close db to prevent leakages
+            req.close()
             if(ad > 0){
                 dblist.add(ad)
             }

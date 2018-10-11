@@ -163,6 +163,8 @@ class CommentsFragment : Fragment(),GlobalInterface {
                     swipecommonactionsclass?.makeswipestopDef()
                 }
             }
+            //close db connections so no leakages
+            db.close()
         }
         return view
     }
@@ -288,6 +290,8 @@ class CommentsFragment : Fragment(),GlobalInterface {
         if(save && context != null){
             val req = RequestsDatabase(context!!)
             var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "comment"))
+            //close db connections so no leakages
+            req.close()
             if(ad > 0){
                 dblist.add(ad)
             }
@@ -311,6 +315,8 @@ class CommentsFragment : Fragment(),GlobalInterface {
         if(save && context != null){
             val req = RequestsDatabase(context!!)
             var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = Gson().toJson(result) ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "list"))
+            //close db connections so no leakages
+            req.close()
             if(ad > 0){
                 dblist.add(ad)
             }

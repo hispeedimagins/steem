@@ -192,6 +192,8 @@ class MyFeedFragment : Fragment() {
                     }
                 }
             }
+            //close db connections so no leakages
+            db.close()
 
         } else {
             GetFeed()
@@ -418,6 +420,8 @@ class MyFeedFragment : Fragment() {
                     if(context != null){
                         val req = RequestsDatabase(context!!)
                         var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString() ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "feedfirst"))
+                        //close db connections so no leakages
+                        req.close()
                         if(ad > 0){
                             dblist.add(ad)
                         }
@@ -484,6 +488,8 @@ class MyFeedFragment : Fragment() {
                     if(context != null){
                         val req = RequestsDatabase(context!!)
                         var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString(),dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "more"))
+                        //close db connections so no leakages
+                        req.close()
                         if(ad > 0){
                             dblist.add(ad)
                         }

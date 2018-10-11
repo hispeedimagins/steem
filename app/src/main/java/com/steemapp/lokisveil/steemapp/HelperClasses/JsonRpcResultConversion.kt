@@ -25,6 +25,8 @@ import java.util.regex.Pattern
 /**
  * Created by boot on 2/10/2018.
  */
+
+
 class JsonRpcResultConversion(val json :JSONObject?,var username :String, val requestType: TypeOfRequest?){
     var contex : Context? = null
     constructor(json :JSONObject?,username :String,requestType : TypeOfRequest?,context: Context) : this(json,username,requestType){
@@ -77,7 +79,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
 
         }
-
+        //close db connections to prevent leakages
+        closedb()
         return al
     }
 
@@ -194,10 +197,13 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 var comm : feed.Comment = gson.fromJson<feed.Comment>(si,feed.Comment::class.java)*/
 
             }
-
+            //close db connections to prevent leakages
+            closedb()
            return returndata
         }
 
+        //close db connections to prevent leakages
+        closedb()
         return  ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
 
 
@@ -208,11 +214,20 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         println(address.getAsString())*/
     }
 
+    //close db connections to prevent leakages
+    fun closedb(){
+        followersDatabase?.close()
+        followingDatabase?.close()
+    }
 
     fun ParseJsonBlogMore(checkforbots:Boolean = false) : ArrayList<FeedArticleDataHolder.FeedArticleHolder>{
 
         //val body = gson.fromJson(json, JsonObject::class.java)
         val body = json
+        //check if json has result to preven a crash, if not, return.
+        if(!(body!!.has("result"))){
+            return ArrayList()
+        }
         var result: JSONArray? = body?.getJSONArray("result") ?: return ArrayList()
 
         var returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList()
@@ -234,11 +249,11 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
             }
         }
-
-
+        //close db connections to prevent leakages
+        closedb()
         return returndata
 
-        return  ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
+        //return  ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
 
     }
 
@@ -441,6 +456,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         //if(article == null) return list
 
         list.add(article!!)
+        //set wid to zero
+        var wid = 0
         if(article != null && article.replies != null){
             for(x in 0 until article.replies!!.length()){
                 var comstr = content.getJSONObject(article.replies!!.getString(x))
@@ -449,7 +466,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 reply.reply_to_above = false
                 var s = list.add(reply)
                 if(reply.replies != null && reply.replies!!.length() > 0){
-                    _ParseReplies(list,content,reply,true,5)
+                    //add 5 to increase width
+                    _ParseReplies(list,content,reply,true,wid + 5)
                 }
             }
             /*for(x in article.replies){
@@ -463,8 +481,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
             }*/
         }
 
-
-
+        //close db connections to prevent leakages
+        closedb()
         return list
     }
 
@@ -494,7 +512,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
             reply.reply_to_above = replytoabove
             list.add(reply)
             if(reply.replies != null && reply.replies!!.length() > 0){
-                _ParseReplies(list,content,reply,true,wid + 5)
+                var nw = wid + 5
+                _ParseReplies(list,content,reply,true,nw)
             }
         }
 

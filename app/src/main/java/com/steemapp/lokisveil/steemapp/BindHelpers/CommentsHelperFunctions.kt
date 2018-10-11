@@ -120,14 +120,14 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRec
             pay = holder.article?.already_paid
         }
 
-        /*if(holder.article?.width != 0){
+        if(holder.article?.width != 0){
+            holder.cardviewchat?.layoutParams = GetLayourParamsMargin(GetPx(holder.article?.width?.toFloat()!!))
+        }
 
-        }*/
-        holder.cardviewchat?.layoutParams = GetLayourParamsMargin(GetPx(holder.article?.width?.toFloat() as Float))
 
         holder.article_comments?.text = holder.article?.children.toString()
 
-        if(holder.article?.uservoted != null && holder.article?.uservoted as Boolean == true){
+        if(holder.article?.uservoted != null && holder.article?.uservoted as Boolean){
             holder.article_likes?.setTextColor(ContextCompat.getColor(con, R.color.colorAccent))
         }
         holder.article_likes?.text = holder.article?.netVotes.toString()

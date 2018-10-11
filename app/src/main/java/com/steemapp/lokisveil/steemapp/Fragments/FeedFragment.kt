@@ -208,6 +208,8 @@ class FeedFragment : Fragment() {
                     }
                 }
             }
+            //close db connections so no leakages
+            db.close()
             //var islas = true
 
         } else {
@@ -424,6 +426,8 @@ class FeedFragment : Fragment() {
                         val req = RequestsDatabase(context!!)
                         //req.DeleteOld()
                         var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString() ,dateLong = Date().time, typeOfRequest = TypeOfRequest.feed.name,otherInfo = "feedfirst"))
+                        //close db connections so no leakages
+                        req.close()
                         if(ad > 0){
                             dblist.add(ad)
                         }
@@ -478,6 +482,8 @@ class FeedFragment : Fragment() {
                     if(context != null){
                         val req = RequestsDatabase(context!!)
                         var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString(),dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "more"))
+                        //close db connections so no leakages
+                        req.close()
                         if(ad > 0){
                             dblist.add(ad)
                         }
@@ -528,6 +534,8 @@ class FeedFragment : Fragment() {
         val req = RequestsDatabase(context!!)
         //delete old items
         req.DeleteOld()
+        //close db connections so no leakages
+        req.close()
     }
     // TODO: Rename method, update argument and hook method into UI event
     /*fun onButtonPressed(uri: Uri) {
