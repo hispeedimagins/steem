@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--The difference in the lg widget is that
+in the widget category
+we use 0x100 instead of home
+Also the config activity is not set, we provide
+a settings icon for that
+update time is set to a day
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/lg_app_widget"
+    android:initialLayout="@layout/lg_app_widget"
+    android:minHeight="180dp"
+    android:minWidth="180dp"
+    android:previewImage="@drawable/example_appwidget_preview"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="43200000"
+    android:widgetCategory="0x100" />
