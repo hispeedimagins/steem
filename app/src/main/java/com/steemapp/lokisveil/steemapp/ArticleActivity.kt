@@ -1,6 +1,7 @@
 package com.steemapp.lokisveil.steemapp
 
 import android.app.Notification
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -37,6 +38,7 @@ import com.steemapp.lokisveil.steemapp.Fragments.CommentsFragment
 import com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
 import com.steemapp.lokisveil.steemapp.Interfaces.ArticleActivityInterface
+import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.ArticleRoomVM
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.BlockId
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.SignedTransaction
 import com.steemapp.lokisveil.steemapp.jsonclasses.Block
@@ -109,7 +111,8 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
     var notifitype: NotificationType? = null
     internal var result : List<feed.Comment>? = null
     var dblist = ArrayList<Long>()
-
+    var dbId = -1
+    lateinit var articleVm:ArticleRoomVM
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyThemeArticle(this@ArticleActivity)
         super.onCreate(savedInstanceState)
@@ -131,7 +134,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
         username = sharedPreferences.getString(CentralConstants.username, null)
         key = sharedPreferences.getString(CentralConstants.key, null)
 
-
+        articleVm = ViewModelProviders.of(this).get(ArticleRoomVM::class.java)
         //Run functions to retrieve the general constants for use while
         //voting on a comment/article
         val runs = GeneralRequestsFeedIntoConstants(applicationContext)
@@ -151,6 +154,8 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
             if(notistr != null){
                 notifitype = NotificationType.valueOf(notistr)
             }
+            dbId = extras.getInt("dbId",-1)
+
             supportActionBar?.title = articlepermlink?.replace("-"," ")
             //toolbar.title = articlepermlink
         }
@@ -162,6 +167,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
         }
 
         mysetup()
+
         if(notifitype != null){
             when(notifitype){
                 NotificationType.vote -> {
@@ -205,7 +211,14 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
 
 
             } else {
-                GetFeed(articletag as String,articleuser as String,articlepermlink as String)
+                if(dbId != -1){
+                    articleVm.getFetchedItem(dbId).observe(this,android.arch.lifecycle.Observer {
+                        articleFragment?.displayMessage(it!!)
+                    })
+                } else {
+                    GetFeed(articletag as String,articleuser as String,articlepermlink as String)
+                }
+                //GetFeed(articletag as String,articleuser as String,articlepermlink as String)
             }
             //GetFeed(articletag as String,articleuser as String,articlepermlink as String)
 
