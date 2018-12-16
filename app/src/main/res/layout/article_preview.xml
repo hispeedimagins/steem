@@ -222,11 +222,12 @@
                 />-->
 
             <ImageView
-                android:drawingCacheQuality="low"
-                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:id="@+id/article_image"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:id="@+id/article_image"
+                android:adjustViewBounds="true"
+                android:drawingCacheQuality="low"
 
                 />
 
