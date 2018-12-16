@@ -13,6 +13,7 @@ import com.steemapp.lokisveil.steemapp.DataHolders.GetReputationDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.FollowersDatabase
 import com.steemapp.lokisveil.steemapp.Databases.FollowingDatabase
 import com.steemapp.lokisveil.steemapp.FollowApiConstants
+import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
@@ -34,14 +35,19 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         followersDatabase = FollowersDatabase(context)
         followingDatabase = FollowingDatabase(context)
     }
+
+    constructor(json :JSONObject?,username :String, requestType: TypeOfRequest?,context: Context,jInterface:JsonRpcResultInterface?,blogData:Boolean): this(json,username,requestType,context){
+        jni = jInterface
+        this.blogData = blogData
+    }
     //val json = json
     //val username : String = username.toLowerCase()
     var gson : Gson = Gson()
     var followersDatabase : FollowersDatabase? = null
     var followingDatabase : FollowingDatabase? = null
     var nobots = "\\b(?:postpromoter|smartsteem|buildawhale|upme|appreciator|rocky1|booster|boomerang|jerrybanfield|therising|promobot|upmyvote|pushup|sneaky-ninja|minnowbooster)\\b"
-
-
+    var jni : JsonRpcResultInterface? = null
+    var blogData:Boolean = false
 
     //used to parse through get_reputation api data
     fun ParseRepAndSearch() : List<GetReputationDataHolder>{
@@ -104,15 +110,11 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
     }
 
     fun ParseJsonBlog() : ArrayList<FeedArticleDataHolder.FeedArticleHolder>{
-
-        //val body = gson.fromJson(json, JsonObject::class.java)
         val body = json
         var result = if(body?.has("result")!!) body?.getJSONObject("result") else null
         if(result == null){
             return ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
         }
-        /*var tag_idx = result.getJSONObject("tag_idx")
-        var trending = tag_idx.getJSONArray("trending")*/
         if(result?.has("tag_idx")!!){
             GetTrendingTags()
         }
@@ -131,7 +133,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         } else if(requestType == TypeOfRequest.replies){
             getthis = "recent_replies"
         }
-
+        var runTimes = 0
         var returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList()
         val arr = if(user.has(getthis))  user.getJSONArray(getthis) else null
         if(arr != null){
@@ -143,75 +145,28 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                     var ss = arr.getString(x)
                     if(ss != null){
                         var commstr : JSONObject = content.getJSONObject(ss)
-                        returndata.add(getprocessedfeed(commstr)!!)
+                        if(jni != null){
+                            jni?.insert(getprocessedfeed(commstr)!!)
+                        } else {
+                            returndata.add(getprocessedfeed(commstr)!!)
+                        }
+                        runTimes++
+
                     }
                 }
                 catch (ex : Exception){
                     ex.message
                 }
-
-
-   /*             var si = commstr.toString()
-                var acvojs = commstr.getAsJsonArray("active_votes")
-                //"voter": "cosminblaga",
-                //gson.fromJson<feed.Comment>(commstr.,feed.Comment::class.java)
-                var comms = feed.Comment(commstr.get("id").asInt,commstr.get("author").asString,commstr.get("permlink").asString,commstr.get("category").asString,commstr.get("parent_author").asString,
-                        commstr.get("parent_permlink").asString,
-                        commstr.get("title").asString,
-                        commstr.get("body").asString,
-                        null,
-                        commstr.get("json_metadata").asString,
-                        commstr.get("last_update").asString,
-                        commstr.get("created").asString,
-                        commstr.get("active").asString,
-                        commstr.get("last_payout").asString,
-                        commstr.get("depth").asInt,
-                        commstr.get("children").asInt,
-                        commstr.get("net_rshares").asString,
-                        commstr.get("abs_rshares").asString,
-                        commstr.get("vote_rshares").asString,
-                        commstr.get("children_abs_rshares").asString,
-                        commstr.get("cashout_time").asString,
-                        commstr.get("max_cashout_time").asString,
-                        commstr.get("total_vote_weight").asInt,
-                        commstr.get("reward_weight").asInt,
-                        commstr.get("total_payout_value").asString,
-                        commstr.get("curator_payout_value").asString,
-                        commstr.get("author_rewards").asInt,
-                        commstr.get("net_votes").asInt,
-                        commstr.get("root_comment").asInt,
-                        commstr.get("max_accepted_payout").asString,
-                        commstr.get("percent_steem_dollars").asInt,
-                        commstr.get("allow_replies").asBoolean,
-                        commstr.get("allow_votes").asBoolean,
-                        commstr.get("allow_curation_rewards").asBoolean,
-                        commstr.getAsJsonArray("beneficiaries").toList(),
-                        commstr.get("url").asString,
-                        commstr.get("root_title").asString,
-                        commstr.get("pending_payout_value").asString,
-                        commstr.get("total_pending_payout_value").asString,
-                        )
-
-
-
-                var comm : feed.Comment = gson.fromJson<feed.Comment>(si,feed.Comment::class.java)*/
-
             }
             //close db connections to prevent leakages
+            jni?.processingDone(runTimes)
             closedb()
            return returndata
         }
 
         //close db connections to prevent leakages
         closedb()
-        return  ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
-
-
-
-      /*  val results = body.get("results").getAsJsonArray()
-        val firstResult = results.get(0).getAsJsonObject()
-        val address = firstResult.get("formatted_address")
-        println(address.getAsString())*/
+        return  ArrayList()
     }
 
     //close db connections to prevent leakages
@@ -225,6 +180,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         //val body = gson.fromJson(json, JsonObject::class.java)
         val body = json
         //check if json has result to preven a crash, if not, return.
+        var runtime = 0
         if(!(body!!.has("result"))){
             return ArrayList()
         }
@@ -239,9 +195,13 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                     var commstr : JSONObject = result.getJSONObject(x) //x
                     var s = getprocessedfeed(commstr,false,true)
                     if(s != null){
-                        returndata.add(s)
+                        if(jni != null){
+                            jni?.insert(getprocessedfeed(commstr)!!)
+                        } else {
+                            returndata.add(getprocessedfeed(commstr)!!)
+                        }
                     }
-
+                    runtime++
                 }
                 else{
                     skipz = true
@@ -250,6 +210,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
             }
         }
         //close db connections to prevent leakages
+        jni?.processingDone(runtime)
         closedb()
         return returndata
 
@@ -261,21 +222,16 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
 
     fun getprocessedfeed(commstr : JSONObject,bodyasis : Boolean = false,checkforbots:Boolean = false) : FeedArticleDataHolder.FeedArticleHolder? {
-        //swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(message)
-
         val gson = Gson()
+
+
 
         var voted = false
         var repl : JSONArray? = null
         if(commstr.has("replies")){
             repl = commstr.getJSONArray("replies")
         }
-        /*val collectionTypev = object : TypeToken<List<feed.avtiveVotes>>() {
-
-        }.type*/
         var author = commstr.getString("author")
-        //var vot = gson.fromJson<List<feed.avtiveVotes>>(commstr.getAsJsonArray("active_votes"),collectionTypev)
         if(commstr.getJSONArray("active_votes").toString().contains("\"voter\":\"$username\"")) voted = true
         if(checkforbots){
             val pattern = Pattern.compile(
@@ -285,24 +241,12 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 return null
             }
         }
-
-        /*var comv = commstr.getAsJsonArray("active_votes")
-        if(comv != null){
-            *//*if(commstr.get("active_votes").asString.contains(username)) voted = true*//*
-            for(x in comv){
-                if(x.asJsonObject.asString.contains(username)) voted = true
-                //if(x.voter.equals(username)) voted = true
-            }
-        }*/
         var rpb = commstr.getJSONArray("reblogged_by")
         val collectionType = object : TypeToken<List<String>>() {
 
         }.type
         var ls = gson.fromJson<List<String>>(rpb.toString(),collectionType)
-
-        //var st : String = commstr.getString("body")
         var st : String = ""
-        //var builder = StringBuilder()
         if(!bodyasis){
             try{
                 st = commstr.getString("body").substring(IntRange(0,400))
@@ -310,22 +254,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
             catch(ex : StringIndexOutOfBoundsException){
                 st = commstr.getString("body")
             }
-
-            /*if(st?.length != null && st?.length > 1000){
-                st = st.substring(0,1000)
-            }*/
-            /*if(st?.length != null && st?.length > 600){
-                st = st.substring(0,600)
-            }*/
             st = StripMarkDown.stripMd(st,StripMarkDown.Companion.mdOptions()).trim()
-            /*var splitstring : List<String> = st.split("\n")
-
-            if(splitstring != null){
-
-                for (x in splitstring){
-                    builder.append("${x.trim()} ")
-                }
-            }*/
 
 
         }
@@ -334,12 +263,13 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         }
 
         var autho = "$author (${StaticMethodsMisc.CalculateRepScore(commstr.getString("author_reputation"))})"
-        var tfollowsYou = false
-        if(followersDatabase != null){
+        //var tfollowsYou = false
+        //jni?.searchFollower(author)
+        /*if(followersDatabase != null){
             if(author != username){
                 tfollowsYou = followersDatabase?.simpleSearch(author) as Boolean
             }
-        }
+        }*/
 
         var jsonMetadata : feed.JsonMetadataInner? = null
         //this is because some apps have tags in a string instead of an array
@@ -351,12 +281,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
         }
 
-        //var du = DateUtils.getRelativeDateTimeString(contex,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
-
-        //var d = calendarcalculations() //2018-02-03T13:58:18
-        //var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")))
         var dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
-        //d.setDateOfTheData(dd)
         var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
 
         var fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
@@ -367,7 +292,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 active =  commstr.getString("active"),
                 author = author,
                 //body = if(bodyasis) st else builder.toString(),
-                body = st,
+                body = commstr.getString("body"),
+                summary = st,
                 cashoutTime = commstr.getString("cashout_time"),
                 category = commstr.getString("category"),
                 children = commstr.getInt("children"),
@@ -395,52 +321,19 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 total_pending_payout_value = commstr.getString("total_pending_payout_value"),
                 uservoted = voted,
                 already_paid = commstr.getString("total_payout_value"),
-                summary = null,
                 datespan = du.toString(),
                 replies = repl,
                 activeVotes = commstr.getJSONArray("active_votes"),
                 rootAuthor = if(commstr.has("root_author")) commstr.getString("root_author") else null,
                 rootPermlink = if(commstr.has("root_permlink")) commstr.getString("root_permlink") else null,
-                followsYou = tfollowsYou
+                followsYou = false,
+                isBlog = blogData
 
         )
         //adapter?.feedHelperFunctions?.add(fd)
         return fd
     }
 
-
-
-    /*fun ParseReplies(UserAndPermlinkWithDash : String?) : ArrayList<feed.Comment>{
-        var list = ArrayList<feed.Comment>()
-        //val body = gson.fromJson(json, JsonObject::class.java)
-        val body = json
-        var result = body.getJSONObject("result")
-        if(result == null){
-            return list
-        }
-        var content : JSONObject = result.getJSONObject("content")
-
-        var com : JSONObject = content.getJSONObject(UserAndPermlinkWithDash)
-        var article : feed.Comment = gson.fromJson<feed.Comment>(com.toString(),feed.Comment::class.java)
-        if(article == null) return list
-
-        list.add(article)
-        if(article.replies != null){
-            for(x in article.replies){
-                var comstr = content.getJSONObject(x)
-                var reply = gson.fromJson<feed.Comment>(comstr.toString(),feed.Comment::class.java)
-                reply.reply_to_above = false
-                var s = list.add(reply)
-                if(reply.replies != null && reply.replies.any()){
-                    _ParseReplies(list,content,reply,true,5)
-                }
-            }
-        }
-
-
-
-        return list
-    }*/
     fun ParseReplies(UserAndPermlinkWithDash : String?) : ArrayList<Any>{
         var list = ArrayList<Any>()
         //val body = gson.fromJson(json, JsonObject::class.java)
@@ -470,34 +363,12 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                     _ParseReplies(list,content,reply,true,wid + 5)
                 }
             }
-            /*for(x in article.replies){
-                var comstr = content.getJSONObject(x)
-                var reply = gson.fromJson<feed.Comment>(comstr.toString(),feed.Comment::class.java)
-                reply.reply_to_above = false
-                var s = list.add(reply)
-                if(reply.replies != null && reply.replies.any()){
-                    _ParseReplies(list,content,reply,true,5)
-                }
-            }*/
         }
 
         //close db connections to prevent leakages
         closedb()
         return list
     }
-
-    /*private fun _ParseReplies(list : ArrayList<feed.Comment>,content : JSONObject,article : feed.Comment,replytoabove : Boolean,wid : Int){
-        for(x in article.replies){
-            var comstr = content.getJSONObject(x)
-            var reply = gson.fromJson<feed.Comment>(comstr.toString(),feed.Comment::class.java)
-            reply.width = wid
-            reply.reply_to_above = replytoabove
-            list.add(reply)
-            if(reply.replies != null && reply.replies.any()){
-                _ParseReplies(list,content,reply,true,wid + wid)
-            }
-        }
-    }*/
 
     private fun _ParseReplies(list : ArrayList<Any>,content : JSONObject,article : FeedArticleDataHolder.CommentHolder,replytoabove : Boolean,wid : Int){
         for(x in 0 until article.replies!!.length()){
@@ -522,13 +393,10 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
 
     fun getprocessedcomment(commstr: JSONObject,parentAuthor:String?,parentPermlink:String?,parentTag:String?,wid : Int,replies : JSONArray?) : FeedArticleDataHolder.CommentHolder {
-        //swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(message)
 
         val gson = Gson()
 
         var voted = false
-        var con = FollowApiConstants.getInstance()
 
         var fol = MyOperationTypes.unfollow
         if(followingDatabase != null){
@@ -539,16 +407,6 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 MyOperationTypes.follow
             }
         }
-
-        /*fol = if(!con.following.isEmpty() && con.following.any { p -> p.following == commstr.getString("author") }){
-            MyOperationTypes.unfollow
-        }
-        else {
-           MyOperationTypes.follow
-        }*/
-        /*for(x in 0 until com.getJSONArray("active_votes").length()){
-
-        }*/
         var avs = commstr.getJSONArray("active_votes").toString()
         if(avs.contains("\"voter\":\"$username\"")) voted = true
         var jsonMetadata : feed.JsonMetadataInner? = null
@@ -562,10 +420,6 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
             Log.e("jsonerror",commstr.getString("json_metadata"))
         }
 
-        //var du = DateUtils.getRelativeDateTimeString(contex,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created"))).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
-
-        //var d = calendarcalculations() //2018-02-03T13:58:18
-        //var dd = (SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(commstr.getString("created")) )
         var dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
         //d.setDateOfTheData(dd)
         var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
@@ -575,13 +429,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
         }.type
         var ls = gson.fromJson<List<String>>(rpb.toString(),collectionType)
-       /* var d = calendarcalculations() //2018-02-03T13:58:18
-        d.setDateOfTheData((SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(result.created) ))*/
         var bod = StaticMethodsMisc.CorrectMarkDown(commstr.getString("body"),jsonMetadata?.image)
-        //and = AndDown()
-        //var du = DateUtils.getRelativeDateTimeString(context,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(result.created)).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
-        //var and = AndDown()
-        //val s : String = and.markdownToHtml(bod, AndDown.HOEDOWN_EXT_AUTOLINK, 0)
         var author = commstr.getString("author")
         var autho = "$author (${StaticMethodsMisc.CalculateRepScore(commstr.getString("author_reputation"))})"
         var tfollowsYou = false
