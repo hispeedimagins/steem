@@ -15,7 +15,6 @@ import android.widget.ImageView
 import android.widget.RemoteViews
 import java.io.InputStream
 import java.net.URL
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
@@ -23,6 +22,8 @@ import com.bumptech.glide.request.transition.Transition
 import android.opengl.ETC1.getHeight
 import android.opengl.ETC1.getWidth
 import android.R.attr.bitmap
+import android.app.Application
+import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Canvas
 import android.support.v4.content.ContextCompat
 import android.util.Log
@@ -39,8 +40,11 @@ import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
+import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 import com.steemapp.lokisveil.steemapp.MiscConstants.Companion.getBitmap
 import com.steemapp.lokisveil.steemapp.MyViewHolders.ArticleViewHolder
+import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.WidgetRepo
+import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.WidgetVM
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
@@ -63,16 +67,43 @@ class WidgetService : RemoteViewsService() {
 
 class WidgetItem(var text: String)
 
-internal class StackRemoteViewsFactory(private val mContext: Context, intent: Intent) : RemoteViewsService.RemoteViewsFactory {
+internal class StackRemoteViewsFactory(private val mContext: Context, intent: Intent) : RemoteViewsService.RemoteViewsFactory,JsonRpcResultInterface {
     private val mWidgetItems = ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
     //var textColorMineTheme: Int = 0
     private var username = mContext.getSharedPreferences(CentralConstants.sharedprefname,0).getString(CentralConstants.username,null)
     private val mAppWidgetId: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
             AppWidgetManager.INVALID_APPWIDGET_ID)
     private val isrefresh :Boolean = intent.getBooleanExtra("isrefresh",false)
+    lateinit var repo: WidgetRepo
+    private var prevCount = 0
+    //var textColorMineTheme = 0
     init {
         /*mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID)*/
+    }
+
+    override fun processingDone(count: Int) {
+        //repo.getLastDbKey(this)
+        repo.getList(prevCount,this)
+    }
+
+    override fun insert(data: List<FeedArticleDataHolder.FeedArticleHolder>) {
+        if(data.isEmpty()) return
+        mWidgetItems.clear()
+        mWidgetItems.addAll(data)
+        mWidgetItems.reverse()
+        updateTheWidget()
+    }
+
+    override fun insert(data: FeedArticleDataHolder.FeedArticleHolder) {
+        repo.insert(data)
+    }
+
+    override fun countGot(count: Int?) {
+        var id = 0
+        if(count != null) id = count
+        prevCount = id
+        repo.getList(id,this)
     }
 
     override fun onCreate() {
@@ -88,7 +119,11 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
             mWidgetItems?.clear()
             AppWidgetManager.getInstance(mContext).notifyAppWidgetViewDataChanged(mAppWidgetId,R.id.stack_view)
         }
-
+        /*var attrs  = intArrayOf(R.attr.textColorMine)
+        var ta = mContext.obtainStyledAttributes(attrs)
+        var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
+        ta.recycle()
+        textColorMineTheme = ContextCompat.getColor(mContext, textColorMineThemeint)*/
         // We sleep for 3 seconds here to show how the empty view appears in the interim.
         // The empty view is set in the StackWidgetProvider and should be a sibling of the
         // collection view.
@@ -102,6 +137,8 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
         var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
         ta.recycle()
         textColorMineTheme = ContextCompat.getColor(mContext, textColorMineThemeint)*/
+        repo = WidgetRepo(mContext,null)
+        repo.getLastDbKey(this)
         callcreate()
     }
 
@@ -272,7 +309,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
                     /*val collectionType = object : TypeToken<List<feed.FeedData>>() {
 
                     }.type*/
-                    val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.feed,mContext)
+                    val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.feed,mContext,this,false)
                     //con.ParseJsonBlog()
                     //val result = con.ParseJsonBlog()
                     val result = con.ParseJsonBlogMore()
@@ -288,7 +325,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
                         }*/
                         AppWidgetManager.getInstance(mContext).notifyAppWidgetViewDataChanged(mAppWidgetId,R.id.stack_view)
                     } else{
-                        callcreate()
+                        //callcreate()
                     }
 
                 }, Response.ErrorListener {
@@ -301,6 +338,9 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
         volleyre.addToRequestQueue(s)
     }
 
+    fun updateTheWidget(){
+        AppWidgetManager.getInstance(mContext).notifyAppWidgetViewDataChanged(mAppWidgetId,R.id.stack_view)
+    }
 
     fun GetFeed(){
         //val queue = Volley.newRequestQueue(context)
@@ -334,7 +374,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
 
                     }*/
 
-                    val con = JsonRpcResultConversion(response,nametouse,TypeOfRequest.feed,mContext)
+                    val con = JsonRpcResultConversion(response,nametouse,TypeOfRequest.feed,mContext,this,false)
                     //con.ParseJsonBlog()
                     val result = con.ParseJsonBlog()
                     //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
@@ -342,13 +382,14 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
 
                         /*adapter?.feedHelperFunctions.add(result)*/
                         //displayMessage(result)
+
                         mWidgetItems.addAll(result)
                         /*for(x in result){
                             mWidgetItems.add(x)
                         }*/
                         AppWidgetManager.getInstance(mContext).notifyAppWidgetViewDataChanged(mAppWidgetId,R.id.stack_view)
                     } else {
-                        callcreate()
+                        //callcreate()
                     }
                     //addItems(response,nametouse)
 
@@ -397,8 +438,8 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
         else {
 
             //holder.article_likes?.setTextColor(ContextCompat.getColor(con, R.color.abc_hint_foreground_material_light))
-            //rv.setTextColor(R.id.article_likes,textColorMineTheme)
-            //rv.setTextViewCompoundDrawables(R.id.article_likes,R.drawable.ic_thumb_up_black_24px,0,0,0)
+            rv.setTextColor(R.id.article_likes,ContextCompat.getColor(mContext, R.color.white))
+            rv.setTextViewCompoundDrawables(R.id.article_likes,R.drawable.ic_thumb_up_white_24px,0,0,0)
         }
         rv.setTextViewText(R.id.article_likes,article.netVotes.toString())
 
@@ -408,7 +449,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
             rv.setTextColor(R.id.article_name,ContextCompat.getColor(mContext, R.color.colorAccent))
             //holder.article_name?.setTextColor(ContextCompat.getColor(con, R.color.colorAccent))
         } else{
-            //rv.setTextColor(R.id.article_name,textColorMineTheme)
+            rv.setTextColor(R.id.article_name,ContextCompat.getColor(mContext, R.color.white))
         }
         /*holder.article_name?.setOnClickListener(View.OnClickListener {
             val i = Intent(con, OpenOtherGuyBlog::class.java)
@@ -568,7 +609,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
             })*/
         }
 
-        rv.setTextViewText(R.id.article_summary,article.body)
+        rv.setTextViewText(R.id.article_summary,article.summary)
 
     }
 
