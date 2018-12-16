@@ -917,7 +917,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
         var con = FollowApiConstants.getInstance()
 
-
+        if(holder == null) holder = ArticleViewHolder(view as View)
         if(holder != null && context != null){
             holder?.article = result
             if(!con.following.isEmpty() && con.following.any { p -> p.following == holder?.article?.author }){

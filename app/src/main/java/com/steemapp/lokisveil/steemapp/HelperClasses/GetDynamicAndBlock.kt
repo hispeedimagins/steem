@@ -260,7 +260,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
 
                                 //holder?.uservoted = true
                                 //holder.article_likes?.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-                                adaptedcomms.notifyitemcchanged(position,holder)
+                                adaptedcomms.notifyitemcchanged(position,holder!!)
                                 Log.d("dynamicend","link was reached for " + toastString)
                             }
 
@@ -278,7 +278,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
 
                                 //holder?.uservoted = true
                                 //holder.article_likes?.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-                                adaptedcomms?.notifyitemcchanged(position,holder)
+                                adaptedcomms?.notifyitemcchanged(position,holder!!)
 
 
                             }

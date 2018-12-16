@@ -17,6 +17,8 @@ public class CentralConstants {
     public static final String delegatedvestingshares = "delegatedvestingshares";
     public static final String receivedvestingshares = "receivedvestingshares";
     public static final String accountrep = "accountrep";
+    public static final String followerCount = "follower_count_follower";
+    public static final String followingCount = "following_count_follower";
 
 
     public static final String baseUrl = "https://api.steemit.com/";

@@ -97,7 +97,9 @@ class FollowingDatabase(context : Context) : SQLiteOpenHelper(context, CentralCo
                     follower = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollower)),
                     following = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollowing)),
                     what = rl,
-                    dbid = cursor.getLong(cursor.getColumnIndex(DatabaseColoumnId))
+                    dbid = cursor.getLong(cursor.getColumnIndex(DatabaseColoumnId)),
+                    uniqueName = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollowing)),
+                    isFollower = false
             )
 
             questionsLites.add(q)

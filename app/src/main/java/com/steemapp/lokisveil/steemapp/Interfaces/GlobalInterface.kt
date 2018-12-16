@@ -37,6 +37,16 @@ interface GlobalInterface {
 
     }
 
+    fun followerProgress(got:Int,total:Int){
+
+    }
+    fun followingProgress(got:Int,total:Int){
+
+    }
+    fun followHasChanged(){
+
+    }
+
     // for attaching listeners
     fun attachCheckboxListner(box:CheckBox?){
 

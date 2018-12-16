@@ -104,7 +104,9 @@ class FollowersDatabase(context : Context) : SQLiteOpenHelper(context, CentralCo
                 following = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollowing)),
                     what = rl,
                     //return dbid as well for deletion
-                    dbid = cursor.getLong(cursor.getColumnIndex(DatabaseColoumnId))
+                    dbid = cursor.getLong(cursor.getColumnIndex(DatabaseColoumnId)),
+                    uniqueName = cursor.getString(cursor.getColumnIndex(DatabaseColoumnFollower)),
+                    isFollower = true
             )
 
             questionsLites.add(q)

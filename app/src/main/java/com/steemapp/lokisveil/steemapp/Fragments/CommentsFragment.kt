@@ -132,7 +132,7 @@ class CommentsFragment : Fragment(),GlobalInterface {
         swipecommonactionsclass = swipecommonactionsclass(swipeRefreshLayout as SwipeRefreshLayout)
         fragmentActivity = getActivity()
 
-        swipecommonactionsclass?.makeswiperun()
+        //swipecommonactionsclass?.makeswiperun()
         val sharedPreferences = context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
         username = sharedPreferences?.getString(CentralConstants.username, null)
         key = sharedPreferences?.getString(CentralConstants.key, null)

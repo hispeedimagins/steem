@@ -21,7 +21,7 @@ interface arvdinterface {
     //function to remove and notify
     fun removeAt(position: Int)
 
-    abstract fun getObject(position: Int): Any
+    abstract fun getObject(position: Int): Any?
     abstract fun getSize(): Int
 
     abstract fun SetMenuItemVisibility(MenuItemId: Int, visibility: Boolean)
