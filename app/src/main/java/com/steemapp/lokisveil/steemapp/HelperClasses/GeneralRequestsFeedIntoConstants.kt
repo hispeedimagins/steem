@@ -1,5 +1,6 @@
 package com.steemapp.lokisveil.steemapp.HelperClasses
 
+import android.app.Application
 import android.content.Context
 import com.android.volley.Request
 import com.android.volley.Response
@@ -13,6 +14,8 @@ import com.steemapp.lokisveil.steemapp.Databases.FollowingDatabase
 import com.steemapp.lokisveil.steemapp.FollowApiConstants
 import com.steemapp.lokisveil.steemapp.Interfaces.GetFollowListsBack
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
+import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
+import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.FollowersRepo
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.VolleyRequest
 import com.steemapp.lokisveil.steemapp.jsonclasses.Block
@@ -23,7 +26,7 @@ import java.util.function.Predicate
 /**
  * Created by boot on 3/12/2018.
  */
-class GeneralRequestsFeedIntoConstants(context: Context) {
+class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface {
     val applicationContext = context
     val globalInterface : GlobalInterface? = if(context is GlobalInterface) context else null
     val followlistinterface : GetFollowListsBack? = if(context is GetFollowListsBack) context else null
@@ -31,8 +34,14 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
     var followers = ArrayList<prof.Resultfp>()
     var following = ArrayList<prof.Resultfp>()
     var followcount: prof.FollowCount? = null
-    constructor(context:Context,stopDbCode:Boolean) :this(context){
-        useDbCode = stopDbCode
+    var followRepo:FollowersRepo? = null
+    var deleDone = false
+    var currRequestName = ""
+    var totalSize = 0
+    var gotTillNow = 0
+    constructor(context:Context,application:Application) :this(context){
+        //useDbCode = stopDbCode
+        followRepo = FollowersRepo(application)
     }
     constructor(context:Context,followcounts: prof.FollowCount,stopDbCode:Boolean) :this(context){
         useDbCode = stopDbCode
@@ -142,52 +151,65 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
     }
 
 
+    override fun countGot(count: Int) {
+        var foc = followcount?.result?.followerCount
+        var floc = followcount?.result?.followingCount
+        if(foc != null && floc != null){
+            var tot = foc + floc
+            totalSize = tot
+            if(tot > count || tot < count){
+                globalInterface?.followHasChanged()
+            }
+        }
+    }
 
+    fun refreshFollowDbNow(){
+        followRepo?.deleteAll(this)
+    }
+
+    override fun deleDone() {
+        GetFollowing(currRequestName,"",null)
+        GetFollowers(currRequestName,"",null)
+    }
 
     fun GetFollowCount(name:String, followcountlistener: Response.Listener<JSONObject>?  ,listener: Response.Listener<JSONObject>?,followerlistener: Response.Listener<JSONObject>?){
-        //val queue = Volley.newRequestQueue(context)
+        currRequestName = name
         var listenerm: Response.Listener<JSONObject> =  Response.Listener { response ->
 
             val gson = Gson()
             var parse = gson.fromJson(response.toString(), prof.FollowCount::class.java)
             if(parse != null && parse.result != null){
-                /*FollowApiConstants.getInstance().followCount = parse*/
                 this.followcount = parse
-                /*StaticMethodsMisc.MakeFollowRequests(parse,applicationContext,listener)
-                StaticMethodsMisc.MakeFollowRequestsFollowers(parse,applicationContext,followerlistener)*/
-                GetFollowers(name,"",followerlistener)
-                GetFollowing(name,"",listener)
+                //GetFollowers(name,"",followerlistener)
+                //GetFollowing(name,"",listener)
+
+                var s = SharedPrefrencesSingleton.getInstance(applicationContext)
+
+                var fc = s.getInt(CentralConstants.followerCount)
+                var fic = s.getInt(CentralConstants.followingCount)
+                followRepo?.getCount(this)
+                /*if(fc > parse.result.followerCount || fc < parse.result.followerCount ||
+                        fic > parse.result.followingCount || fic < parse.result.followingCount){
+                    GetFollowers(name,"",followerlistener)
+                    GetFollowing(name,"",listener)
+                }*/
+                //GetFollowers(name,"",followerlistener)
+                //GetFollowing(name,"",listener)
+                s.put(CentralConstants.followerCount,parse.result.followerCount)
+                s.put(CentralConstants.followingCount,parse.result.followingCount)
+                s.commit()
             }
 
         }
         if(followcountlistener != null){
             listenerm = followcountlistener
         }
-
-        //swipecommonactionsclass?.makeswiperun()
-        //Toast.makeText(applicationContext,"Processing. Please wait....", Toast.LENGTH_LONG).show()
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFollowCount(name),
-                listenerm
-                /*Response.Listener { response ->
-
-                    val gson = Gson()
-                    var parse = gson.fromJson(response.toString(), prof.FollowCount::class.java)
-                    if(parse != null && parse.result != null){
-
-                    }
-
-                }*/, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
-        }
-
-        )
-        //queue.add(s)
+                listenerm, Response.ErrorListener {})
         volleyre.addToRequestQueue(s)
     }
 
@@ -203,12 +225,16 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
                 followers.addAll(parse.result!! )
                 if(!useDbCode){
                     followlistinterface?.GetFollowersList(parse.result as List<prof.Resultfp>)
+                } else {
+                    followRepo?.insert(parse.result !!,true)
+                    gotTillNow += parse.result!!.size
+                    globalInterface?.followerProgress(gotTillNow,followcount?.result?.followerCount!!)
                 }
                 if(followers.size == followcount?.result?.followerCount){
                     //globalInterface?.notifyRequestMadeSuccess()
 
                     if(useDbCode){
-                        var fold = FollowersDatabase(applicationContext)
+                        /*var fold = FollowersDatabase(applicationContext)
                         var alldbpeople = fold.GetAllQuestions()
                         for(x in followers){
                             x.followInternal = MyOperationTypes.follow
@@ -222,7 +248,7 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
                         }
                         for(x in alldbpeople){
                             fold.deleteContact(x.dbid)
-                        }
+                        }*/
                         globalInterface?.followersDone()
                     } else{
                         followlistinterface?.FollowersDone()
@@ -279,12 +305,17 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
                 following.addAll (parse.result !!)
                 if(!useDbCode){
                     followlistinterface?.GetFollowingList(parse.result !!)
+                } else {
+                    followRepo?.insert(parse.result !!,false)
+                    gotTillNow += parse.result!!.size
+                    globalInterface?.followingProgress(gotTillNow,followcount?.result?.followingCount!!)
                 }
                 if(following.size == followcount?.result?.followingCount){
                     //globalInterface?.notifyRequestMadeSuccess()
 
+
                     if(useDbCode){
-                        var fold = FollowingDatabase(applicationContext)
+                        /*var fold = FollowingDatabase(applicationContext)
                         var alldbpeople = fold.GetAllQuestions()
                         for(x in following){
                             x.followInternal = MyOperationTypes.follow
@@ -298,7 +329,7 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
                         }
                         for(x in alldbpeople){
                             fold.deleteContact(x.dbid)
-                        }
+                        }*/
                         globalInterface?.followingDone()
                     }
                     else{
@@ -347,5 +378,13 @@ class GeneralRequestsFeedIntoConstants(context: Context) {
 
 
 
+    fun callDelete():Boolean{
+        if(!deleDone){
+            deleDone = true
+            return false
+            //followRepo?.deleteAll()
+        }
+        return deleDone
+    }
 
 }
