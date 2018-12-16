@@ -1,4 +1,7 @@
 package com.steemapp.lokisveil.steemapp.jsonclasses
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Index
+import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 
@@ -145,12 +148,18 @@ data class FollowNames(
 		@SerializedName("result") val result: List<Resultfp>?
 )
 
+
+@Entity(tableName = "follow_tables",indices = [Index(value = ["uniqueName"],unique = true)])
 data class Resultfp(
 		@SerializedName("follower") val follower: String, //hispeedimagins
 		@SerializedName("following") val following: String, //amazink-fem
 		@SerializedName("what") val what: List<String>,
 		var followInternal: MyOperationTypes = MyOperationTypes.follow,
-		var dbid : Long = 0
+
+		@PrimaryKey(autoGenerate = true)
+		var dbid : Long = 0,
+		var isFollower:Boolean = false,
+        var uniqueName:String = ""
 		)
 
 
