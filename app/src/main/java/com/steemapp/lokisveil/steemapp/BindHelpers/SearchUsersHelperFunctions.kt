@@ -22,7 +22,7 @@ import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 
 //class for displaying the users in search results
-class SearchUsersHelperFunctions(context : Context, username:String?, adapter: AllRecyclerViewAdapter, adpterType: AdapterToUseFor) {
+class SearchUsersHelperFunctions(context : Context, username:String?, adapter: arvdinterface, adpterType: AdapterToUseFor) {
 
     val con: Context = context
     var name:String? = username

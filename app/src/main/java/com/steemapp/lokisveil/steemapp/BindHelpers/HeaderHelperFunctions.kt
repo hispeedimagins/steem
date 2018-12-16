@@ -34,7 +34,7 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.Block
 import org.json.JSONObject
 
 //this class handles the headers for search results in adapter view
-class HeaderHelperFunctions(context : Context, username:String?, adapter: AllRecyclerViewAdapter, adpterType: AdapterToUseFor) {
+class HeaderHelperFunctions(context : Context, username:String?, adapter: arvdinterface, adpterType: AdapterToUseFor) {
     val con: Context = context
     var name:String? = username
     val adaptedcomms: arvdinterface = adapter

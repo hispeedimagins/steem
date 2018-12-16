@@ -29,7 +29,7 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperation
 
 //simple helper functions for recycler view in beneficiaries
-class beneficiaryHelperFunctions(context : Context, username:String?, adapter: AllRecyclerViewAdapter)  {
+class beneficiaryHelperFunctions(context : Context, username:String?, adapter: arvdinterface)  {
 
     //app context
     val con: Context = context

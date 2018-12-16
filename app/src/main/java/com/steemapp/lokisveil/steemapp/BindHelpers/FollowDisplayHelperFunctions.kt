@@ -23,7 +23,7 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 /**
  * Created by boot on 3/31/2018.
  */
-class FollowDisplayHelperFunctions(context : Context, username:String?, adapter: AllRecyclerViewAdapter, adpterType: AdapterToUseFor) {
+class FollowDisplayHelperFunctions(context : Context, username:String?, adapter: arvdinterface, adpterType: AdapterToUseFor) {
 
     val con:Context = context
     var name:String? = username

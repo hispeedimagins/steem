@@ -19,7 +19,7 @@ import com.steemapp.lokisveil.steemapp.MyViewHolders.DraftViewHolder
 import com.steemapp.lokisveil.steemapp.jsonclasses.OperationJson
 import org.json.JSONObject
 
-class draftHelperFunctions (context : Context, username:String?, adapter: AllRecyclerViewAdapter, adpterType: AdapterToUseFor) {
+class draftHelperFunctions (context : Context, username:String?, adapter: arvdinterface, adpterType: AdapterToUseFor) {
     val con: Context = context
     var name: String? = username
     val adaptedcomms: arvdinterface = adapter

@@ -112,7 +112,7 @@ class FloatingDateHolder {
     }
 
     //the only constructor used atm
-    constructor(con: Context, view: View, recyclerView: RecyclerView, recyclerViewAdapter: AllRecyclerViewAdapter) {
+    constructor(con: Context, view: View, recyclerView: RecyclerView, recyclerViewAdapter: arvdinterface) {
 
         this.view = view
 

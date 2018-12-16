@@ -40,7 +40,7 @@ import org.json.JSONObject
 /**
  * Created by boot on 2/16/2018.
  */
-class CommentsHelperFunctions(context : Context,username:String?,adapter: AllRecyclerViewAdapter ,scale: Float,metrics: DisplayMetrics,dateHolder: FloatingDateHolder?)  {
+class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdinterface ,scale: Float,metrics: DisplayMetrics,dateHolder: FloatingDateHolder?)  {
 
     val con: Context = context
     var name:String? = username

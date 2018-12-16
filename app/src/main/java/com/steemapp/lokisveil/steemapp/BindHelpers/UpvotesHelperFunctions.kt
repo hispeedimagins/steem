@@ -39,7 +39,7 @@ import java.util.ArrayList
 /**
  * Created by boot on 3/13/2018.
  */
-class UpvotesHelperFunctions(context : Context, username:String?, adapter: AllRecyclerViewAdapter,dateHolder: FloatingDateHolder? = null){
+class UpvotesHelperFunctions(context : Context, username:String?, adapter: arvdinterface,dateHolder: FloatingDateHolder? = null){
     val con:Context = context
     var name:String? = username
     val adaptedcomms: arvdinterface = adapter

@@ -18,7 +18,7 @@ import com.steemapp.lokisveil.steemapp.MyViewHolders.NotificationBusyViewHolder
 import com.steemapp.lokisveil.steemapp.jsonclasses.BusyNotificationJson
 import java.util.*
 
-class NotificationsBusyHelperFundtions(context : Context, username:String?, adapter: AllRecyclerViewAdapter,dateHolder: FloatingDateHolder? = null)  {
+class NotificationsBusyHelperFundtions(context : Context, username:String?, adapter: arvdinterface,dateHolder: FloatingDateHolder? = null)  {
 
     val con: Context = context
     var name:String? = username
