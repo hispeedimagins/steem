@@ -1,6 +1,8 @@
 package com.steemapp.lokisveil.steemapp.Fragments
 
 
+import android.arch.lifecycle.ViewModelProviders
+import android.arch.paging.PagedList
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -21,22 +23,22 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
-import com.steemapp.lokisveil.steemapp.CentralConstants
+import com.steemapp.lokisveil.steemapp.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
+import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 
-import com.steemapp.lokisveil.steemapp.R
-import com.steemapp.lokisveil.steemapp.VolleyRequest
+import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.ArticleRoomVM
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import org.json.JSONObject
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -44,8 +46,18 @@ import java.util.*
  * Use the [MyFeedFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MyFeedFragment : Fragment() {
+class MyFeedFragment : Fragment() , JsonRpcResultInterface {
 
+    override fun insert(data: FeedArticleDataHolder.FeedArticleHolder) {
+        var nametouse : String = username as String
+        if(otherguy != null){
+            nametouse = otherguy as String
+        }
+        startAuthor = data.author
+        startPermlink = data.permlink
+        startTag = nametouse
+        vm?.insert(data)
+    }
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -54,7 +66,8 @@ class MyFeedFragment : Fragment() {
 
     private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
 
-    private var adapter: AllRecyclerViewAdapter? = null
+    private var adapter: AllRecyclerViewClassPaged? = null
+    private var adapterNormal: AllRecyclerViewAdapter? = null
     private var activity: Context? = null
     internal var view: View? = null
     internal var swipeRefreshLayout: SwipeRefreshLayout? = null
@@ -73,8 +86,8 @@ class MyFeedFragment : Fragment() {
     var startPermlink : String? = null
     var startTag : String? = null
     var globalInterface : GlobalInterface? = null
-    var dblist = ArrayList<Long>()
-
+    var runOnce = false
+    var vm : ArticleRoomVM? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -91,28 +104,42 @@ class MyFeedFragment : Fragment() {
         if(view == null){
             view = inflater!!.inflate(R.layout.fragment_my_feed, container, false)
             recyclerView = view?.findViewById(R.id.feedFragment)
-            adapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(), recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
+            //adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
             //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
 
-            recyclerView?.setItemAnimator(DefaultItemAnimator())
-            recyclerView?.setAdapter(adapter)
+            if(GetNameToUseOtherGuy()){
+                adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
+                vm = ViewModelProviders.of(this).get(ArticleRoomVM::class.java)
+                vm?.getLastDbKey()?.observe(this,android.arch.lifecycle.Observer {
+                    if(!runOnce && it != null){
+                        vm?.getPagedUpdatedList(it!!,true)?.observe(this,android.arch.lifecycle.Observer { pagedList ->
+                            if(pagedList != null){
+                                adapter?.submitList(pagedList!! as PagedList<Any>)
+                                swipecommonactionsclass?.makeswipestop()
+                            }
+
+                        })
+                        runOnce = true
+                    }
+                })
+                recyclerView?.setItemAnimator(DefaultItemAnimator())
+                recyclerView?.setAdapter(adapter)
+            } else {
+                adapterNormal = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList() ,recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
+                recyclerView?.setItemAnimator(DefaultItemAnimator())
+                recyclerView?.setAdapter(adapterNormal)
+            }
+
+
+
             //init fabhider to hide the FAB on scroll
             FabHider(recyclerView,globalInterface?.getFab())
             recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-
-                    /*if(dy > 0){
-
-                            dab.hide();
-                        }
-                        else {
-                            dab.show();
-                        }*/
-
                     if (dy > 0) {
                         visibleItemCount = recyclerView!!.childCount
-                        totalItemCount = adapter?.getItemCount() as Int
+                        totalItemCount = if(adapter != null) adapter?.getItemCount()!! else adapterNormal?.itemCount!!
                         //pastVisiblesItems = recyclerView.findFirstVisibleItemPosition();
                         pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 
@@ -145,10 +172,9 @@ class MyFeedFragment : Fragment() {
 
 
         activity = getActivity()?.applicationContext
-        //activity = view?.context
         swipeRefreshLayout = view?.findViewById<SwipeRefreshLayout>(R.id.activity_feed_swipe_refresh_layout) as SwipeRefreshLayout
 
-        swipeRefreshLayout?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+        swipeRefreshLayout?.setOnRefreshListener( {
             refreshcontent()
         })
 
@@ -159,71 +185,22 @@ class MyFeedFragment : Fragment() {
         username = sharedPreferences?.getString(CentralConstants.username, null)
         key = sharedPreferences?.getString(CentralConstants.key, null)
 
-        if (!tokenisrefreshingholdon) {
+        /*if (!tokenisrefreshingholdon) {
             //getQuestionsNow(false);
         } else if (startwasjustrun) {
             //getQuestionsNow(true)
+        }*/
 
-        }
-
-        //check instance
-        if(savedInstanceState != null){
-            //get all the variables back
-            val sharedPreferences = view?.context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
-            username = sharedPreferences?.getString(CentralConstants.username, null)
-            key = sharedPreferences?.getString(CentralConstants.key, null)
-            startAuthor = savedInstanceState?.getString("startau")
-            startPermlink = savedInstanceState?.getString("startperm")
-            startTag = savedInstanceState?.getString("starttag")
-            otherguy = savedInstanceState?.getString("otherguy")
-
-            var lar = savedInstanceState.getLongArray("dbitemsf")
-            dblist.addAll(lar.toList())
-            var db = RequestsDatabase(context!!)
-            for(x in lar){
-                var req = db.GetAllQuestions(x)
-                if(req != null){
-                    //initialize the jsonobject
-                    var jso = JSONObject(req.json)
-                    if(req.otherInfo == "more"){
-                        addMoreItems(jso,GetNameToUse())
-                    } else {
-                        addItems(jso,GetNameToUse())
-                    }
-                }
-            }
-            //close db connections so no leakages
-            db.close()
-
-        } else {
-            GetFeed()
-        }
+        if(savedInstanceState == null) GetFeed()
         return view
-        //return inflater!!.inflate(R.layout.fragment_my_feed, container, false)
     }
-
-
-
-    //save state
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        //outState.putSerializable("feedlist",adapter?.getList() as Serializable)
-        outState.putLongArray("dbitemsf",dblist.toLongArray())
-        outState.putString("startau",startAuthor)
-        outState.putString("startperm",startPermlink)
-        outState.putString("starttag",startTag)
-        outState.putString("otherguy",otherguy)
-    }
-
 
     private fun refreshcontent() {
         tokenisrefreshingholdon = false
-        //swipecommonactionsclass?.makeswipestop()
-        adapter?.clear()
-        adapter?.notifyDataSetChanged()
-        /*adapter = new MyquestionslistRecyclerViewAdapter(new ArrayList<ForReturningQuestionsLite>(), mListener);
-        recyclerView.setAdapter(adapter);*/
-        //getQuestionsNow(false)
+        //adapter?.clear()
+        //adapter?.notifyDataSetChanged()
+        adapterNormal?.clear()
+        adapterNormal?.notifyDataSetChanged()
 
         GetFeed()
     }
@@ -239,96 +216,15 @@ class MyFeedFragment : Fragment() {
         } else {
             if (recyclerView != null) {
 
-                adapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(), recyclerView as RecyclerView, view as View, AdapterToUseFor.blog)
+                adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.blog)
 
                 recyclerView?.setAdapter(adapter)
 
             }
 
         }
-
-        /*adapter = new MyquestionslistRecyclerViewAdapter(new ArrayList<ForReturningQuestionsLite>(), mListener);
-        recyclerView.setAdapter(adapter);*/
-        //getQuestionsNow(true)
         GetFeed()
     }
-
-
-    fun displayMessage(result: feed.Comment) {
-        //swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(message)
-        val gson = Gson()
-
-        var voted = false
-
-        if(result.active_voted != null){
-
-            for(x in result.active_voted){
-
-                if(x.voter.equals(username)) voted = true
-            }
-        }
-
-        var st : String? = result.body
-        if(st?.length != null && st?.length > 300){
-            st = st.substring(0,300)
-        }
-        var splitstring : List<String> = st?.split("\n") as List<String>
-        var builder = StringBuilder()
-        if(splitstring != null){
-
-            for (x in splitstring){
-                if(!x.contains("**") && !x.contains("[")&& !x.contains("<")){
-                    builder.append(x)
-                }
-            }
-        }
-
-        result.jsonMetadata = gson.fromJson<feed.JsonMetadataInner>(result.jsonMetadataString, feed.JsonMetadataInner::class.java)
-        var d = calendarcalculations() //2018-02-03T13:58:18
-        var du = DateUtils.getRelativeDateTimeString(activity,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(result.created)).time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
-
-        d.setDateOfTheData((SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(result.created) ))
-        var fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
-                reblogBy = result.reblogBy,
-                reblogOn = result.reblogOn,
-                entryId = result.entryId,
-                active =  result.active,
-                author = result.author,
-                body = builder.toString(),
-                cashoutTime = result.cashoutTime,
-                category = result.category,
-                children = result.children,
-                created = result.created,
-                createdcon = d.getDateTimeString(),
-                depth = result.depth,
-                id = result.id,
-                lastPayout = result.lastPayout,
-                lastUpdate = result.lastUpdate,
-                netVotes = result.netVotes,
-                permlink = result.permlink,
-                rootComment = result.rootComment,
-                title = result.title,
-                format = result.jsonMetadata?.format,
-                app = result.jsonMetadata?.app,
-                image = result.jsonMetadata?.image,
-                links = result.jsonMetadata?.links,
-                tags = result.jsonMetadata?.tags,
-                users = result.jsonMetadata?.users,
-                authorreputation = result.authorreputation,
-                pending_payout_value = result.pending_payout_value,
-                promoted = result.promoted,
-                total_pending_payout_value = result.total_pending_payout_value,
-                uservoted = voted,
-                already_paid = result.totalPayoutValue,
-                summary = null,
-                datespan = du.toString()
-
-        )
-        adapter?.feedHelperFunctions?.add(fd)
-
-    }
-
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -344,40 +240,12 @@ class MyFeedFragment : Fragment() {
         globalInterface = null
     }
 
-    fun displayMessage(result: List<feed.Comment>) {
-
-
-        loading = false
-
-        for (a in result){
-
-            displayMessage(a)
-        }
-        var lc = result[result.size - 1]
-        if(lc != null){
-            var nametouse : String = username as String
-            if(otherguy != null){
-                nametouse = otherguy as String
-            }
-            startAuthor = lc.author
-            startPermlink = lc.permlink
-            startTag = nametouse
-        }
-        swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(questionsList)
-
-    }
 
     fun displayMessageFeddArticle(result: List<FeedArticleDataHolder.FeedArticleHolder>) {
 
 
         loading = false
-
-        /*for (a in result){
-
-            displayMessage(a)
-        }*/
-        adapter?.feedHelperFunctions?.add(result)
+        adapterNormal?.feedHelperFunctions?.add(result)
         if(result.isNotEmpty()){
             var lc = result[result.size - 1]
             if(lc != null){
@@ -392,7 +260,6 @@ class MyFeedFragment : Fragment() {
         }
 
         swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(questionsList)
 
     }
 
@@ -408,42 +275,11 @@ class MyFeedFragment : Fragment() {
         val url = "https://api.steemit.com/"
         val d = MakeJsonRpc.getInstance()
         val g = Gson()
-        /*var nametouse : String = if(username != null) username as String else ""
-        if(otherguy != null){
-            nametouse = otherguy as String
-        }*/
         var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getBlogJ(nametouse),
                 Response.Listener { response ->
-
-                    //save to the db, ids go the state
-                    if(context != null){
-                        val req = RequestsDatabase(context!!)
-                        var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString() ,dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "feedfirst"))
-                        //close db connections so no leakages
-                        req.close()
-                        if(ad > 0){
-                            dblist.add(ad)
-                        }
-                    }
-                    /*val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,activity as Context)
-                    //con.ParseJsonBlog()
-                    val result = con.ParseJsonBlog()
-                    //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
-                    if(result != null && !result.isEmpty()){
-
-
-                        displayMessageFeddArticle(result)
-                    }*/
                     addItems(response,nametouse)
-
-                }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
-        }
-
-        )
-        //queue.add(s)
+                }, Response.ErrorListener {})
         volleyre.addToRequestQueue(s)
 
     }
@@ -458,96 +294,51 @@ class MyFeedFragment : Fragment() {
         return nametouse
     }
 
+    fun GetNameToUseOtherGuy():Boolean{
+        return otherguy == null
+    }
+
 
     fun GetMoreItems(){
-        //val queue = Volley.newRequestQueue(context)
-
         swipecommonactionsclass?.makeswiperun()
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(activity)
 
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
-        /*var nametouse : String = username as String
-        if(otherguy != null){
-            nametouse = otherguy as String
-        }*/
         var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getMoreItems(startAuthor,startPermlink,startTag,true),
                 Response.Listener { response ->
                     loading = false
-                    //val gson = Gson()
-                    /*val collectionType = object : TypeToken<List<feed.Comment>>() {
-
-                    }.type*/
-                    //val con = JsonRpcResultConversion(response.toString(),username as String,TypeOfRequest.feed)
-                    //con.ParseJsonBlog()
-                    //val result = con.ParseJsonBlog()
-
-                    //save request to db, id goes to state
-                    if(context != null){
-                        val req = RequestsDatabase(context!!)
-                        var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString(),dateLong = Date().time, typeOfRequest = TypeOfRequest.blog.name,otherInfo = "more"))
-                        //close db connections so no leakages
-                        req.close()
-                        if(ad > 0){
-                            dblist.add(ad)
-                        }
-
-                    }
-                    /*val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,if(activity != null) activity as Context else globalInterface?.getContextMine() as Context)
-                    //con.ParseJsonBlog()
-                    val result = con.ParseJsonBlogMore()
-                    //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
-                    if(result != null && !result.isEmpty()){
-
-
-                        displayMessageFeddArticle(result)
-                    }
-                    else{
-                        displayMessageFeddArticle(ArrayList<FeedArticleDataHolder.FeedArticleHolder>())
-                    }*/
                     addMoreItems(response,nametouse)
-
-                }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
-        }
-
-        )
-        //queue.add(s)
+                }, Response.ErrorListener {})
         volleyre.addToRequestQueue(s)
     }
 
     fun addMoreItems(response:JSONObject,nametouse:String){
         //if context is null try to load the activity context
-        val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,if(context != null) context as Context else this.activity?.applicationContext!!)
-        //con.ParseJsonBlog()
+        val con = JsonRpcResultConversion(response,nametouse,
+                TypeOfRequest.blog,
+                if(context != null) context as Context else this.activity?.applicationContext!!,
+                if(GetNameToUseOtherGuy())this else null,true)
         val result = con.ParseJsonBlogMore()
-        //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
         if(result != null && !result.isEmpty()){
-
-
             displayMessageFeddArticle(result)
         }
         else{
-            displayMessageFeddArticle(ArrayList<FeedArticleDataHolder.FeedArticleHolder>())
+            displayMessageFeddArticle(ArrayList())
         }
     }
 
     fun addItems(response:JSONObject,nametouse:String){
-        /*if(context == null){
-
-        }*/
         //if context is null try to load the activity context
-        val con = JsonRpcResultConversion(response,nametouse as String,TypeOfRequest.blog,if(context != null) context as Context else this.activity?.applicationContext!!)
-        //con.ParseJsonBlog()
+        val con = JsonRpcResultConversion(response,
+                nametouse,
+                TypeOfRequest.blog,
+                if(context != null) context as Context else this.activity?.applicationContext!!,
+                if(GetNameToUseOtherGuy())this else null,true)
         val result = con.ParseJsonBlog()
-        //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
         if(result != null && !result.isEmpty()){
-
-            /*adapter?.feedHelperFunctions.add(result)*/
-            //displayMessage(result)
             displayMessageFeddArticle(result)
         }
     }
