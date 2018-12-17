@@ -10,14 +10,18 @@ import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomConverters.Converters
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.*
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 
+//the entities are passed to the db via the annotatiion
 @Database(entities = [FeedArticleDataHolder.FeedArticleHolder::class,
     FeedArticleDataHolder.CommentHolder::class,
     FeedArticleDataHolder.beneficiariesDataHolder::class,
     FeedArticleDataHolder.WidgetArticleHolder::class,
     prof.Resultfp::class],
         version = 10)
+//type converters to convert data to and fro from the db
 @TypeConverters(Converters::class)
 abstract class RoomDatabaseApp : RoomDatabase() {
+
+    //Declare all the DAO interfaces here for access later
     abstract fun articleDao(): ArticleDao
     abstract fun commentDao():CommentDao
     abstract fun beneficiaryDao():BeneficiaryDao
@@ -25,6 +29,7 @@ abstract class RoomDatabaseApp : RoomDatabase() {
     abstract fun widgetDao():WidgetDao
 
     companion object {
+        //singleton for accessing the db
         @Volatile
         private var INSTANCE: RoomDatabaseApp? = null
 

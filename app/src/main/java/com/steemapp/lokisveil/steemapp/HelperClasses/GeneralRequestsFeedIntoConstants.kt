@@ -39,6 +39,8 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
     var currRequestName = ""
     var totalSize = 0
     var gotTillNow = 0
+
+    //used to construct the repo
     constructor(context:Context,application:Application) :this(context){
         //useDbCode = stopDbCode
         followRepo = FollowersRepo(application)
@@ -151,6 +153,11 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
     }
 
 
+    /**
+     * callback from the db with the total number of people in the db.
+     * if the number of people has changed then a callback is made to begin changing items
+     * @param count total number of people in db
+     */
     override fun countGot(count: Int) {
         var foc = followcount?.result?.followerCount
         var floc = followcount?.result?.followingCount
@@ -163,10 +170,16 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
         }
     }
 
+    /**
+     * deletes the follow db and waits for a callback to begin a sync
+     */
     fun refreshFollowDbNow(){
         followRepo?.deleteAll(this)
     }
 
+    /**
+     * callback from the db. Begin the sync now
+     */
     override fun deleDone() {
         GetFollowing(currRequestName,"",null)
         GetFollowers(currRequestName,"",null)
@@ -180,24 +193,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
             var parse = gson.fromJson(response.toString(), prof.FollowCount::class.java)
             if(parse != null && parse.result != null){
                 this.followcount = parse
-                //GetFollowers(name,"",followerlistener)
-                //GetFollowing(name,"",listener)
-
-                var s = SharedPrefrencesSingleton.getInstance(applicationContext)
-
-                var fc = s.getInt(CentralConstants.followerCount)
-                var fic = s.getInt(CentralConstants.followingCount)
                 followRepo?.getCount(this)
-                /*if(fc > parse.result.followerCount || fc < parse.result.followerCount ||
-                        fic > parse.result.followingCount || fic < parse.result.followingCount){
-                    GetFollowers(name,"",followerlistener)
-                    GetFollowing(name,"",listener)
-                }*/
-                //GetFollowers(name,"",followerlistener)
-                //GetFollowing(name,"",listener)
-                s.put(CentralConstants.followerCount,parse.result.followerCount)
-                s.put(CentralConstants.followingCount,parse.result.followingCount)
-                s.commit()
             }
 
         }
@@ -226,8 +222,10 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                 if(!useDbCode){
                     followlistinterface?.GetFollowersList(parse.result as List<prof.Resultfp>)
                 } else {
+                    //add to db
                     followRepo?.insert(parse.result !!,true)
                     gotTillNow += parse.result!!.size
+                    //callback the ui for updating the number of people
                     globalInterface?.followerProgress(gotTillNow,followcount?.result?.followerCount!!)
                 }
                 if(followers.size == followcount?.result?.followerCount){
@@ -253,8 +251,6 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                     } else{
                         followlistinterface?.FollowersDone()
                     }
-
-                    //FollowApiConstants.getInstance().followers = ArrayList()
                 } else{
                     GetFollowers(name,followers.last().follower,listener)
                 }
@@ -265,31 +261,12 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
         if(listener != null){
             listenerm = listener
         }
-
-        //swipecommonactionsclass?.makeswiperun()
-        //Toast.makeText(applicationContext,"Processing. Please wait....", Toast.LENGTH_LONG).show()
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFollowers(name,start),
-                listenerm
-                /*Response.Listener { response ->
-
-                    val gson = Gson()
-                    var parse = gson.fromJson(response.toString(), prof.FollowCount::class.java)
-                    if(parse != null && parse.result != null){
-
-                    }
-
-                }*/, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
-        }
-
-        )
-        //queue.add(s)
+                listenerm, Response.ErrorListener {})
         volleyre.addToRequestQueue(s)
     }
 
@@ -306,8 +283,10 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                 if(!useDbCode){
                     followlistinterface?.GetFollowingList(parse.result !!)
                 } else {
+                    //update the db
                     followRepo?.insert(parse.result !!,false)
                     gotTillNow += parse.result!!.size
+                    //callback so ui updates with the number
                     globalInterface?.followingProgress(gotTillNow,followcount?.result?.followingCount!!)
                 }
                 if(following.size == followcount?.result?.followingCount){
@@ -336,8 +315,6 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                         followlistinterface?.AllDone()
                     }
 
-
-                    //FollowApiConstants.getInstance().following = ArrayList()
                 } else{
                     GetFollowers(name,following.last().following,listener)
                 }
@@ -348,43 +325,15 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
         if(listener != null){
             listenerm = listener
         }
-
-        //swipecommonactionsclass?.makeswiperun()
-        //Toast.makeText(applicationContext,"Processing. Please wait....", Toast.LENGTH_LONG).show()
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFollowing(name,start),
                 listenerm
-                /*Response.Listener { response ->
-
-                    val gson = Gson()
-                    var parse = gson.fromJson(response.toString(), prof.FollowCount::class.java)
-                    if(parse != null && parse.result != null){
-
-                    }
-
-                }*/, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
-        }
-
-        )
-        //queue.add(s)
+                , Response.ErrorListener {})
         volleyre.addToRequestQueue(s)
     }
 
-
-
-    fun callDelete():Boolean{
-        if(!deleDone){
-            deleDone = true
-            return false
-            //followRepo?.deleteAll()
-        }
-        return deleDone
-    }
 
 }

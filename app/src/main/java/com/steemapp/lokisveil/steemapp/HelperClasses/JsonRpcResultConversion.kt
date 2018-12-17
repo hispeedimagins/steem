@@ -145,6 +145,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                     var ss = arr.getString(x)
                     if(ss != null){
                         var commstr : JSONObject = content.getJSONObject(ss)
+                        //if jni is not null we do a callback for saving to db,
+                        //else accumulate in the list and return
                         if(jni != null){
                             jni?.insert(getprocessedfeed(commstr)!!)
                         } else {
@@ -195,6 +197,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                     var commstr : JSONObject = result.getJSONObject(x) //x
                     var s = getprocessedfeed(commstr,false,true)
                     if(s != null){
+                        //if jni is not null we do a callback for saving to db,
+                        //else accumulate in the list and return
                         if(jni != null){
                             jni?.insert(getprocessedfeed(commstr)!!)
                         } else {
@@ -259,17 +263,10 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
         }
         else{
-            st  = commstr.getString("body")
+            //st  = commstr.getString("body")
         }
 
         var autho = "$author (${StaticMethodsMisc.CalculateRepScore(commstr.getString("author_reputation"))})"
-        //var tfollowsYou = false
-        //jni?.searchFollower(author)
-        /*if(followersDatabase != null){
-            if(author != username){
-                tfollowsYou = followersDatabase?.simpleSearch(author) as Boolean
-            }
-        }*/
 
         var jsonMetadata : feed.JsonMetadataInner? = null
         //this is because some apps have tags in a string instead of an array

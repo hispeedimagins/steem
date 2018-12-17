@@ -31,6 +31,10 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import java.util.*
 
+/**
+ * the paged adapter class
+ * the same as the normal one but uses an AsyncPagedListDiffer list with a diff callback
+ */
 class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerView, view: View?, initiate: AdapterToUseFor, globalInterface: GlobalInterface? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() , arvdinterface, FastScrollRecyclerView.SectionedAdapter {
     override fun getSectionName(position: Int): String {
         var ob = mDiffer?.getItem(position)
@@ -55,6 +59,9 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
 
 
     companion object {
+        /**
+         * this determines if an object has to be updated
+         */
         val  article_DIFF_CALLBACK = object :
                 DiffUtil.ItemCallback<Any>() {
             // details may have changed if reloaded from the database,
@@ -350,11 +357,12 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
 
     }
 
+    //will cause a crash do not use
     fun clear() {
         mDiffer?.currentList?.clear()
         notifyDataSetChanged()
     }
-
+    //will cause a crash do not use
     fun add(num: Long) {
         mDiffer?.currentList?.add(num)
         notifyDataSetChanged()
@@ -447,14 +455,14 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
     override fun getItemCount(): Int {
         return mDiffer?.itemCount
     }
-
+    //will cause a crash do not use
     fun add(all: List<Any>) {
         for(x in all){
             add(x)
         }
     }
 
-
+    //will cause a crash do not use
     override fun add(`object`: Any) {
 
 
@@ -476,14 +484,12 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
 
     }
 
+    /**
+     * we submit the paged list here
+     */
     fun submitList(list:PagedList<Any>){
         mDiffer.submitList(list)
     }
-
-    /*fun submitList(list:PagedList<FeedArticleDataHolder.FeedArticleHolder>):AsyncPagedListDiffer<Any>{
-        mDiffer.submitList(list as PagedList<Any>)
-        return mDiffer
-    }*/
 
     override fun notifydatachanged() {
 

@@ -20,6 +20,10 @@ import kotlin.collections.ArrayList
  */
 class FeedArticleDataHolder {
     companion object {
+
+        /**
+         * converts articledatholder to widget
+         */
         fun feedToWidget(data: FeedArticleHolder):WidgetArticleHolder{
             return WidgetArticleHolder  (
                      reblogBy = data.reblogBy,
@@ -155,6 +159,10 @@ class FeedArticleDataHolder {
 
 
      }*/
+
+    /**
+     * declared room entity
+     */
     @Entity(tableName = "article_holder" ,indices = [Index(value = ["id"],unique = true)])
     data class FeedArticleHolder  (
         val reblogBy: List<String>?,
@@ -313,6 +321,9 @@ class FeedArticleDataHolder {
 }*/
 
 
+    /**
+     * declared room entity same as article
+     */
     @Entity(tableName = "widget_holder" ,indices = [Index(value = ["id"],unique = true)])
     data class WidgetArticleHolder  (
             val reblogBy: List<String>?,
@@ -370,6 +381,9 @@ class FeedArticleDataHolder {
     )
 
 
+    /**
+     * declared room entity for comments
+     */
     @Entity(tableName = "comment_holder",indices = [Index(value = ["id"],unique = true)])
     data class CommentHolder(
             val reblogBy: List<String>?,

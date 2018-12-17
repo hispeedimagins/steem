@@ -56,6 +56,9 @@ import kotlin.collections.ArrayList
  */
 class FeedFragment : Fragment(),JsonRpcResultInterface  {
 
+    /**
+     * callback from the jni, this will insert it into the database
+     */
     override fun insert(data: FeedArticleDataHolder.FeedArticleHolder) {
         var nametouse : String = username as String
         if(otherguy != null){
@@ -117,15 +120,17 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
             view = inflater!!.inflate(R.layout.fragment_feed, container, false)
             recyclerView = view?.findViewById(R.id.feedFragment)
 
+            //setup the new paged adapter
             adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
-            //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
-            //followersRepo = FollowersRepo(context?.applicationContext as Application)
+            //setup the vm
             vm = ViewModelProviders.of(this).get(ArticleRoomVM::class.java)
-
+            //observe the last db result only once
             vm?.getLastDbKey()?.observe(this,android.arch.lifecycle.Observer {
                 if(!runOnce && it != null){
+                    //now get a list of items from the db and observe changes
                     vm?.getPagedUpdatedList(it!!)?.observe(this,android.arch.lifecycle.Observer { pagedList ->
                         if(pagedList != null){
+                            //submit the list to the adapter
                             adapter?.submitList(pagedList!! as PagedList<Any>)
                             swipecommonactionsclass?.makeswipestop()
                         }
@@ -311,8 +316,14 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
         volleyre.addToRequestQueue(s)
     }
 
+    /**
+     * process the result and add it to the adapter/db
+     * @param response the jsoobject response to process
+     * @param nametouse the name for whom we are processing
+     */
     fun addMoreItems(response:JSONObject,nametouse:String){
         if (context == null) return
+        //we pass jni into the constructor to not get a list back but insert into the db
         val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.blog,context!!,this,false)
         val result = con.ParseJsonBlogMore()
         if(result != null && !result.isEmpty()){
@@ -323,8 +334,14 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
         }
     }
 
+    /**
+     * process the result and add it to the adapter/db
+     * @param response the jsoobject response to process
+     * @param nametouse the name for whom we are processing
+     */
     fun addItems(response:JSONObject,nametouse:String){
         if (context == null) return
+        //we pass jni into the constructor to not get a list back but insert into the db
         val con = JsonRpcResultConversion(response,nametouse,TypeOfRequest.feed,context!!,this,false)
         val result = con.ParseJsonBlog()
         if(result != null && !result.isEmpty()){

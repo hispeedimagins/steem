@@ -48,11 +48,15 @@ import kotlin.collections.ArrayList
  */
 class MyFeedFragment : Fragment() , JsonRpcResultInterface {
 
+    /**
+     * add to the database, callback from the processing class
+     */
     override fun insert(data: FeedArticleDataHolder.FeedArticleHolder) {
         var nametouse : String = username as String
         if(otherguy != null){
             nametouse = otherguy as String
         }
+        //save for pagination
         startAuthor = data.author
         startPermlink = data.permlink
         startTag = nametouse
@@ -107,6 +111,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
             //adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
             //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
 
+            //check if this is for the users blog or someone else's
             if(GetNameToUseOtherGuy()){
                 adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
                 vm = ViewModelProviders.of(this).get(ArticleRoomVM::class.java)
@@ -125,6 +130,8 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
                 recyclerView?.setItemAnimator(DefaultItemAnimator())
                 recyclerView?.setAdapter(adapter)
             } else {
+                //use the normal adapter as we do not need to save the other guys
+                //articles in the db as of now
                 adapterNormal = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList() ,recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
                 recyclerView?.setItemAnimator(DefaultItemAnimator())
                 recyclerView?.setAdapter(adapterNormal)
@@ -315,6 +322,11 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
         volleyre.addToRequestQueue(s)
     }
 
+    /**
+     * process the result and add it to the adapter/db
+     * @param response the jsoobject response to process
+     * @param nametouse the name for whom we are processing
+     */
     fun addMoreItems(response:JSONObject,nametouse:String){
         //if context is null try to load the activity context
         val con = JsonRpcResultConversion(response,nametouse,
@@ -330,6 +342,11 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
         }
     }
 
+    /**
+     * process the result and add it to the adapter/db
+     * @param response the jsoobject response to process
+     * @param nametouse the name for whom we are processing
+     */
     fun addItems(response:JSONObject,nametouse:String){
         //if context is null try to load the activity context
         val con = JsonRpcResultConversion(response,

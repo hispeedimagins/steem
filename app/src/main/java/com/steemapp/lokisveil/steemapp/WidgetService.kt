@@ -82,23 +82,38 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
                 AppWidgetManager.INVALID_APPWIDGET_ID)*/
     }
 
+    /**
+     * callback tell us to fetch more data as processing is done now
+     */
     override fun processingDone(count: Int) {
         //repo.getLastDbKey(this)
         repo.getList(prevCount,this)
     }
 
+    /**
+     * callback get the daata list from the db
+     */
     override fun insert(data: List<FeedArticleDataHolder.FeedArticleHolder>) {
         if(data.isEmpty()) return
+        //clear the list
         mWidgetItems.clear()
+        //add more
         mWidgetItems.addAll(data)
+        //reverse the list as the data is new now
         mWidgetItems.reverse()
         updateTheWidget()
     }
 
+    /**
+     * insert the item into the db
+     */
     override fun insert(data: FeedArticleDataHolder.FeedArticleHolder) {
         repo.insert(data)
     }
 
+    /**
+     * callback tells us how many items we have in the db
+     */
     override fun countGot(count: Int?) {
         var id = 0
         if(count != null) id = count
@@ -110,33 +125,14 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
         // In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
         // for example downloading or creating content etc, should be deferred to onDataSetChanged()
         // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
-        /*for (i in 0 until mCount) {
-            mWidgetItems.add(WidgetItem(i.toString() + "!"))
-        }*/
 
         // if it is a user refresh, clear and tell it to update the ui
         if(isrefresh){
             mWidgetItems?.clear()
             AppWidgetManager.getInstance(mContext).notifyAppWidgetViewDataChanged(mAppWidgetId,R.id.stack_view)
         }
-        /*var attrs  = intArrayOf(R.attr.textColorMine)
-        var ta = mContext.obtainStyledAttributes(attrs)
-        var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
-        ta.recycle()
-        textColorMineTheme = ContextCompat.getColor(mContext, textColorMineThemeint)*/
-        // We sleep for 3 seconds here to show how the empty view appears in the interim.
-        // The empty view is set in the StackWidgetProvider and should be a sibling of the
-        // collection view.
-        /*try {
-            Thread.sleep(3000)
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        }*/
-        /*var attrs  = intArrayOf(R.attr.textColorMine)
-        var ta = mContext.obtainStyledAttributes(attrs)
-        var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
-        ta.recycle()
-        textColorMineTheme = ContextCompat.getColor(mContext, textColorMineThemeint)*/
+
+        //construct the repo and fetc hthe last db key
         repo = WidgetRepo(mContext,null)
         repo.getLastDbKey(this)
         callcreate()
@@ -203,19 +199,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
         //val dr = Drawable.createFromStream(ips,null)
         //rv.setImageViewBitmap(R.id.article_image, BitmapFactory.decodeStream(url.openConnection().getInputStream()))
         //rv.set
-        // Next, we set a fill-intent which will be used to fill-in the pending intent template
-        // which is set on the collection view in StackWidgetProvider.
-        /*val extras = Bundle()
-        extras.putInt(AllAppWidget.EXTRA_ITEM, position)
 
-        extras.putExtra("username", if(holder.article?.rootAuthor != null) holder.article?.rootAuthor else holder.article?.author)
-        extras.putExtra("tag", holder.article?.category)
-        extras.putExtra("permlink", if(holder.article?.rootPermlink != null) holder.article?.rootPermlink else holder.article?.permlink)
-        //if(adaptype == AdapterToUseFor.commentNoti || adaptype == AdapterToUseFor.replyNoti) myIntent.putExtra("permlinkToFind",holder.article?.permlink)
-
-        val fillInIntent = Intent()
-        fillInIntent.putExtras(extras)
-        rv.setOnClickFillInIntent(R.id.widget_item, fillInIntent)*/
         // You can do heaving lifting in here, synchronously. For example, if you need to
         // process an image, fetch something from the network, etc., it is ok to do it here,
         // synchronously. A loading view will show up in lieu of the actual contents in the
@@ -251,28 +235,6 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
 
     override fun onDataSetChanged() {
         Log.d("data called","now items size is ${mWidgetItems.size}")
-
-        /*var tag = AllAppWidgetConfigureActivity.loadTitlePref(mContext,mAppWidgetId,"tag")
-        var spinner = AllAppWidgetConfigureActivity.loadTitlePref(mContext,mAppWidgetId,"spinner")
-
-        var req = "get_discussions_by_"
-        //var tagte = tags_autocom.text.toString()
-        //var sptl = spinnerTrending.selectedItem.toString()
-
-        //mainremo.removeAllViews()
-        req += if(spinner == "new"){
-            "created"
-        }
-        else{
-            spinner
-        }
-
-        if(spinner == "feed"){
-            GetFeed()
-        } else{
-            GetFeed(req,tag)
-        }*/
-
         // This is triggered when you call AppWidgetManager notifyAppWidgetViewDataChanged
         // on the collection view corresponding to this factory. You can do heaving lifting in
         // here, synchronously. For example, if you need to process an image, fetch something
@@ -284,57 +246,29 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
 
 
     fun GetFeed(mainrequest:String,maintag:String){
-        //val queue = Volley.newRequestQueue(context)
-
-        /*swipecommonactionsclass?.makeswiperun()
-
-        if(username == null){
-            val sharedPreferences = view?.context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
-            username = sharedPreferences?.getString(CentralConstants.username, null)
-            key = sharedPreferences?.getString(CentralConstants.key, null)
-        }*/
-
         val volleyre : VolleyRequest = VolleyRequest.getInstance(mContext)
-        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
         val url = "https://api.steemit.com/"
         val d = MakeJsonRpc.getInstance()
-        //val g = Gson()
         var nametouse : String = if(username != null)  username as String else ""
 
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getTagQuery(mainrequest,maintag,"20"),
                 Response.Listener { response ->
 
-                    //val gson = Gson()
-                    /*val collectionType = object : TypeToken<List<feed.FeedData>>() {
-
-                    }.type*/
                     val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.feed,mContext,this,false)
-                    //con.ParseJsonBlog()
-                    //val result = con.ParseJsonBlog()
-                    val result = con.ParseJsonBlogMore()
-                    //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
-                    if(result != null && !result.isEmpty()){
 
-                        /*adapter?.feedHelperFunctions.add(result)*/
-                        //displayMessage(result)
-                        //displayMessageFeddArticle(result)
+                    val result = con.ParseJsonBlogMore()
+
+                    if(result != null && !result.isEmpty()){
                         mWidgetItems.addAll(result)
-                        /*for(x in result){
-                            mWidgetItems.add(x)
-                        }*/
                         AppWidgetManager.getInstance(mContext).notifyAppWidgetViewDataChanged(mAppWidgetId,R.id.stack_view)
                     } else{
-                        //callcreate()
                     }
 
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
-        //queue.add(s)
         volleyre.addToRequestQueue(s)
     }
 
@@ -343,10 +277,6 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
     }
 
     fun GetFeed(){
-        //val queue = Volley.newRequestQueue(context)
-
-
-
         if(username == null){
             val sharedPreferences = mContext.getSharedPreferences(CentralConstants.sharedprefname, 0)
             username = sharedPreferences?.getString(CentralConstants.username, null)
@@ -354,7 +284,6 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
         }
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(mContext)
-        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
         val url = "https://api.steemit.com/"
         val d = MakeJsonRpc.getInstance()
 
@@ -362,62 +291,22 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFeedJ(nametouse),
                 Response.Listener { response ->
-
-                    //save request to db, id goes to state
-                    /*if(mContext != null){
-                        val req = RequestsDatabase(mContext!!)
-                        //req.DeleteOld()
-                        var ad = req.Insert(com.steemapp.lokisveil.steemapp.DataHolders.Request(json = response.toString() ,dateLong = Date().time, typeOfRequest = TypeOfRequest.feed.name,otherInfo = "feedfirst"))
-                        if(ad > 0){
-                            dblist.add(ad)
-                        }
-
-                    }*/
-
                     val con = JsonRpcResultConversion(response,nametouse,TypeOfRequest.feed,mContext,this,false)
-                    //con.ParseJsonBlog()
                     val result = con.ParseJsonBlog()
-                    //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
                     if(result != null && !result.isEmpty()){
-
-                        /*adapter?.feedHelperFunctions.add(result)*/
-                        //displayMessage(result)
-
                         mWidgetItems.addAll(result)
-                        /*for(x in result){
-                            mWidgetItems.add(x)
-                        }*/
                         AppWidgetManager.getInstance(mContext).notifyAppWidgetViewDataChanged(mAppWidgetId,R.id.stack_view)
                     } else {
-                        //callcreate()
                     }
-                    //addItems(response,nametouse)
 
 
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
         //queue.add(s)
         volleyre.addToRequestQueue(s)
     }
-
-    /*public fun getBitmap(sh:FutureTarget<Drawable>):Bitmap?{
-        try{
-            var g = sh.get()
-            var bt = Bitmap.createBitmap(g.getIntrinsicWidth(), g.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            val canvas = Canvas(bt)
-            g.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
-            g.draw(canvas)
-            return bt
-        } catch (ex:Exception){
-            Log.d("getBitmapWidget",ex.message)
-        }
-        return null
-
-    }*/
 
 
     public fun Bind(rv:RemoteViews,article:FeedArticleDataHolder.FeedArticleHolder,position:Int){

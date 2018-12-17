@@ -92,17 +92,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         allFollowDone()
     }
 
+    /**
+     * callback tell us we can hide the progress showing ui now
+     */
     fun allFollowDone(){
         if(runs.gotTillNow == runs.totalSize){
             progress_foll.visibility = View.GONE
         }
     }
 
+    /**
+     * reports the follower progress
+     * @param got the number got till now
+     * @param total the total number of people to get
+     */
     override fun followerProgress(got:Int,total:Int){
+        //calculate percentage
         var pro = (got/total) * 100
         progressNow.progress = pro
         progressDone.text = "syncing people : $got/${runs.totalSize}"
     }
+
+    /**
+     * reports the following progress
+     * @param got the number got till now
+     * @param total the total number of people to get
+     */
     override fun followingProgress(got:Int,total:Int){
         var pro = (got/total) * 100
         progressNow.progress = pro
@@ -329,63 +344,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
     }
-
-
-    /*fun createJob(dispatcher: FirebaseJobDispatcher): Job {
-        *//* Job job = dispatcher.newJobBuilder()
-                // persist the task across boots
-                .setLifetime(Lifetime.FOREVER)
-                // Call this service when the criteria are met.
-                .setService(LocationManagerS.class)
-                // unique id of the task
-                .setTag("LocationJob")
-                // We are mentioning that the job is not periodic.
-                .setRecurring(true)
-                // Run between 30 - 60 seconds from now.
-                .setTrigger(Trigger.executionWindow(10,20))
-                //Run this job only when the network is avaiable.
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                .build();*//*
-
-
-        val myExtrasBundle = Bundle()
-        myExtrasBundle.putString("some_key", "some_value")
-
-//dispatcher.mustSchedule(myJob);
-
-
-        return dispatcher.newJobBuilder()
-                // the JobService that will be called
-                .setService(NotificationService::class.java)
-                // uniquely identifies the job
-                .setTag("my-unique-tag")
-                // one-off job
-                .setRecurring(true)
-                // don't persist past a device reboot
-                .setLifetime(Lifetime.FOREVER)
-                // start between 0 and 60 seconds from now
-                .setTrigger(Trigger.executionWindow(600 * 2, 600 * 3))
-                //.setTrigger(Trigger.executionWindow(0, 60))
-
-                // don't overwrite an existing job with the same tag
-                .setReplaceCurrent(false)
-                //.setReplaceCurrent(true)
-                // retry with exponential backoff
-                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
-                // constraints that need to be satisfied for the job to run
-                .setConstraints(
-                                Constraint.ON_ANY_NETWORK
-
-                                // only run on an unmetered network
-                                //Constraint.ON_UNMETERED_NETWORK,
-                                // only run when the device is charging
-                                //Constraint.DEVICE_CHARGING
-
-                        )
-                .setExtras(myExtrasBundle)
-                .build()
-    }*/
-
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
