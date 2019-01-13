@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
 
     android:layout_width="match_parent"
 
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:id="@+id/design_bottom_sheet"
     android:clipToPadding="true"
     app:behavior_hideable="true"
@@ -116,113 +116,135 @@
                     >
 
                 </android.support.v7.widget.CardView>-->
-                <android.support.design.widget.TextInputLayout
-
-                    android:hint="Title"
-                    android:id="@+id/TextMainOneTextLayout"
-                    android:layout_marginBottom="5dp"
+                <ScrollView
+                    android:id="@+id/content_scroller"
+                    android:layout_weight="1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
-                    app:counterOverflowTextAppearance="@style/MyOverflowText"
-                    app:counterTextAppearance="@style/MyNormalTextCounter"
-                    >
-
-                    <EditText
-                        style="@style/MyMaterialTheme.NormalText"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/TextMainOne"
-                        android:textColorHint="?attr/textColorMine"
-                        android:textColor="?attr/textColorMine"
-                        android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
-                        />
+                        android:orientation="vertical"
+                        >
+                        <android.support.design.widget.TextInputLayout
+
+                            android:hint="Title"
+                            android:id="@+id/TextMainOneTextLayout"
+                            android:layout_marginBottom="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
+                            app:counterOverflowTextAppearance="@style/MyOverflowText"
+                            app:counterTextAppearance="@style/MyNormalTextCounter"
+                            >
+
+                            <EditText
+                                style="@style/MyMaterialTheme.NormalText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/TextMainOne"
+                                android:textColorHint="?attr/textColorMine"
+                                android:textColor="?attr/textColorMine"
+                                android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
+                                />
 
 
-                </android.support.design.widget.TextInputLayout>
-
-
-
-                <!--<android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/cardviewThree"
-
-                    app:cardUseCompatPadding="true"
-                    app:cardPreventCornerOverlap="true"
-                    contentPadding="1dp"
-
-                    android:layout_gravity="center_horizontal"
-                    >
-
-                </android.support.v7.widget.CardView>-->
-                <android.support.design.widget.TextInputLayout
-                    app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
-                    android:hint="Tags (Seperated by spaces)"
-                    android:id="@+id/EditMainTextTwoTextLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:counterOverflowTextAppearance="@style/MyOverflowText"
-                    app:counterTextAppearance="@style/MyNormalTextCounter"
-                    >
-
-
-                    <EditText
-                        style="@style/MyMaterialTheme.NormalText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColorHint="?attr/textColorMine"
-                        android:id="@+id/EditMainTextTwo"
-                        android:textColor="?attr/textColorMine"
-                        android:inputType="textEmailAddress|textMultiLine|textAutoComplete|textAutoCorrect"
-                        />
-
-
-                </android.support.design.widget.TextInputLayout>
+                        </android.support.design.widget.TextInputLayout>
 
 
 
-                <!--<android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                        <!--<android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/cardviewThree"
 
-                    android:id="@+id/cardviewFour"
-                    app:cardUseCompatPadding="true"
-                    app:cardPreventCornerOverlap="true"
-                    contentPadding="1dp"
+                            app:cardUseCompatPadding="true"
+                            app:cardPreventCornerOverlap="true"
+                            contentPadding="1dp"
 
-                    android:layout_gravity="center_horizontal"
-                    >
+                            android:layout_gravity="center_horizontal"
+                            >
 
-                </android.support.v7.widget.CardView>-->
-
-                <android.support.design.widget.TextInputLayout
-                    app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
-                    android:hint="Your post"
-                    android:id="@+id/EditMainTextThreeTextLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:counterOverflowTextAppearance="@style/MyOverflowText"
-
-                    app:counterTextAppearance="@style/MyNormalTextCounter"
-                    >
+                        </android.support.v7.widget.CardView>-->
+                        <android.support.design.widget.TextInputLayout
+                            app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
+                            android:hint="Tags (Seperated by spaces)"
+                            android:id="@+id/EditMainTextTwoTextLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:counterOverflowTextAppearance="@style/MyOverflowText"
+                            app:counterTextAppearance="@style/MyNormalTextCounter"
+                            >
 
 
-                    <EditText
-                        style="@style/MyMaterialTheme.NormalText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColorHint="?attr/textColorMine"
-                        android:id="@+id/EditMainTextThree"
-                        android:textColor="?attr/textColorMine"
-                        android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
-                        />
+                            <EditText
+                                style="@style/MyMaterialTheme.NormalText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColorHint="?attr/textColorMine"
+                                android:id="@+id/EditMainTextTwo"
+                                android:textColor="?attr/textColorMine"
+                                android:inputType="textEmailAddress|textMultiLine|textAutoComplete|textAutoCorrect"
+                                />
 
 
-                </android.support.design.widget.TextInputLayout>
+                        </android.support.design.widget.TextInputLayout>
+
+
+
+                        <!--<android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:id="@+id/cardviewFour"
+                            app:cardUseCompatPadding="true"
+                            app:cardPreventCornerOverlap="true"
+                            contentPadding="1dp"
+
+                            android:layout_gravity="center_horizontal"
+                            >
+
+                        </android.support.v7.widget.CardView>-->
+
+                        <android.support.design.widget.TextInputLayout
+                            android:overScrollMode="always"
+                            android:layout_weight="1"
+                            app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
+                            android:hint="Your post"
+                            android:id="@+id/EditMainTextThreeTextLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            app:counterOverflowTextAppearance="@style/MyOverflowText"
+                            android:minLines="16"
+                            app:counterTextAppearance="@style/MyNormalTextCounter"
+                            >
+
+
+                            <EditText
+
+                                android:gravity="start"
+                                android:overScrollMode="always"
+                                style="@style/MyMaterialTheme.NormalText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColorHint="?attr/textColorMine"
+                                android:id="@+id/EditMainTextThree"
+                                android:textColor="?attr/textColorMine"
+                                android:minLines="16"
+                                android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
+                                />
+
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+                </ScrollView>
+
+
+
 
 
                 <android.support.v7.widget.CardView
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/cardBackgroundColor"
@@ -309,7 +331,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
 
-</ScrollView>
+</RelativeLayout>
 
 
 

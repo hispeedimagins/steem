@@ -19,6 +19,11 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
+    <include layout="@layout/follow_progress"
+        android:id="@+id/progress_foll"
+        android:visibility="gone"
+        ></include>
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
