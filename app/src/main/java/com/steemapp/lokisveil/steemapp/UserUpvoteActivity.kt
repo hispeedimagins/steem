@@ -81,8 +81,8 @@ class UserUpvoteActivity : AppCompatActivity() {
             }
             //check for null
             if(jo != null){
-                var dat : Date = StaticMethodsMisc.FormatDateGmt(jo.getString("time"))
-                var du = DateUtils.getRelativeDateTimeString(applicationContext,dat.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+                var dat = if(jo.has("time")) StaticMethodsMisc.FormatDateGmt(jo.getString("time")) else null
+                var du = if(dat != null) MiscConstants.dateToRelDate(dat,this) else ""
                 var votvalr = StaticMethodsMisc.VotingValueSteemToSd(StaticMethodsMisc.CalculateVotingValueRshares(jo.getString("rshares")))
                 var av = feed.avtiveVotes(
                         voter = jo.getString("voter"),
@@ -91,10 +91,10 @@ class UserUpvoteActivity : AppCompatActivity() {
                         calculatedrshares = StaticMethodsMisc.FormatVotingValueToSBD(votvalr),
                         votevalforsorting = votvalr,
                         calculatedtime = "",
-                        calculatedvotepercent = "Vote power :"+ (jo.getString("weight").toInt() / 100).toString(),
+                        calculatedvotepercent = if(jo.has("weight"))"Vote power :"+ (jo.getString("weight").toInt() / 100).toString() else "",
                         dateString = du.toString(),
                         date = dat,
-                        namewithrep = "${jo.getString("voter")} (${StaticMethodsMisc.CalculateRepScore(jo.getString("reputation"))})",
+                        namewithrep = "${jo.getString("voter")} (${(jo.getString("reputation"))})",
                         percent = "",
                         reputation = "",
                         rshares = "",

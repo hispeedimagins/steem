@@ -264,7 +264,7 @@ class SearchActivity : AppCompatActivity() {
                 id = 0,
                 lastPayout = "",
                 lastUpdate = "",
-                netVotes = post.net_votes,
+                netVotes = if(post.net_votes != null)post.net_votes else 0,
                 permlink = post.permlink,
                 rootComment =  0,
                 title = post.title,

@@ -14,6 +14,7 @@ import com.steemapp.lokisveil.steemapp.Databases.FollowersDatabase
 import com.steemapp.lokisveil.steemapp.Databases.FollowingDatabase
 import com.steemapp.lokisveil.steemapp.FollowApiConstants
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
+import com.steemapp.lokisveil.steemapp.MiscConstants
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
@@ -245,11 +246,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 return null
             }
         }
-        var rpb = commstr.getJSONArray("reblogged_by")
-        val collectionType = object : TypeToken<List<String>>() {
-
-        }.type
-        var ls = gson.fromJson<List<String>>(rpb.toString(),collectionType)
+        val ls = _getReblogBy(commstr)
         var st : String = ""
         if(!bodyasis){
             try{
@@ -278,32 +275,33 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
         }
 
+        /*var dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
+        var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)*/
         var dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
-        var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+        var du = MiscConstants.dateToRelDate(dd,contex)
 
         var fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
                 displayName = autho,
                 reblogBy = ls,
-                reblogOn = if(commstr.has("first_reblogged_on")) commstr.getString("first_reblogged_on") else "" ,
+                reblogOn = _getString("first_reblogged_on",commstr),
                 entryId = if(commstr.has("entry_id")) commstr.getInt("entry_id") else 0 ,
-                active =  commstr.getString("active"),
+                active = _getString("active",commstr,true)!!,
                 author = author,
                 //body = if(bodyasis) st else builder.toString(),
                 body = commstr.getString("body"),
                 summary = st,
-                cashoutTime = commstr.getString("cashout_time"),
-                category = commstr.getString("category"),
+                cashoutTime = _getString("cashout_time",commstr,true)!!,
+                category = _getString("category",commstr,true)!!,
                 children = commstr.getInt("children"),
                 date = dd,
-                created = commstr.getString("created"),
+                created = _getString("created",commstr,true)!!,
                 createdcon = dd.time.toString(),
-                //createdcon = d.getDateTimeString(),
                 depth = commstr.getInt("depth"),
-                id = commstr.getInt("id"),
-                lastPayout = commstr.getString("last_payout"),
-                lastUpdate = commstr.getString("last_update"),
-                netVotes = commstr.getInt("net_votes"),
-                permlink = commstr.getString("permlink"),
+                id = commstr.getInt("post_id"),
+                lastPayout = _getString("last_payout",commstr,true)!!,
+                lastUpdate = _getString("last_update",commstr,true)!!,
+                netVotes = _getNetVotes(commstr),
+                permlink = _getString("permlink",commstr,true)!!,
                 rootComment = if(commstr.has("root_comment")) commstr.getInt("root_comment") else 0,
                 title = commstr.getString("title"),
                 format = jsonMetadata?.format,
@@ -312,13 +310,13 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 links = jsonMetadata?.links,
                 tags = jsonMetadata?.tags,
                 users = jsonMetadata?.users,
-                authorreputation = commstr.getString("author_reputation"),
-                pending_payout_value = commstr.getString("pending_payout_value"),
-                promoted = commstr.getString("promoted"),
-                total_pending_payout_value = commstr.getString("total_pending_payout_value"),
+                authorreputation = _getString("author_reputation",commstr),
+                pending_payout_value = _getString("pending_payout_value",commstr),
+                promoted = _getString("promoted",commstr),
+                total_pending_payout_value = _getString("total_pending_payout_value",commstr),
                 uservoted = voted,
-                already_paid = commstr.getString("total_payout_value"),
-                datespan = du.toString(),
+                already_paid = _getString("total_payout_value",commstr),
+                datespan = du,
                 replies = repl,
                 activeVotes = commstr.getJSONArray("active_votes"),
                 rootAuthor = if(commstr.has("root_author")) commstr.getString("root_author") else null,
@@ -327,8 +325,35 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 isBlog = blogData
 
         )
-        //adapter?.feedHelperFunctions?.add(fd)
         return fd
+    }
+
+    private fun _getReblogBy(commstr : JSONObject):List<String>{
+        if(commstr.has("reblogged_by")){
+            var rpb = commstr.getJSONArray("reblogged_by")
+            val collectionType = object : TypeToken<List<String>>() {
+
+            }.type
+            return gson.fromJson<List<String>>(rpb.toString(),collectionType)
+        }
+        return ArrayList<String>()
+    }
+
+    private fun _getString(str:String,commstr : JSONObject,noNull:Boolean = false):String?{
+        if(commstr.has(str)) return commstr.getString(str)
+        if(noNull) return "" else return null
+    }
+
+    private fun _getInt(str:String,commstr : JSONObject,noNull:Boolean = false):Int?{
+        if(commstr.has(str)) return commstr.getInt(str)
+        if(noNull) return 0 else return null
+    }
+
+    private fun _getNetVotes(commstr : JSONObject):Int{
+        if(commstr.has("active_votes")){
+            return commstr.getJSONArray("active_votes").length()
+        }
+        return 0
     }
 
     fun ParseReplies(UserAndPermlinkWithDash : String?) : ArrayList<Any>{
@@ -366,6 +391,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         closedb()
         return list
     }
+
+
 
     private fun _ParseReplies(list : ArrayList<Any>,content : JSONObject,article : FeedArticleDataHolder.CommentHolder,replytoabove : Boolean,wid : Int){
         for(x in 0 until article.replies!!.length()){
@@ -418,14 +445,13 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         }
 
         var dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
-        //d.setDateOfTheData(dd)
-        var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
-
-        var rpb = commstr.getJSONArray("reblogged_by")
+        var du = MiscConstants.dateToRelDate(dd,contex)
+       /* var rpb = commstr.getJSONArray("reblogged_by")
         val collectionType = object : TypeToken<List<String>>() {
 
         }.type
-        var ls = gson.fromJson<List<String>>(rpb.toString(),collectionType)
+        var ls = gson.fromJson<List<String>>(rpb.toString(),collectionType)*/
+        val ls = _getReblogBy(commstr)
         var bod = StaticMethodsMisc.CorrectMarkDown(commstr.getString("body"),jsonMetadata?.image)
         var author = commstr.getString("author")
         var autho = "$author (${StaticMethodsMisc.CalculateRepScore(commstr.getString("author_reputation"))})"
@@ -442,23 +468,23 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         var fd : FeedArticleDataHolder.CommentHolder = FeedArticleDataHolder.CommentHolder(
                 displayName = autho,
                 reblogBy = ls,
-                reblogOn = if(commstr.has("first_reblogged_on")) commstr.getString("first_reblogged_on") else "" ,
+                reblogOn = _getString("first_reblogged_on",commstr),
                 entryId = if(commstr.has("entry_id")) commstr.getInt("entry_id") else 0 ,
-                active =  commstr.getString("active"),
+                active = _getString("active",commstr,true)!!,
                 author = author,
                 body = bod,
-                cashoutTime = commstr.getString("cashout_time"),
-                category = commstr.getString("category"),
+                cashoutTime = _getString("cashout_time",commstr,true)!!,
+                category = _getString("category",commstr,true)!!,
                 children = commstr.getInt("children"),
-                created = commstr.getString("created"),
+                created =  _getString("created",commstr,true)!!,
                 createdcon = dd.toString(),
                 date = dd,
                 depth = commstr.getInt("depth"),
-                id = commstr.getInt("id"),
-                lastPayout = commstr.getString("last_payout"),
-                lastUpdate = commstr.getString("last_update"),
-                netVotes = commstr.getInt("net_votes"),
-                permlink = commstr.getString("permlink"),
+                id = commstr.getInt("post_id"),
+                lastPayout = _getString("last_payout",commstr,true)!!,
+                lastUpdate = _getString("last_update",commstr,true)!!,
+                netVotes = _getNetVotes(commstr),
+                permlink = _getString("permlink",commstr,true)!!,
                 rootComment = if(commstr.has("root_comment")) commstr.getInt("root_comment") else 0,
                 title = commstr.getString("title"),
                 format = jsonMetadata?.format,
@@ -468,13 +494,13 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 tags = jsonMetadata?.tags,
                 users = jsonMetadata?.users,
                 authorreputation = StaticMethodsMisc.CalculateRepScore(commstr.getString("author_reputation")),
-                pending_payout_value = commstr.getString("pending_payout_value"),
-                promoted = commstr.getString("promoted"),
-                total_pending_payout_value = commstr.getString("total_pending_payout_value"),
+                pending_payout_value = _getString("pending_payout_value",commstr),
+                promoted = _getString("promoted",commstr),
+                total_pending_payout_value = _getString("total_pending_payout_value",commstr),
                 uservoted = voted,
-                already_paid = commstr.getString("total_payout_value"),
+                already_paid =  _getString("total_payout_value",commstr),
                 //summary = null,
-                datespan = du.toString(),
+                datespan = du,
                 width = wid,
                 activeVotes = commstr.getJSONArray("active_votes"),
                 replies = replies,

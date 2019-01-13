@@ -24,7 +24,7 @@ class AskSteemSearch {
             val created: String, //2018-01-31T10:49:09
             val title: String, //A run to freedom
             val children: Int, //6
-            val net_votes: Int, //115
+            val net_votes: Int?, //115
             val tags: List<String>,
             val author: String, //hispeedimagins
             val type: String, //post

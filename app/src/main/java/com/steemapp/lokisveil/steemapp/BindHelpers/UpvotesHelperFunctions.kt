@@ -57,8 +57,11 @@ class UpvotesHelperFunctions(context : Context, username:String?, adapter: arvdi
 
 
     fun add(vote:feed.avtiveVotes){
-        floatingDateHolder?.checktimeandaddQuestions(vote.date!!)
-        adaptedcomms?.add(vote)
+        if(vote.date != null){
+            floatingDateHolder?.checktimeandaddQuestions(vote.date!!)
+        }
+
+        adaptedcomms.add(vote)
         adaptedcomms.notifyitemcinserted(adaptedcomms.getSize())
     }
 
