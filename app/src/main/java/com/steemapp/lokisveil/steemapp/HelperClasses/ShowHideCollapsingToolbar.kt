@@ -1,5 +1,7 @@
 package com.steemapp.lokisveil.steemapp.HelperClasses
 
+
+
 import android.support.design.widget.AppBarLayout
 import android.util.Log
 import android.view.View
@@ -10,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_open_other_guy_blog.*
 /**
  * Created by boot on 3/20/2018.
  */
-class ShowHideCollapsingToolbar(appbar: AppBarLayout,main_linearlayout_title:LinearLayout,toolbar_linear:LinearLayout) {
+class ShowHideCollapsingToolbar(appbar: AppBarLayout, main_linearlayout_title:LinearLayout, toolbar_linear:LinearLayout) {
     private val PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f
     //private val PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f
     private val PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.9f
@@ -22,16 +24,18 @@ class ShowHideCollapsingToolbar(appbar: AppBarLayout,main_linearlayout_title:Lin
     private var toolbar_linear = toolbar_linear
 
     init {
-        appbar.addOnOffsetChangedListener({appBarLayout, verticalOffset ->
-            if(appBarLayout.totalScrollRange != 0){
-                val maxScroll = appBarLayout.totalScrollRange
-                val percentage = (Math.abs(verticalOffset).toDouble() / maxScroll.toDouble())
-               // Log.d("verticalOffset ",verticalOffset.toString() + ", maxScroll " + maxScroll.toString() +", percentage " + percentage.toString())
-                handleAlphaOnTitle(percentage)
-                handleToolbarTitleVisibility(percentage)
+        val ob = object:AppBarLayout.OnOffsetChangedListener{
+            override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+                if(appBarLayout!= null && appBarLayout.totalScrollRange != 0){
+                    val maxScroll = appBarLayout.totalScrollRange
+                    val percentage = (Math.abs(verticalOffset).toDouble() / maxScroll.toDouble())
+                    // Log.d("verticalOffset ",verticalOffset.toString() + ", maxScroll " + maxScroll.toString() +", percentage " + percentage.toString())
+                    handleAlphaOnTitle(percentage)
+                    handleToolbarTitleVisibility(percentage)
+                }
             }
-
-        })
+        }
+        appbar.addOnOffsetChangedListener(ob)
     }
 
 

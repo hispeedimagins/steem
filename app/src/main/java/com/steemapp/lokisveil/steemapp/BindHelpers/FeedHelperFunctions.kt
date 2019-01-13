@@ -155,6 +155,9 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
                 //.error(R.drawable.error)
                 .priority(Priority.HIGH)
                 .circleCrop()
+
+        //get the current relative date time
+        holder.article?.datespan = MiscConstants.dateToRelDate(holder.article?.date!!,con)
         holder.article_date?.text = holder.article?.datespan
         Glide.with(con).load(CentralConstants.GetFeedImageUrl(holder.article?.author))
                 .apply(options)
@@ -194,16 +197,22 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
             holder.article_image?.visibility = View.GONE
         }
         else{
-            holder.article_image?.visibility = View.VISIBLE
-            val optionss = RequestOptions()
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_all_inclusive_black_24px)
-                    //.error(R.drawable.error)
-                    .priority(Priority.HIGH)
+            val im = holder.article?.image?.firstOrNull()
+            if(im != null){
+                holder.article_image?.visibility = View.VISIBLE
+                val optionss = RequestOptions()
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_all_inclusive_black_24px)
+                        //.error(R.drawable.error)
+                        .priority(Priority.HIGH)
 
-            //use first of null so the app does not crash if not images exist
-            Glide.with(con).load(holder.article?.image?.firstOrNull()).apply(optionss)
-                    .into(holder.article_image as ImageView)
+                //use first of null so the app does not crash if not images exist
+                Glide.with(con).load(im).apply(optionss)
+                        .into(holder.article_image as ImageView)
+            } else {
+                holder.article_image?.visibility = View.GONE
+            }
+
 
         }
 

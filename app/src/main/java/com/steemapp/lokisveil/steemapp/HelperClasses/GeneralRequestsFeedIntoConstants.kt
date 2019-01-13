@@ -167,6 +167,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
             if(tot > count || tot < count){
                 globalInterface?.followHasChanged()
             }
+            //globalInterface?.followHasChanged()
         }
     }
 
@@ -333,6 +334,15 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                 listenerm
                 , Response.ErrorListener {})
         volleyre.addToRequestQueue(s)
+    }
+
+
+    fun matchfollowsWithFollowers(){
+
+    }
+
+    fun matchfollowingWithFollowers(){
+
     }
 
 

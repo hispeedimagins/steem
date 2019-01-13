@@ -158,7 +158,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
         // Inflate the layout for this fragment
 
         //view = inflater!!.inflate(R.layout.fragment_article, container, false)
-        view = inflater!!.inflate(R.layout.fragment_article, container, false)
+        view = inflater.inflate(R.layout.fragment_article, container, false)
         //initialize fabhider so the FAB hides on scroll
         var fa = FabHider(null,articleActivityInterface?.getFab(),view?.findViewById(R.id.nestedscroll))
         
@@ -184,19 +184,21 @@ class ArticleFragment : Fragment() , GlobalInterface {
         val sharedPreferences = context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
         username = sharedPreferences?.getString(CentralConstants.username, null)
         key = sharedPreferences?.getString(CentralConstants.key, null)
-        holder = ArticleViewHolder(view as View)
+
+        //check if holder is null before instantiating it
+        if(holder == null) holder = ArticleViewHolder(view as View)
         //webview = view?.findViewById(R.id.article_webview)
         //holder.shareTextView = view?.findViewById(R.id.shareTextView) as TextView
         //GetView()
         //var swiplay =
 
-        var sl = view?.findViewById<SwipeRefreshLayout>(R.id.activity_feed_swipe_refresh_layout) as SwipeRefreshLayout
+        var sl = view?.findViewById(R.id.activity_feed_swipe_refresh_layout) as SwipeRefreshLayout
         swipe = swipecommonactionsclass(sl)
 
         swipe?.makeswiperun()
-        sl?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+        sl?.setOnRefreshListener {
             articleActivityInterface?.ReloadData()
-        })
+        }
         metrics = DisplayMetrics()
         getActivity()?.windowManager?.defaultDisplay?.getMetrics(metrics)
 
@@ -220,6 +222,13 @@ class ArticleFragment : Fragment() , GlobalInterface {
                 }
             }
         }
+
+        //if saved data is not null display it
+        var dbData = articleActivityInterface?.getDbData()
+        if(dbData != null){
+            displayMessage(dbData,false)
+        }
+
         return view
     }
 
@@ -401,7 +410,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
         holder.article_likes?.text = holder.article?.netVotes.toString()
         //holder.article_name?.text = holder.article?.author
-        holder.article_name?.text = "${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
+        holder.article_name?.text = holder.article?.displayName //"${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
         if(holder.article?.followsYou!!){
             holder.article_name?.setTextColor(ContextCompat.getColor(context!!, R.color.colorAccent))
         } else{
@@ -528,13 +537,13 @@ class ArticleFragment : Fragment() , GlobalInterface {
         }*/
 
 
-        holder.article_name?.setOnClickListener(View.OnClickListener {
+        holder.article_name?.setOnClickListener {
             val i = Intent(context, OpenOtherGuyBlog::class.java)
             i.putExtra(CentralConstants.OtherGuyNamePasser,holder.article?.author)
             context?.startActivity(i)
-        })
+        }
 
-        holder.article_like?.setOnClickListener(View.OnClickListener {
+        holder.article_like?.setOnClickListener {
             // Toast.makeText(con,"Processing. Please wait....",Toast.LENGTH_LONG).show()
             //ForReturningQuestionsLite q = item;
             var articles = holder.article as FeedArticleDataHolder.FeedArticleHolder
@@ -545,14 +554,9 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
             val weight = VoteWeightThenVote(context as Context,getActivity() as FragmentActivity,vop,null, 0,holder.progressbar,null)
             weight.makeDialog()
-            /*globallist.add(bloc)
+        }
 
-            Log.d("buttonclick",globallist.toString())*/
-            //GetDynamicGlobalProperties(mholder.article as FeedArticleDataHolder.FeedArticleHolder)
-
-        })
-
-        holder.article_reblog_now?.setOnClickListener(View.OnClickListener {
+        holder.article_reblog_now?.setOnClickListener {
             //Toast.makeText(con,"Processing. Please wait....",Toast.LENGTH_LONG).show()
             //ForReturningQuestionsLite q = item;
             var articles = holder.article as FeedArticleDataHolder.FeedArticleHolder
@@ -575,14 +579,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
             //var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,mholder,null,cus,obs,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog)
             var bloc = GetDynamicAndBlock(context as Context ,null, 0,list,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog,holder.progressbar,null)
             bloc.GetDynamicGlobalProperties()
-            /*globallist.add(bloc)
-            Log.d("buttonclick",globallist.toString())*/
-            /*val myIntent = Intent(con, ArticleActivity::class.java)
-            myIntent.putExtra("username", holder.article?.author)
-            myIntent.putExtra("tag", holder.article?.category)
-            myIntent.putExtra("permlink", holder.article?.permlink)
-            con.startActivity(myIntent)*/
-        })
+        }
 
 
         var css =  Github()
@@ -823,81 +820,6 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
         return param
     }
-
-    /*fun displayMessage(result: feed.Comment) {
-        //swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(message)
-        swipe?.makeswipestop()
-        val gson = Gson()
-
-        var voted = false
-
-        if(result.active_voted != null){
-
-            for(x in result.active_voted){
-
-                if(x.voter.equals(username)) voted = true
-            }
-        }
-
-
-        if(result.jsonMetadataString != null && result.jsonMetadataString != ""){
-            result.jsonMetadata = gson.fromJson<feed.JsonMetadataInner>(result.jsonMetadataString, feed.JsonMetadataInner::class.java)
-        }
-        //result.jsonMetadata = gson.fromJson<feed.JsonMetadataInner>(result.jsonMetadataString, feed.JsonMetadataInner::class.java)
-        var d = calendarcalculations() //2018-02-03T13:58:18
-        //var du = DateUtils.getRelativeDateTimeString(context,Date().time,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(result.created) ).time,)
-        var du = DateUtils.getRelativeDateTimeString(context,(SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(result.created)).time,SECOND_IN_MILLIS,WEEK_IN_MILLIS,0)
-
-
-        d.setDateOfTheData((SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(result.created) ))
-
-        var fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
-                reblogBy = result.reblogBy,
-                reblogOn = result.reblogOn,
-                entryId = result.entryId,
-                active =  result.active,
-                author = result.author,
-                body = result.body,
-                cashoutTime = result.cashoutTime,
-                category = result.category,
-                children = result.children,
-                created = result.created,
-                createdcon = d.getDateTimeString(),
-                depth = result.depth,
-                id = result.id,
-                lastPayout = result.lastPayout,
-                lastUpdate = result.lastUpdate,
-                netVotes = result.netVotes,
-                permlink = result.permlink,
-                rootComment = result.rootComment,
-                title = result.title,
-                format = result.jsonMetadata?.format,
-                app = result.jsonMetadata?.app,
-                image = result.jsonMetadata?.image,
-                links = result.jsonMetadata?.links,
-                tags = result.jsonMetadata?.tags,
-                users = result.jsonMetadata?.users,
-                authorreputation = result.authorreputation,
-                pending_payout_value = result.pending_payout_value,
-                promoted = result.promoted,
-                total_pending_payout_value = result.total_pending_payout_value,
-                uservoted = voted,
-                already_paid = result.totalPayoutValue,
-                summary = null,
-                datespan = du.toString()
-        )
-        //adapter?.feedHelperFunctions?.add(fd)
-
-        if(holder != null){
-            holder?.article = fd
-            sameasbind(holder as ArticleViewHolder)
-            val articlepop = ArticlePopUpMenu(context as Context,holder?.shareTextView as View,"${CentralConstants.baseUrlView}@${holder?.article?.author}","${CentralConstants.baseUrl}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}",holder?.article?.useFollow,username,holder?.article?.author,null,0,holder?.progressbar,this)
-
-        }
-
-
-    }*/
     fun displayMessage(result: FeedArticleDataHolder.FeedArticleHolder,save:Boolean = false) {
 
         //this is where we save data to the database for saveinstance
@@ -917,7 +839,12 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
         var con = FollowApiConstants.getInstance()
 
-        if(holder == null) holder = ArticleViewHolder(view as View)
+
+        //if holder is null we instantiate it if the new is not null
+        //else we save the data and wait for create to be called
+        if(holder == null && view != null) {
+            holder = ArticleViewHolder(view as View)
+        }
         if(holder != null && context != null){
             holder?.article = result
             if(!con.following.isEmpty() && con.following.any { p -> p.following == holder?.article?.author }){

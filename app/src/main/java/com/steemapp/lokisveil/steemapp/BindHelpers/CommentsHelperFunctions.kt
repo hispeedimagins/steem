@@ -164,14 +164,14 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
             holder.article_resteemed_by?.text = "by "+ holder.article?.reblogBy?.get(0)
         }
         holder.article_tag?.text = "in "+ holder.article?.category
-        holder.article_tag?.setOnClickListener(View.OnClickListener {
+        holder.article_tag?.setOnClickListener {
             var it = Intent(con,MainTags::class.java)
             it.putExtra(CentralConstants.MainRequest,"get_discussions_by_trending")
             it.putExtra(CentralConstants.MainTag,holder.article?.category)
             it.putExtra(CentralConstants.OriginalRequest,"trending")
             con.startActivity(it)
 
-        })
+        }
         //holder.article_title?.text = holder.article?.title
         /*Glide.with(con).load(holder.article?.image?.get(0))
                 .placeholder(R.drawable.common_full_open_on_phone)
@@ -179,13 +179,13 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
 
         //var by : in.uncod.android.bypass =
 
-        holder.article_name?.setOnClickListener(View.OnClickListener {
+        holder.article_name?.setOnClickListener {
             val i = Intent(con, OpenOtherGuyBlog::class.java)
             i.putExtra(CentralConstants.OtherGuyNamePasser,holder.article?.author)
             con.startActivity(i)
-        })
+        }
 
-        mholder.mView.setOnClickListener(View.OnClickListener {
+        mholder.mView.setOnClickListener {
             //ForReturningQuestionsLite q = item;
 
             /*val myIntent = Intent(con, ArticleActivity::class.java)
@@ -193,47 +193,20 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
             myIntent.putExtra("tag", holder.article?.category)
             myIntent.putExtra("permlink", holder.article?.permlink)
             con.startActivity(myIntent)*/
-        })
+        }
 
 
-        mholder.article_like?.setOnClickListener(View.OnClickListener {
-            //Toast.makeText(con,"Processing. Please wait....", Toast.LENGTH_LONG).show()
-            //ForReturningQuestionsLite q = item;
+        mholder.article_like?.setOnClickListener {
             var articles = mholder.article as FeedArticleDataHolder.CommentHolder
-            //var s : SteemJ = SteemJ()
-            //s.vote(AccountName(holder.article?.author), Permlink(holder.article?.permlink),10000)
             var vop : VoteOperation = VoteOperation(AccountName(name), AccountName(articles.author), Permlink(articles.permlink))
             vop.weight = 10000
-            /*var obs = Response.Listener<JSONObject> { response ->
-                //var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
-                val gson = Gson()
-                var ress = gson.fromJson<Block.BlockAdded>(response.toString(), Block.BlockAdded::class.java)
-                if(ress != null && ress.result != null ){
-                    //con.run { Toast.makeText(con,"Upvoted ${vop.permlink}",Toast.LENGTH_LONG).show() }
-                    Toast.makeText(con,"Upvoted ${vop.permlink}", Toast.LENGTH_LONG).show()
-                    holder.article?.uservoted.to(true)
-                    holder.article_likes?.setTextColor(ContextCompat.getColor(con, R.color.colorAccent))
-                    adaptedcomms.notifyitemcchanged(mholder.adapterPosition)
-                    //Runnable { run {  } }
-                    //Toast.makeText(con,"$name has upvoted ${vop.author.name}",Toast.LENGTH_LONG).show()
-                }
-            }
-            //var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,mholder,null,vop,obs,"Upvoted ${vop.permlink.link}",MyOperationTypes.vote)
-            var list  = ArrayList<Operation>()
-            list.add(vop)*/
-            /*var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,list,"Upvoted ${vop.permlink.link}", MyOperationTypes.vote)
-            bloc.GetDynamicGlobalProperties()*/
-            //globallist.add(bloc)
             var we = VoteWeightThenVote(con,adaptedcomms.getActivity(),vop,adaptedcomms,position,holder.progressbar,null)
             we.makeDialog()
-            //Log.d("buttonclick",globallist.toString())
-            //GetDynamicGlobalProperties(mholder.article as FeedArticleDataHolder.FeedArticleHolder)
-
-        })
+        }
 
         if(name == mholder.article?.author){
             mholder.article_edit?.visibility = View.VISIBLE
-            mholder.article_edit?.setOnClickListener(View.OnClickListener {
+            mholder.article_edit?.setOnClickListener {
 
                 var mod = ModalBottomSheetMy()
                 var hs = adaptedcomms.getActivity() as android.support.v4.app.FragmentActivity
@@ -246,7 +219,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
                 mod.setMyOperationTypes(MyOperationTypes.edit_comment)
                 mod.setEditStuff(mholder.article?.title,holder.article?.paretn_author,holder.article?.parent_tag,holder.article?.parent_permlink,holder.article?.body)
 
-            })
+            }
         }
         else{
             mholder.article_edit?.visibility = View.GONE

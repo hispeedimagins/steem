@@ -125,7 +125,7 @@ class ArticleHelperFunctions(context : Context, username:String?, adapter: AllRe
         }
         holder.article_likes?.text = holder.article?.netVotes.toString()
         //holder.article_name?.text = holder.article?.author
-        holder.article_name?.text = "${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
+        holder.article_name?.text = holder.article?.displayName //"${holder.article?.author} (${StaticMethodsMisc.CalculateRepScore(holder.article?.authorreputation)})"
         holder.article_payout?.text = pay
         //val d = Calendar.getInstance()
         //d.time = holder.article?.createdcon

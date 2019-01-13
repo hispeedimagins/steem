@@ -149,7 +149,7 @@ class WritePost : Fragment() {
         mListener?.attachCheckboxListner(CheckBoxMainOne)
 
         //Init fabhider to hide fab on scroll
-        FabHider(null,null,mListener?.getFabM(),v.findViewById(R.id.design_bottom_sheet))
+        FabHider(null,null,mListener?.getFabM(),v.findViewById(R.id.content_scroller))
 
         EditTextMainOnehandler = TextInputLayoutErrorHandler(v.findViewById(R.id.TextMainOneTextLayout) as TextInputLayout)
         EditTextMainTwohandler = TextInputLayoutErrorHandler(v.findViewById(R.id.EditMainTextTwoTextLayout) as TextInputLayout)

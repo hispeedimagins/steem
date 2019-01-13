@@ -97,11 +97,11 @@ class RepliesNotificationsFragment : Fragment() {
         adapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(), recy as RecyclerView, view as View, AdapterToUseFor.commentNoti)
         //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
 
-        recy?.setItemAnimator(DefaultItemAnimator())
-        recy?.setAdapter(adapter)
+        recy.setItemAnimator(DefaultItemAnimator())
+        recy.setAdapter(adapter)
 
-        recy?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        recy.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
                 /*if(dy > 0){
@@ -113,7 +113,7 @@ class RepliesNotificationsFragment : Fragment() {
                     }*/
 
                 if (dy > 0) {
-                    visibleItemCount = recyclerView!!.childCount
+                    visibleItemCount = recyclerView.childCount
                     totalItemCount = adapter?.getItemCount() as Int
                     //pastVisiblesItems = recyclerView.findFirstVisibleItemPosition();
                     pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
@@ -147,7 +147,7 @@ class RepliesNotificationsFragment : Fragment() {
 
 
         activity = getActivity()?.applicationContext
-        var swipeRefreshLayout = view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout_reps) as SwipeRefreshLayout
+        var swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout_reps) as SwipeRefreshLayout
 
         swipeRefreshLayout.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
             refreshcontent()
@@ -169,13 +169,13 @@ class RepliesNotificationsFragment : Fragment() {
         //check for instance
         if(savedInstanceState != null){
             //initialize variables from the state
-            val sharedPreferences = view?.context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
+            val sharedPreferences = view.context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
             username = sharedPreferences?.getString(CentralConstants.username, null)
             key = sharedPreferences?.getString(CentralConstants.key, null)
-            startAuthor = savedInstanceState?.getString("startau")
-            startPermlink = savedInstanceState?.getString("startperm")
-            startTag = savedInstanceState?.getString("starttag")
-            otherguy = savedInstanceState?.getString("otherguy")
+            startAuthor = savedInstanceState.getString("startau")
+            startPermlink = savedInstanceState.getString("startperm")
+            startTag = savedInstanceState.getString("starttag")
+            otherguy = savedInstanceState.getString("otherguy")
             /*var asl = savedInstanceState?.getSerializable("feedlist")
             adapter?.add(if(asl != null) asl as List<Any> else java.util.ArrayList<Any>())*/
             var lar = savedInstanceState.getLongArray("dbitems")

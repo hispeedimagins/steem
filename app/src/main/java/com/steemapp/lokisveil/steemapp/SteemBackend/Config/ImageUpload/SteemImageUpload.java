@@ -45,7 +45,8 @@ public class SteemImageUpload {
     private static int maxBufferSize = 1 * 1024 * 1024;
     /** The endpoint to send the upload request to. */
 
-    private static String steemitImagesEndpoint = "https://cdn.steemitimages.com";
+    private static String steemitImagesEndpoint = "https://steemitimages.com";
+    //private static String steemitImagesEndpoint = "https://cdn.steemitimages.com";
     //private static String steemitImagesEndpoint = "http://192.168.1.33:8800";
     /** The image signing challenge added to the hash. */
     private static String imageSigningChallenge = "ImageSigningChallenge";

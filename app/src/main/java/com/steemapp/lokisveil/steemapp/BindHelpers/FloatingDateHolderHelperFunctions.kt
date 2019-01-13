@@ -38,12 +38,12 @@ class FloatingDateHolder {
     private var arvdinterface: arvdinterface? = null
 
     internal var listener: RecyclerView.OnScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
         }
 
         //listner to the recycleview so the date can be updated in the frame layout
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
             val visibleItemCount = recyclerView!!.childCount
             //int totalItemCount = mValues.size();
