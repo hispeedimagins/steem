@@ -1,5 +1,6 @@
 package com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos
 
+import android.arch.paging.DataSource
 import android.arch.persistence.room.*
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 
@@ -9,9 +10,16 @@ interface FollowsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(lite: prof.Resultfp):Long
 
+    @Update
+    fun update(lite:prof.Resultfp)
+
     //insert a list
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(list:List<prof.Resultfp>)
+
+
+    @Query("SELECT * from follow_tables where isFollower == :isFollower ORDER BY uniqueName ASC")
+    fun getPagedList(isFollower:Boolean = true): DataSource.Factory<Integer,prof.Resultfp>
 
     //get all
     @Query("select * from follow_tables")

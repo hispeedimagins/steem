@@ -120,7 +120,10 @@ class WidgetRepo(application: Application?) {
             for(item in params[0]){
                 //check if the person follows the user
                 item.followsYou = fRepo.searchFollower(item.author)
-                dao.insert(FeedArticleDataHolder.feedToWidget(item))
+                val conv = FeedArticleDataHolder.feedToWidget(item)
+                if(dao.insert(conv) == -1L){
+                    dao.update(conv)
+                }
             }
             return null
         }
@@ -132,7 +135,9 @@ class WidgetRepo(application: Application?) {
             var item = params[0]
             //check if the person follows the user
             item.followsYou = fRepo.searchFollower(item.author)
-            var id = dao.insert(item)
+            if(dao.insert(item) == -1L){
+                dao.update(item)
+            }
             return null
         }
     }
