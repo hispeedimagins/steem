@@ -77,6 +77,9 @@ class AllAppWidget : AppWidgetProvider() {
                 myIntent.putExtra("username", intent.getStringExtra("username"))
                 myIntent.putExtra("tag", intent.getStringExtra("tag"))
                 myIntent.putExtra("permlink", intent.getStringExtra("permlink"))
+                //pass the dbid along
+                myIntent.putExtra("dbId",intent.getIntExtra("dbId",-1))
+                myIntent.putExtra("fromWidget",true)
                 context.startActivity(myIntent)
             }
 

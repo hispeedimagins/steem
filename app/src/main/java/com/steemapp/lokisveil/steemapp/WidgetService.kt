@@ -417,6 +417,12 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
         extras.putString("username", if(article?.rootAuthor != null) article?.rootAuthor else article?.author)
         extras.putString("tag", article?.category)
         extras.putString("permlink", if(article?.rootPermlink != null) article?.rootPermlink else article?.permlink)
+
+        //forward the dbid so we do not have to fetch the item from the server
+        extras.putInt("dbId",article.myDbKey)
+        extras.putBoolean("fromWidget",true)
+
+
         //if(adaptype == AdapterToUseFor.commentNoti || adaptype == AdapterToUseFor.replyNoti) myIntent.putExtra("permlinkToFind",holder.article?.permlink)
 
         val fillInIntent = Intent()
