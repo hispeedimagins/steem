@@ -2,6 +2,8 @@ package com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
+import android.arch.paging.PagedList
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.FollowersRepo
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 
@@ -10,12 +12,22 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.prof
  */
 class FollowViewModel(application: Application): AndroidViewModel(application) {
     private val repo = FollowersRepo(application)
+    private var pagedUpdatedList : LiveData<PagedList<prof.Resultfp>>? = null
 
+
+    /**
+     * gets the paged update list for followers
+     * @param isFollower true if followers list else false for following list
+     */
+    fun getpagedList(isFollower:Boolean = true):LiveData<PagedList<prof.Resultfp>>{
+        pagedUpdatedList = repo.getPagedUpdatedList(isFollower)
+        return pagedUpdatedList!!
+    }
 
     /**
      * insert a list of followers
      */
-    fun insert(data:List<prof.Resultfp>){
+    fun insert(data:List<prof.Resultfp>,isFollower:Boolean = false){
         repo.insert(data)
     }
 
@@ -38,6 +50,11 @@ class FollowViewModel(application: Application): AndroidViewModel(application) {
      */
     fun searchFollowing(name:String):Boolean{
         return repo.searchFollowing(name)
+    }
+
+
+    fun checkFollowing(data:List<prof.Resultfp>,isFollower:Boolean = false){
+        repo.checkIfFollowing(data,isFollower)
     }
 
 /*    fun deleteAll(){
