@@ -8,6 +8,7 @@ import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.preference.PreferenceManager
 import android.support.v7.view.ContextThemeWrapper
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
@@ -15,7 +16,9 @@ import com.bumptech.glide.request.FutureTarget
 import com.steemapp.lokisveil.steemapp.HelperClasses.Links
 import com.steemapp.lokisveil.steemapp.HelperClasses.Physhy
 import com.steemapp.lokisveil.steemapp.HelperClasses.ProxifyUrl
+import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import java.net.URL
+import java.util.*
 import java.util.regex.Pattern
 
 class MiscConstants{
@@ -279,7 +282,38 @@ class MiscConstants{
         }
 
 
+        /**
+         * converts a date to relative date string
+         * @param created date string
+         * @param context the context passed
+         * @return returns a relative date string
+         */
+        fun dateToRelDate(created:String,context: Context?):String{
+            val dd = StaticMethodsMisc.FormatDateGmt(created)
+            val du = dateToRelDate(dd.time,context)
+            return du.toString()
+        }
 
+        /**
+         * converts a date to relative date string
+         * @param created date in java object
+         * @param context the context passed
+         * @return returns a relative date string
+         */
+        fun dateToRelDate(created: Date, context: Context?):String{
+            val du = dateToRelDate(created.time,context)
+            return du.toString()
+        }
+
+        /**
+         * converts a date to relative date string
+         * @param created date in timestamp
+         * @param context the context passed
+         * @return returns a relative date string
+         */
+        fun dateToRelDate(created:Long,context: Context?):CharSequence{
+            return DateUtils.getRelativeDateTimeString(context,created, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
+        }
 
     }
 }

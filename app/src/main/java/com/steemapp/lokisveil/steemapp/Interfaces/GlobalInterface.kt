@@ -37,12 +37,28 @@ interface GlobalInterface {
 
     }
 
+
+    /**
+     * reports the follower progress
+     * @param got the number got till now
+     * @param total the total number of people to get
+     */
     fun followerProgress(got:Int,total:Int){
 
     }
+
+    /**
+     * reports the following progress
+     * @param got the number got till now
+     * @param total the total number of people to get
+     */
     fun followingProgress(got:Int,total:Int){
 
     }
+
+    /**
+     * called when the db count does not match the count from the server
+     */
     fun followHasChanged(){
 
     }

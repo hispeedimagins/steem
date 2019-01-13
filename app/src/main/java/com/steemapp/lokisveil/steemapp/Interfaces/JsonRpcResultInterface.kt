@@ -23,10 +23,21 @@ interface JsonRpcResultInterface {
 
     }
 
-    fun searchFollower(name:String){
+    /**
+     * search for followers
+     * @param name the name to search for
+     * @param isFollower if person is follower
+     */
+    fun searchFollower(name:String,isFollower:Boolean){
 
     }
-    fun searchFollowing(name:String){
+
+    /**
+     * search for following
+     * @param name the name to search for
+     * @param isFollower if person is following
+     */
+    fun searchFollowing(name:String,isFollowing:Boolean){
 
     }
     fun countGot(count:Int){
