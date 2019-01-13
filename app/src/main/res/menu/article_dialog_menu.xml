@@ -4,8 +4,6 @@
         android:title="Share Author Profile Url"/>
     <item android:id="@+id/article_dialog_share_article"
         android:title="Share Article Url"/>
-    <item android:id="@+id/loading"
-        android:title="Loading. Please wait."/>
     <item android:id="@+id/article_dialog_follow"
         android:title="Follow"/>
     <item android:id="@+id/article_dialog_unfollow"

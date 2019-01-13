@@ -6,7 +6,6 @@ import android.content.Intent
 import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v7.widget.PopupMenu
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
@@ -15,9 +14,7 @@ import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.FavouritesDatabase
 import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
-import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
-import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.FollowersRepo
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.FollowType
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
@@ -29,19 +26,7 @@ import org.json.JSONArray
 /**
  * Created by boot on 3/9/2018.
  */
-class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shareurlarticleu:String?,followInternal: MyOperationTypes?,followname:String?,followingname:String?,adaptedcomms: arvdinterface?,position:Int?,progressBar: ProgressBar?,globalInterface: GlobalInterface?,jsonArray: JSONArray? = null,useFav : Boolean = false) : GlobalInterface,JsonRpcResultInterface {
-
-    //callback if person is following
-    override fun searchFollowing(name: String, isFollowing: Boolean) {
-        if(isFollowing){
-            followInternal = MyOperationTypes.unfollow
-        } else {
-            followInternal = MyOperationTypes.follow
-        }
-        unHideFollow()
-    }
-
-
+class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shareurlarticleu:String?,followInternal: MyOperationTypes?,followname:String?,followingname:String?,adaptedcomms: arvdinterface?,position:Int?,progressBar: ProgressBar?,globalInterface: GlobalInterface?,jsonArray: JSONArray? = null,useFav : Boolean = false) : GlobalInterface {
     override fun notifyRequestMadeSuccess() {
         when(followInternal){
             MyOperationTypes.follow ->{
@@ -95,14 +80,13 @@ class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shar
     val progressBars = progressBar
     val userFavs = useFav
     var jsonArray: JSONArray? = jsonArray
-    var popupMenuItem: Menu? = null
     init {
         setup()
 
     }
 
     fun setup(){
-        view?.setOnClickListener{
+        view?.setOnClickListener(View.OnClickListener {
             var semcon = MiscConstants.ApplyMyThemePopUp(context)
             val popup = PopupMenu(semcon,view)
             //inflating menu from xml resource
@@ -136,12 +120,22 @@ class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shar
 
 
 
-            popupMenuItem = popup.menu
+            when(followInternal){
+                MyOperationTypes.follow ->{
+                    followType = FollowType.BLOG
+                    popup.menu.findItem(R.id.article_dialog_follow).isVisible = true
+                }
+                MyOperationTypes.unfollow ->{
+                    followType = FollowType.UNDEFINED
+                    popup.menu.findItem(R.id.article_dialog_unfollow).isVisible = true
+                }
+                MyOperationTypes.mute ->{
 
-            //instantiate a repo and find out if the person follows the user or now
-            //we fire an async request
-            var repo = FollowersRepo(context,null)
-            repo.searchFollowing(followingname,this)
+                }
+                MyOperationTypes.unmute ->{
+
+                }
+            }
             //adding click listener
             popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
                 override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -186,35 +180,11 @@ class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shar
             })
             //displaying the popup
             popup.show()
-        }
-    }
-
-    /**
-     * helps us update the ui when the async task finishes
-     */
-    fun unHideFollow(){
-        popupMenuItem?.findItem(R.id.loading)?.isVisible = false
-        when(followInternal){
-            MyOperationTypes.follow ->{
-                followType = FollowType.BLOG
-                popupMenuItem?.findItem(R.id.article_dialog_follow)?.isVisible = true
-            }
-            MyOperationTypes.unfollow ->{
-                followType = FollowType.UNDEFINED
-                popupMenuItem?.findItem(R.id.article_dialog_unfollow)?.isVisible = true
-            }
-            MyOperationTypes.mute ->{
-
-            }
-            MyOperationTypes.unmute ->{
-
-            }
-        }
+        })
     }
 
 
     fun attachfollow(popup:PopupMenu?){
-
         when(followInternal){
             MyOperationTypes.follow ->{
                 followType = FollowType.BLOG
