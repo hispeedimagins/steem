@@ -1,68 +1,74 @@
 package com.steemapp.lokisveil.steemapp
 
+import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.Context
 import android.content.CursorLoader
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import com.steemapp.lokisveil.steemapp.Fragments.FeedFragment
-import com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment
-import com.steemapp.lokisveil.steemapp.Fragments.PreviewPost
-import com.steemapp.lokisveil.steemapp.Fragments.WritePost
-import com.steemapp.lokisveil.steemapp.R
-
-import kotlinx.android.synthetic.main.activity_post.*
-import kotlinx.android.synthetic.main.content_post.*
-import java.util.ArrayList
-import java.util.HashMap
-import android.support.v4.app.ActivityCompat.startActivityForResult
-import android.content.Intent.ACTION_PICK
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Bundle
 import android.provider.MediaStore
 import android.support.annotation.NonNull
 import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.*
+import android.support.design.widget.TabLayout
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.*
 import com.github.clans.fab.FloatingActionMenu
+import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.ImageUploadedUrls
-import com.steemapp.lokisveil.steemapp.Databases.drafts
+import com.steemapp.lokisveil.steemapp.Databases.beneficiariesDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
+import com.steemapp.lokisveil.steemapp.Fragments.PreviewPost
+import com.steemapp.lokisveil.steemapp.Fragments.WritePost
 import com.steemapp.lokisveil.steemapp.HelperClasses.AddABeneficiary
 import com.steemapp.lokisveil.steemapp.HelperClasses.GetDynamicAndBlock
+import com.steemapp.lokisveil.steemapp.HelperClasses.ImagePickersWithHelpers
+import com.steemapp.lokisveil.steemapp.HelperClasses.ImagePickersWithHelpers.Companion.RC_CAMERA_STORAGE_PERMS
+import com.steemapp.lokisveil.steemapp.HelperClasses.ImagePickersWithHelpers.Companion.REQUEST_IMAGE_CAPTURE
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
+import com.steemapp.lokisveil.steemapp.Interfaces.BeneficiaryAddInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
-
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.ImageUpload.SteemImageUpload
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
+import com.yalantis.ucrop.UCrop
+import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.android.synthetic.main.bottom_sheet_beneficiaries_view.*
+import kotlinx.android.synthetic.main.content_post.*
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
-import com.steemapp.lokisveil.steemapp.*
-import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
-import com.steemapp.lokisveil.steemapp.Databases.beneficiariesDatabase
-import com.steemapp.lokisveil.steemapp.Interfaces.BeneficiaryAddInterface
+import java.util.*
 import java.util.regex.Pattern
 
 
-class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
+class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface,
+ImagePickersWithHelpers.onTakePick{
+    override fun startActivityForResults(takePictureIntent: Intent, requesT_IMAGE_CAPTURE: Int) {
+        startActivityForResult(takePictureIntent, requesT_IMAGE_CAPTURE)
+    }
+
+    override fun setURI(mCurrentPhotoUri: Uri?) {
+        imageUri = mCurrentPhotoUri
+    }
+
     //open the beneficiary page after adding it to the db
     override fun AddedSuccessfully(dbid: Long) {
         beneficiaryBottomSheet?.state = BottomSheetBehavior.STATE_EXPANDED
@@ -150,6 +156,9 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
     var edittitle:String? = null
     var edittags :String? = null
     var editpost:String? = null
+    var imageUri:Uri? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyTheme(this@Post)
         super.onCreate(savedInstanceState)
@@ -193,7 +202,7 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
             alertDialogBuilder.setTitle("Post the article?")
             alertDialogBuilder.setMessage("This action is not reversible")
 
-            alertDialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener{ diin, num ->
+            alertDialogBuilder.setPositiveButton("ok") { diin, num ->
 
 
                 val mine = MakeOperationsMine()
@@ -230,8 +239,7 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
                             var ops = mine.updatePost(AccountName(username),Permlink(permlinkedit),title,content, tags?.split(" ")?.toTypedArray())
                             val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.edit_comment, writePost?.progressBar, this@Post)
                             block.GetDynamicGlobalProperties()
-                        }
-                        else{
+                        } else{
                             val ops = mine.createPost(AccountName(username), title,content,tags?.split(" ")?.toTypedArray(),ben)
 
                             val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.post, writePost?.progressBar, this@Post)
@@ -246,7 +254,7 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
                 }
 
 
-            })
+            }
 
             alertDialogBuilder.setNegativeButton("No", DialogInterface.OnClickListener { diin, num ->
 
@@ -360,6 +368,8 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
 
     }
 
+
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("dbid",dbid)
@@ -382,89 +392,115 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
 
 
     private fun imageBrowse() {
-        val galleryIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        // Start the Intent
-        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST)
+        //we make a call to our common picker
+        ImagePickersWithHelpers.createImagePickDialog(applicationContext,this,this@Post)
     }
 
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(data != null){
-            super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
+        //check if activity result is ok
+        if (resultCode == Activity.RESULT_OK) {
+            //if pickimage request then we open the image editor
+            if (requestCode == PICK_IMAGE_REQUEST && data != null) {
+                //we create our own temp file
+                imageUri = Uri.fromFile(ImagePickersWithHelpers.createTempFile(this))
+                //pass data to ucrop
+                UCrop.of(data.data, imageUri!!)
+                        .withOptions(ImagePickersWithHelpers.getUcropOptions(this@Post))
+                        .start(this)
+            } else if (requestCode == UCrop.REQUEST_CROP && data != null) {
+                //else we begin the upload dialog
+                imageUri = UCrop.getOutput(data)
+                uploadImage()
+            }
 
-            if (resultCode == Activity.RESULT_OK) {
+        }
 
-                if (requestCode == PICK_IMAGE_REQUEST) {
-                    val picUri : Uri   =  data.data
-
-                    filePath = getPath(picUri)
-                    var file = File(filePath)
-
-                    //val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(this@Post)
-                    val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@Post))
-                    alertDialogBuilder.setTitle("Upload this image?")
-
-                    val inflater = layoutInflater
-                    val dialogView : View = inflater.inflate(R.layout.popup_image_upload, null)
-                    alertDialogBuilder.setView(dialogView)
-                    val imagev = dialogView.findViewById<ImageView>(R.id.image)
-                    imagev.setImageURI(picUri)
-                    //val edittext = dialogView.findViewById<EditText>(R.id.name)
-                    alertDialogBuilder.setPositiveButton("ok", DialogInterface.OnClickListener{ diin, num ->
-                        writePost?.progress(View.VISIBLE)
-
-
-
-                        class someTask() : AsyncTask<Void, Void, String>() {
-                            override fun doInBackground(vararg params: Void?): String? {
-                                //catch errors while signing and uploading the image and display them
-                                try{
-                                    var result = SteemImageUpload.uploadImage(AccountName(username),key,file,filePath )
-
-                                    return result
-                                } catch (ex:Exception){
-                                    runOnUiThread {
-                                        Toast.makeText(applicationContext,ex.message,Toast.LENGTH_LONG).show()
-                                    }
-                                }
-                                return null
-                            }
-
-                            override fun onPostExecute(result: String?) {
-
-
-                                //check if the reult is not null before adding it to the database
-                                if(result != null){
-                                    var db = ImageUploadedUrls(applicationContext)
-                                    var ins = db.Insert(result!!)
-                                    writePost?.addtexturl(result,file.name)
-                                    writePost?.progress(View.GONE)
-                                }
-
-                                super.onPostExecute(result)
-                            }
-                        }
-                        someTask().execute()
-
-
-
-                    })
-
-                    alertDialogBuilder.setNegativeButton("No", DialogInterface.OnClickListener { diin, num ->
-
-                    })
-                    val alertDialog = alertDialogBuilder.create()
-
-                    alertDialog.show()
-
-                    //imageView.setImageURI(picUri)
-
-                }
-
+        //check if it is a image click request code, then launch the editor again
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            //pass data to ucrop
+            //pass data to ucrop
+            UCrop.of(imageUri!!, imageUri!!)
+                    .withOptions(ImagePickersWithHelpers.getUcropOptions(this@Post))
+                    .start(this)
+        }
+         else if (resultCode == UCrop.RESULT_ERROR) {
+            if(data != null){
+                val cropError = UCrop.getError(data);
             }
         }
 
 
+
+
+    }
+
+
+    fun uploadImage(){
+        if(imageUri == null) return
+        val picUri : Uri   = imageUri!! //data.data
+
+        filePath = imageUri?.path
+        var file = File(filePath)
+
+        //val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(this@Post)
+        val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@Post))
+        alertDialogBuilder.setTitle("Upload this image?")
+
+        val inflater = layoutInflater
+        val dialogView : View = inflater.inflate(R.layout.popup_image_upload, null)
+        alertDialogBuilder.setView(dialogView)
+        val imagev = dialogView.findViewById<ImageView>(R.id.image)
+        imagev.setImageURI(picUri)
+        //val edittext = dialogView.findViewById<EditText>(R.id.name)
+        alertDialogBuilder.setPositiveButton("ok") { diin, num ->
+            writePost?.progress(View.VISIBLE)
+
+
+
+            class someTask() : AsyncTask<Void, Void, String>() {
+                override fun doInBackground(vararg params: Void?): String? {
+                    //catch errors while signing and uploading the image and display them
+                    try{
+                        var result = SteemImageUpload.uploadImage(AccountName(username),key,file,filePath )
+
+                        return result
+                    } catch (ex:Exception){
+                        runOnUiThread {
+                            Toast.makeText(applicationContext,ex.message,Toast.LENGTH_LONG).show()
+                        }
+                    }
+                    return null
+                }
+
+                override fun onPostExecute(result: String?) {
+
+
+                    //check if the reult is not null before adding it to the database
+                    if(result != null){
+                        var db = ImageUploadedUrls(applicationContext)
+                        var ins = db.Insert(result!!)
+                        writePost?.addtexturl(result,file.name)
+                        writePost?.progress(View.GONE)
+                    }
+
+                    super.onPostExecute(result)
+                }
+            }
+            someTask().execute()
+
+
+        }
+
+        alertDialogBuilder.setNegativeButton("No", DialogInterface.OnClickListener { diin, num ->
+
+        })
+        val alertDialog = alertDialogBuilder.create()
+
+        alertDialog.show()
+
+        //imageView.setImageURI(picUri)
     }
 
 
@@ -570,12 +606,28 @@ class Post : AppCompatActivity() , GlobalInterface, BeneficiaryAddInterface {
         // permissions this app might request.
 
             else -> {
-                // Ignore all other requests.
+                //pass on the permissions to easy permissions
+                EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
             }
         }
     }
 
 
+    /**
+     * Called when easy permissions has got all the permissions
+     * Then we check for our usecase and either proceed for request again
+     */
+    @AfterPermissionGranted(RC_CAMERA_STORAGE_PERMS)
+    private fun methodRequiresTwoPermission() {
+        val perms = ImagePickersWithHelpers.getCameraPermissions()
+        if (EasyPermissions.hasPermissions(this, *perms)) {
+            ImagePickersWithHelpers.dispatchTakePictureIntent(applicationContext, this,this@Post)
+        } else {
+            // Do not have permissions, request them now
+            ImagePickersWithHelpers.getCameraPermission(applicationContext,this,this@Post)
+            return
+        }
+    }
 
 
 

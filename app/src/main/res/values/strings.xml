@@ -164,4 +164,6 @@
     <string name="smartbulletin_provider_default_activity">
         com.steemapp.lokisveil.steemapp/com.steemapp.lokisveil.steemapp.MainActivity         <!-- full screen activity -->
     </string>
+
+    <string name="camera_permission">Camera permission denied</string>
 </resources>
