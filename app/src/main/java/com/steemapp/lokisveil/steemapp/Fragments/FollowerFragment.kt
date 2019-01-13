@@ -1,5 +1,9 @@
 package com.steemapp.lokisveil.steemapp.Fragments
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
+import android.arch.paging.PagedList
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -15,9 +19,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.android.volley.Response
 import com.google.gson.Gson
-import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
-import com.steemapp.lokisveil.steemapp.CentralConstants
-import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem
+import com.steemapp.lokisveil.steemapp.*
 import com.steemapp.lokisveil.steemapp.Databases.FollowersDatabase
 import com.steemapp.lokisveil.steemapp.Databases.FollowingDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
@@ -26,8 +28,8 @@ import com.steemapp.lokisveil.steemapp.HelperClasses.JsonRpcResultConversion
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.GetFollowListsBack
+import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.FollowViewModel
 
-import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import org.json.JSONObject
 import java.util.ArrayList
@@ -64,6 +66,7 @@ class FollowerFragment : Fragment() {
     private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
 
     private var adapter: AllRecyclerViewAdapter? = null
+    private var adapterPaged: AllRecyclerViewClassPaged? = null
     private var activity: Context? = null
     internal var view: View? = null
     internal var swipeRefreshLayout: SwipeRefreshLayout? = null
@@ -74,7 +77,8 @@ class FollowerFragment : Fragment() {
     internal var startwasjustrun = false
     var username : String? = null
     var otherguy : String? = null
-    var useOtherGuyOnly : Boolean? = false
+    var useOtherGuyOnly : Boolean = false
+    var vm:FollowViewModel? = null
     //var useFollower : Boolean?  = false
     var key : String? = null
     var followers: List<prof.Resultfp> = ArrayList()
@@ -84,7 +88,7 @@ class FollowerFragment : Fragment() {
             mParam1 = arguments!!.getString(ARG_PARAM1)
             mParam2 = arguments!!.getString(ARG_PARAM2)
             otherguy = arguments?.getString(CentralConstants.OtherGuyNamePasser, null)
-            useOtherGuyOnly = arguments?.getBoolean(CentralConstants.OtherGuyUseOtherGuyOnly,false)
+            useOtherGuyOnly = arguments?.getBoolean(CentralConstants.OtherGuyUseOtherGuyOnly,false)!!
             //useFollower = arguments?.getBoolean(CentralConstants.FollowingFragmentUseFollower,false)
         }
     }
@@ -97,52 +101,45 @@ class FollowerFragment : Fragment() {
         swipecommonactionsclass = swipecommonactionsclass(swipeRefreshLayout as SwipeRefreshLayout)
         // Set the adapter
         if (recyclerView is RecyclerView) {
-            val context = view.getContext()
-            /*if (mColumnCount <= 1) {
-                recyclerView?.layoutManager = LinearLayoutManager(context)
+            if(useOtherGuyOnly){
+                adapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(), recyclerView as RecyclerView, view as View, AdapterToUseFor.followers)
+                //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
+                recyclerView?.setItemAnimator(DefaultItemAnimator())
+                recyclerView?.setAdapter(adapter)
             } else {
-                recyclerView?.layoutManager = GridLayoutManager(context, mColumnCount)
-            }*/
-            //recyclerView = view
+                //if it is for us we use the db
+                adapterPaged = AllRecyclerViewClassPaged(getActivity() as FragmentActivity,recyclerView!!,view!!,AdapterToUseFor.followers)
+                recyclerView?.setItemAnimator(DefaultItemAnimator())
+                recyclerView?.setAdapter(adapterPaged)
+            }
 
-            adapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(), recyclerView as RecyclerView, view as View, AdapterToUseFor.followers)
-            //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
-
-            recyclerView?.setItemAnimator(DefaultItemAnimator())
-            recyclerView?.setAdapter(adapter)
         }
         activity = getActivity()?.applicationContext
         val sharedPreferences = context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
         username = sharedPreferences?.getString(CentralConstants.username, null)
         key = sharedPreferences?.getString(CentralConstants.key, null)
 
-        if(useOtherGuyOnly as Boolean){
+        if(useOtherGuyOnly){
             swipecommonactionsclass?.makeswiperun()
-            /*var followerlistener: Response.Listener<JSONObject> =  Response.Listener { response ->
-
-                val gson = Gson()
-                var parse = gson.fromJson(response.toString(), prof.FollowNames::class.java)
-                if(parse != null && parse.result != null){
-
-                    followers += (parse.result as List<prof.Resultfp>)
-                    displayfollowing(parse.result as List<prof.Resultfp>)
-                    if(followers.size == CentralConstantsOfSteem.getInstance().otherGuyFollowCount.result.followerCount){
-                        swipecommonactionsclass?.makeswipestop()
-                    }
-
-                }
-
-            }*/
-
-            //StaticMethodsMisc.MakeFollowRequestsFollowers(CentralConstantsOfSteem.getInstance().otherGuyFollowCount,context,followerlistener)
             var gens = GeneralRequestsFeedIntoConstants(context as Context,CentralConstantsOfSteem.getInstance().otherGuyFollowCount,false)
             gens.GetFollowers(otherguy as String,"",null)
         }
         else{
+            //setup the viewmodel
+            vm = ViewModelProviders.of(getActivity() as FragmentActivity).get(FollowViewModel::class.java)
+
             var parse = JsonRpcResultConversion(null,username as String,null,context as Context)
-            var fol = FollowersDatabase(context as Context)
-            var fols = fol.GetAllQuestions()
-            displayfollowing(parse.processfollowlist(fols,true))
+            /*var fol = FollowersDatabase(context as Context)
+            var fols = fol.GetAllQuestions()*/
+
+
+            //fetch the paged list
+            vm?.getpagedList()?.observe(this, Observer {
+                if(it != null){
+                    adapterPaged?.submitList(it as PagedList<Any>)
+                }
+            })
+            //displayfollowing(parse.processfollowlist(fols,true))
             swipecommonactionsclass?.makeswipestop()
         }
         return view

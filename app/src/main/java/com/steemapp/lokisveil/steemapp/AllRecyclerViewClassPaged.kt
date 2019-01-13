@@ -37,24 +37,21 @@ import java.util.*
  */
 class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerView, view: View?, initiate: AdapterToUseFor, globalInterface: GlobalInterface? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() , arvdinterface, FastScrollRecyclerView.SectionedAdapter {
     override fun getSectionName(position: Int): String {
-        var ob = mDiffer?.getItem(position)
-        when(apptype){
-            AdapterToUseFor.followers->{
-                return (ob as prof.Resultfp).follower
-            }
-            AdapterToUseFor.following->{
-                return (ob as prof.Resultfp).following
-            }
-            else->{
-                return ""
+        val ob = mDiffer.getItem(position)
+        if(ob != null){
+            when(apptype){
+                AdapterToUseFor.followers->{
+                    return (ob as prof.Resultfp).follower
+                }
+                AdapterToUseFor.following->{
+                    return (ob as prof.Resultfp).following
+                }
+                else->{
+                    return ""
+                }
             }
         }
-        /*if(followDisplayHelperFunctions != null){
-            return (ob as prof.Resultfp).follower
-        }
-        else if(f)*/
-
-
+        return ""
     }
 
 
@@ -70,6 +67,9 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
                                          new: Any): Boolean{
                 if(old is FeedArticleDataHolder.FeedArticleHolder && new is FeedArticleDataHolder.FeedArticleHolder){
                     return old.id == new.id
+                } else if(old is prof.Resultfp && new is prof.Resultfp){
+                    //if it is a profile object we check the dbid
+                    return  old.dbid == new.dbid
                 }
                 return false
             }
@@ -79,6 +79,9 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
                                             new: Any): Boolean{
                 if(old is FeedArticleDataHolder.FeedArticleHolder && new is FeedArticleDataHolder.FeedArticleHolder){
                     return old.permlink == new.permlink
+                } else if(old is prof.Resultfp && new is prof.Resultfp){
+                    //if it is a profile object we check the unique name
+                    return  old.uniqueName == new.uniqueName
                 }
                 return false
             }
@@ -359,6 +362,7 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
 
     //will cause a crash do not use
     fun clear() {
+
         mDiffer?.currentList?.clear()
         notifyDataSetChanged()
     }
@@ -489,6 +493,15 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
      */
     fun submitList(list:PagedList<Any>){
         mDiffer.submitList(list)
+    }
+
+    /**
+     * invalidates any data fed to the list
+     * then update the ui
+     */
+    fun invalidate(){
+        mDiffer.currentList?.dataSource?.invalidate()
+        notifyDataSetChanged()
     }
 
     override fun notifydatachanged() {

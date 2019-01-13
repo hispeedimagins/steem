@@ -62,11 +62,11 @@ class FollowDisplayHelperFunctions(context : Context, username:String?, adapter:
             }
         }
         holder.article_name?.text = fol
-        holder.article_name?.setOnClickListener(View.OnClickListener {
+        holder.article_name?.setOnClickListener {
             val i = Intent(con, OpenOtherGuyBlog::class.java)
             i.putExtra(CentralConstants.OtherGuyNamePasser,fol)
             con.startActivity(i)
-        })
+        }
         val options = RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.ic_person_white_24px)
@@ -76,7 +76,7 @@ class FollowDisplayHelperFunctions(context : Context, username:String?, adapter:
         //holder.article_date?.text = holder.article?.datespan
         Glide.with(con).load(CentralConstants.GetFeedImageUrl(fol)).apply(options)
                 //.placeholder(R.drawable.common_full_open_on_phone)
-                .into(holder.article_pfp as ImageView)
+                .into(holder.article_pfp!!)
 
 
         val articlepop = ArticlePopUpMenu(con,mholder.shareTextView,"${CentralConstants.baseUrlView}@$fol",null,holder?.article?.followInternal,name,fol,adaptedcomms,position,holder?.progressbar,null,null,false)
