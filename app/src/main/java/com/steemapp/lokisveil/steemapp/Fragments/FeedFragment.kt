@@ -70,6 +70,17 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
         vm?.insert(data)
     }
 
+
+    //callback when deleting is done
+    override fun deleDone() {
+        refreshcontent()
+    }
+
+    //callback that all the items were added to the database
+    override fun processingDone(count: Int) {
+        swipecommonactionsclass?.makeswipestop()
+    }
+
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -97,7 +108,6 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
     var startPermlink : String? = null
     var startTag : String? = null
     var vm :ArticleRoomVM? = null
-    var runOnce = false
     private var mListener: GlobalInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,24 +135,20 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
             //setup the vm
             vm = ViewModelProviders.of(this).get(ArticleRoomVM::class.java)
             //observe the last db result only once
-            vm?.getLastDbKey()?.observe(this,android.arch.lifecycle.Observer {
-                if(!runOnce && it != null){
-                    //now get a list of items from the db and observe changes
-                    vm?.getPagedUpdatedList(it!!)?.observe(this,android.arch.lifecycle.Observer { pagedList ->
-                        if(pagedList != null){
-                            //submit the list to the adapter
-                            adapter?.submitList(pagedList!! as PagedList<Any>)
-                            swipecommonactionsclass?.makeswipestop()
-                        }
 
-                    })
-                    runOnce = true
+            //fetch the data from the paged list item sorted by saved time
+            vm?.getPagedUpdatedListTime()?.observe(this,android.arch.lifecycle.Observer { pagedList ->
+                if(pagedList != null && pagedList.size > 0){
+                    //submit the list to the adapter
+                    adapter?.submitList(pagedList as PagedList<Any>)
+                    //swipecommonactionsclass?.makeswipestop()
+                } else if(pagedList != null && pagedList.size == 0){
+                    adapter?.submitList(pagedList as PagedList<Any>)
+                    //swipecommonactionsclass?.makeswipestop()
                 }
+
             })
-            /*vm?.getPagedUpdatedList()?.observe(this,android.arch.lifecycle.Observer { pagedList ->
-                adapter?.submitList(pagedList!! as PagedList<Any>)
-                swipecommonactionsclass?.makeswipestop()
-            })*/
+
 
             recyclerView?.setItemAnimator(DefaultItemAnimator())
             recyclerView?.setAdapter(adapter)
@@ -153,7 +159,7 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
 
 
             recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (dy > 0) {
                         visibleItemCount = recyclerView!!.childCount
@@ -192,10 +198,10 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
         activity = getActivity()?.applicationContext
         swipeRefreshLayout = view?.findViewById<SwipeRefreshLayout>(R.id.activity_feed_swipe_refresh_layout) as SwipeRefreshLayout
 
-        swipeRefreshLayout?.setOnRefreshListener( {
-            vm?.deleteAll()
-            refreshcontent()
-        })
+        swipeRefreshLayout?.setOnRefreshListener {
+            vm?.deleteAll(false,this)
+
+        }
 
         swipecommonactionsclass = swipecommonactionsclass(swipeRefreshLayout as SwipeRefreshLayout)
         fragmentActivity = getActivity()

@@ -62,6 +62,14 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
         startTag = nametouse
         vm?.insert(data)
     }
+
+    override fun deleDone() {
+        refreshcontent()
+    }
+
+    override fun processingDone(count: Int) {
+        swipecommonactionsclass?.makeswipestop()
+    }
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -90,7 +98,6 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
     var startPermlink : String? = null
     var startTag : String? = null
     var globalInterface : GlobalInterface? = null
-    var runOnce = false
     var vm : ArticleRoomVM? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +113,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         if(view == null){
-            view = inflater!!.inflate(R.layout.fragment_my_feed, container, false)
+            view = inflater.inflate(R.layout.fragment_my_feed, container, false)
             recyclerView = view?.findViewById(R.id.feedFragment)
             //adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
             //adapter?.setEmptyView(view?.findViewById(R.id.toDoEmptyView))
@@ -115,17 +122,16 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
             if(GetNameToUseOtherGuy()){
                 adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
                 vm = ViewModelProviders.of(this).get(ArticleRoomVM::class.java)
-                vm?.getLastDbKey()?.observe(this,android.arch.lifecycle.Observer {
-                    if(!runOnce && it != null){
-                        vm?.getPagedUpdatedList(it!!,true)?.observe(this,android.arch.lifecycle.Observer { pagedList ->
-                            if(pagedList != null){
-                                adapter?.submitList(pagedList!! as PagedList<Any>)
-                                swipecommonactionsclass?.makeswipestop()
-                            }
-
-                        })
-                        runOnce = true
+                vm?.getPagedUpdatedListTime(true)?.observe(this,android.arch.lifecycle.Observer { pagedList ->
+                    if(pagedList != null && pagedList.size > 0){
+                        //submit the list to the adapter
+                        adapter?.submitList(pagedList as PagedList<Any>)
+                        //swipecommonactionsclass?.makeswipestop()
+                    } else if(pagedList != null && pagedList.size == 0){
+                        adapter?.submitList(pagedList as PagedList<Any>)
+                        //swipecommonactionsclass?.makeswipestop()
                     }
+
                 })
                 recyclerView?.setItemAnimator(DefaultItemAnimator())
                 recyclerView?.setAdapter(adapter)
@@ -142,7 +148,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
             //init fabhider to hide the FAB on scroll
             FabHider(recyclerView,globalInterface?.getFab())
             recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (dy > 0) {
                         visibleItemCount = recyclerView!!.childCount
@@ -181,9 +187,10 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
         activity = getActivity()?.applicationContext
         swipeRefreshLayout = view?.findViewById<SwipeRefreshLayout>(R.id.activity_feed_swipe_refresh_layout) as SwipeRefreshLayout
 
-        swipeRefreshLayout?.setOnRefreshListener( {
-            refreshcontent()
-        })
+        swipeRefreshLayout?.setOnRefreshListener {
+            vm?.deleteAll(true,this)
+            //refreshcontent()
+        }
 
         swipecommonactionsclass = swipecommonactionsclass(swipeRefreshLayout as SwipeRefreshLayout)
         fragmentActivity = getActivity()

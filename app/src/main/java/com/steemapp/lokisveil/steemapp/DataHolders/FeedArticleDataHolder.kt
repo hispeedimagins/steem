@@ -77,7 +77,8 @@ class FeedArticleDataHolder {
                      rootPermlink= data.rootPermlink,
                      date= data.date,
                      followsYou= data.followsYou,
-                     isBlog= data.isBlog
+                     isBlog= data.isBlog,
+                     saveTime = data.saveTime
             )
 
         }
@@ -163,7 +164,7 @@ class FeedArticleDataHolder {
     /**
      * declared room entity
      */
-    @Entity(tableName = "article_holder" ,indices = [Index(value = ["id"],unique = true)])
+    @Entity(tableName = "article_holder" ,indices = [Index(value = ["id"],unique = true),Index(value = ["saveTime"],unique = false)])
     data class FeedArticleHolder  (
         val reblogBy: List<String>?,
         val reblogOn: String?, //2018-02-04T13:44:21
@@ -216,7 +217,8 @@ class FeedArticleDataHolder {
         var rootPermlink: String? = null,
         var date:Date? = null,
         var followsYou:Boolean = false,
-        var isBlog:Boolean = false
+        var isBlog:Boolean = false,
+        var saveTime:Long = 0L
         )/*: Parcelable{
     constructor(parcel: Parcel) : this(
             parcel.createStringArrayList(),
@@ -377,7 +379,8 @@ class FeedArticleDataHolder {
             var rootPermlink: String? = null,
             var date:Date? = null,
             var followsYou:Boolean = false,
-            var isBlog:Boolean = false
+            var isBlog:Boolean = false,
+            val saveTime:Long = 0L
     )
 
 
@@ -439,7 +442,8 @@ class FeedArticleDataHolder {
             var rootPermlink: String?,
             var highlightThis:Boolean = false,
             var date:Date? = null,
-            var followsYou:Boolean = false
+            var followsYou:Boolean = false,
+            val saveTime:Long = 0L
     )/*: Parcelable{
         constructor(parcel: Parcel) : this(
                 parcel.createStringArrayList(),
