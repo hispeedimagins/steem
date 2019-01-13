@@ -6,6 +6,8 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.os.AsyncTask
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.Interfaces.ArticleVmRepoInterface
+import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.ArticleDao
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.FollowsDao
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDatabaseApp
@@ -15,13 +17,22 @@ import java.util.concurrent.Executors
  * The article repo for accessing the db
  */
 class ArticleRoomRepo(application: Application) {
+    /*constructor(application:Application,sTime: Long):this(application){
+        timeOfSave = sTime
+    }*/
     //fetch the db and then the article DAO
+
     private var articleDao = RoomDatabaseApp.getDatabase(application).articleDao()
     private var followerRepo = FollowersRepo(application)
     private var firstFiveList: LiveData<List<FeedArticleDataHolder.FeedArticleHolder>>? = null
     private var fetchedItem : LiveData<FeedArticleDataHolder.FeedArticleHolder>? = null
+    private var fetchedItemId : LiveData<FeedArticleDataHolder.FeedArticleHolder>? = null
     private var pagedUpdatedList : LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>>? = null
+    private var pagedUpdatedListTime : LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>>? = null
+
     private var lastKey:LiveData<Int>? = null
+    //private var timeOfSave = 0L
+
 
     /**
      * get the first twenty items
@@ -37,6 +48,15 @@ class ArticleRoomRepo(application: Application) {
      */
     fun getFetchedItem(id:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder> {
         fetchedItem = articleDao.getArticleMy(id)
+        return fetchedItem!!
+    }
+
+    /**
+     * get an article
+     * @param id the steem id
+     */
+    fun getFetchedItemId(id:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder> {
+        fetchedItem = articleDao.getArticle(id)
         return fetchedItem!!
     }
 
@@ -77,6 +97,17 @@ class ArticleRoomRepo(application: Application) {
         return pagedUpdatedList!!
     }
 
+
+    /**
+     * get a paged list
+     * @param dbKey the id from where to start
+     * @param isBlog true for blog posts else false for feed posts
+     */
+    fun getPagedUpdatedListTime(isBlog:Boolean = false): LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>> {
+        pagedUpdatedListTime = LivePagedListBuilder(articleDao.getPagedListTime(isBlog),20).build()
+        return pagedUpdatedListTime!!
+    }
+
     /**
      * delete all the articles
      */
@@ -84,50 +115,116 @@ class ArticleRoomRepo(application: Application) {
         deleteTaskAllAsync(articleDao).execute()
     }
 
+    /**
+     * delete all the articles
+     */
+    fun deleteAll(isBlog: Boolean,jni:JsonRpcResultInterface? = null){
+        deleteTaskAllBooleanAsync(articleDao,isBlog,jni).execute()
+    }
+
 
     /**
      * insert a list of articles
      */
-    fun insert(data:List<FeedArticleDataHolder.FeedArticleHolder>){
-        insertTaskAsync(articleDao,followerRepo).execute(data)
+    fun insert(data:List<FeedArticleDataHolder.FeedArticleHolder>,sTime:Long,upt:ArticleVmRepoInterface):Long{
+        val sa = sTime - 100
+        //upt.updateSaveTime(sa)
+        insertTaskAsync(articleDao,followerRepo,sa,upt).execute(data)
+        return sa
     }
 
     /**
      * insert a single item
      *
      */
-    fun insert(data:FeedArticleDataHolder.FeedArticleHolder){
-        insertTaskSingleAsync(articleDao,followerRepo).execute(data)
+    fun insert(data:FeedArticleDataHolder.FeedArticleHolder,sTime:Long,upt:ArticleVmRepoInterface):Long{
+        val sa = sTime - 100
+        //upt.updateSaveTime(sa)
+        insertTaskSingleAsync(articleDao,followerRepo,sa,upt).execute(data)
+        return sa
     }
 
-    private class insertTaskAsync internal constructor(private val dao: ArticleDao,private val fRepo:FollowersRepo):
+
+    /**
+     * executed when we have to insert items into the database
+     * @param dao the database dao
+     * @param fRepo the followers repository
+     * @param timeOfSave timestamp while saving
+     */
+    private class insertTaskAsync internal constructor(private val dao: ArticleDao,
+                                                       private val fRepo:FollowersRepo,
+                                                       private var timeOfSave:Long,
+                                                       private val upt: ArticleVmRepoInterface):
             AsyncTask<List<FeedArticleDataHolder.FeedArticleHolder>, Void, Void>(){
         override fun doInBackground(vararg params: List<FeedArticleDataHolder.FeedArticleHolder>): Void? {
             for(item in params[0]){
                 //check for followers
+                //val sa = timeOfSave - 100
                 item.followsYou = fRepo.searchFollower(item.author)
-                dao.insert(item)
+                item.saveTime = timeOfSave
+                //upt.updateSaveTime(sa)
+                if(dao.insert(item) == -1L){
+                    dao.update(item)
+                }
             }
             return null
         }
     }
 
-    private class insertTaskSingleAsync internal constructor(private val dao: ArticleDao,private val fRepo:FollowersRepo):
+
+    /**
+     * executed when we have to insert an item into the database
+     * @param dao the database dao
+     * @param fRepo the followers repository
+     * @param timeOfSave timestamp while saving
+     */
+    private class insertTaskSingleAsync internal constructor(private val dao: ArticleDao,
+                                                             private val fRepo:FollowersRepo,
+                                                             private var timeOfSave:Long,
+                                                             private val upt: ArticleVmRepoInterface):
             AsyncTask<FeedArticleDataHolder.FeedArticleHolder, Void, Void>(){
         override fun doInBackground(vararg params: FeedArticleDataHolder.FeedArticleHolder): Void? {
             var item = params[0]
             //check if a follower
+            //val sa = timeOfSave - 100
             item.followsYou = fRepo.searchFollower(item.author)
-            dao.insert(item)
+            item.saveTime = timeOfSave
+            //upt.updateSaveTime(sa)
+            if(dao.insert(item) == -1L){
+                dao.update(item)
+            }
             return null
         }
     }
 
+    /**
+     * executed when we have to delete the database
+     * @param dao the database dao
+     */
     private class deleteTaskAllAsync internal constructor(private val dao: ArticleDao):
             AsyncTask<Void, Void, Void>(){
         override fun doInBackground(vararg params: Void): Void? {
             dao.deleteAll()
             return null
+        }
+    }
+
+    /**
+     * executed when we have to delete the database
+     * @param dao the database dao
+     * @param isBlog if to delete only blog items
+     * @param jni the callback interface
+     */
+    private class deleteTaskAllBooleanAsync internal constructor(private val dao: ArticleDao,private val isBlog:Boolean,private val jni:JsonRpcResultInterface?):
+            AsyncTask<Void, Void, Void>(){
+        override fun doInBackground(vararg params: Void): Void? {
+            dao.deleteAll(isBlog)
+            return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            jni?.deleDone()
+            super.onPostExecute(result)
         }
     }
 }

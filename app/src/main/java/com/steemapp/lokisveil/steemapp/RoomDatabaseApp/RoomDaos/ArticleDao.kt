@@ -2,22 +2,26 @@ package com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos
 
 import android.arch.lifecycle.LiveData
 import android.arch.paging.DataSource
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 
 @Dao
 interface ArticleDao {
 
     //insert an item
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(data:FeedArticleDataHolder.FeedArticleHolder)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(data:FeedArticleDataHolder.FeedArticleHolder):Long
+
+    //update an item
+    @Update
+    fun update(data:FeedArticleDataHolder.FeedArticleHolder):Int
 
     //delete all
     @Query("delete from article_holder")
     fun deleteAll()
+
+    @Query("delete from article_holder where isBlog = :isBlog")
+    fun deleteAll(isBlog:Boolean)
 
     //wrap with livedata for observing in the future
     @Query("SELECT * from article_holder ORDER BY myDbKey ASC")
@@ -27,16 +31,24 @@ interface ArticleDao {
     @Query("SELECT * from article_holder where id == :eid")
     fun getArticle(eid:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder>
 
+    //get an item matching article id
+    @Query("SELECT * from article_holder where id == :eid")
+    fun getArticleNormal(eid:Int): FeedArticleDataHolder.FeedArticleHolder?
+
     //get an article matching internal db
     @Query("SELECT * from article_holder where myDbKey == :eid")
     fun getArticleMy(eid:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder>
 
     //get a paged list of all items
-    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog from article_holder where isBlog == :isBlog ORDER BY myDbKey ASC")
+    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime from article_holder where isBlog == :isBlog ORDER BY myDbKey ASC")
     fun getPagedList(isBlog:Boolean = false): DataSource.Factory<Integer,FeedArticleDataHolder.FeedArticleHolder>
 
+    //get a paged list of all items ordered by savetime
+    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime from article_holder where isBlog == :isBlog ORDER BY saveTime DESC")
+    fun getPagedListTime(isBlog:Boolean = false): DataSource.Factory<Integer,FeedArticleDataHolder.FeedArticleHolder>
+
     //get a paged list after an id
-    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog from article_holder where isBlog == :isBlog and myDbKey > :dbkey ORDER BY myDbKey ASC")
+    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime from article_holder where isBlog == :isBlog and myDbKey > :dbkey ORDER BY myDbKey ASC")
     fun getPagedList(dbkey:Int,isBlog:Boolean = false): DataSource.Factory<Integer,FeedArticleDataHolder.FeedArticleHolder>
 
     //get the last items db id

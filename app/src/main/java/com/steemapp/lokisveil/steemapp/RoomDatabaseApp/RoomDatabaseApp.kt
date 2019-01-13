@@ -16,7 +16,7 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.prof
     FeedArticleDataHolder.beneficiariesDataHolder::class,
     FeedArticleDataHolder.WidgetArticleHolder::class,
     prof.Resultfp::class],
-        version = 10)
+        version = 12)
 //type converters to convert data to and fro from the db
 @TypeConverters(Converters::class)
 abstract class RoomDatabaseApp : RoomDatabase() {

@@ -7,18 +7,29 @@ import android.arch.paging.PagedList
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.ArticleRoomRepo
 import android.arch.paging.LivePagedListBuilder
+import com.steemapp.lokisveil.steemapp.Interfaces.ArticleVmRepoInterface
+import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
+import java.util.*
 
 
 /**
  * the article viewmodel class
  */
-class ArticleRoomVM(application: Application):AndroidViewModel(application) {
-    //fetch the db
+class ArticleRoomVM(application: Application):AndroidViewModel(application),ArticleVmRepoInterface {
+    override fun updateSaveTime(sTime: Long) {
+        timeOfSave = sTime
+    }
+
+    //time of saving the data is kept up to date
+    private var timeOfSave = Calendar.getInstance().timeInMillis
     private val articleRepo = ArticleRoomRepo(application)
     var firstFiveList: LiveData<List<FeedArticleDataHolder.FeedArticleHolder>>? = null
     private var fetchedItem: LiveData<FeedArticleDataHolder.FeedArticleHolder>? = null
+    private var fetchedItemId : LiveData<FeedArticleDataHolder.FeedArticleHolder>? = null
     private var pagedUpdatedList : LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>>? = null
+    private var pagedUpdatedListTime : LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>>? = null
     private var lastDbKey:LiveData<Int>? = null
+
 
     /**
      * the first five are to be got
@@ -33,6 +44,15 @@ class ArticleRoomVM(application: Application):AndroidViewModel(application) {
      */
     fun getFetchedItem(id:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder> {
         fetchedItem = articleRepo.getFetchedItem(id)
+        return fetchedItem!!
+    }
+
+    /**
+     * get an article
+     * @param id the steem id
+     */
+    fun getFetchedItemId(id:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder> {
+        fetchedItem = articleRepo.getFetchedItemId(id)
         return fetchedItem!!
     }
 
@@ -53,6 +73,14 @@ class ArticleRoomVM(application: Application):AndroidViewModel(application) {
     }
 
     /**
+     * gets a paged data list from the db
+     */
+    fun getPagedUpdatedListTime(isBlog:Boolean = false): LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>> {
+        pagedUpdatedListTime = articleRepo.getPagedUpdatedListTime(isBlog)
+        return pagedUpdatedListTime!!
+    }
+
+    /**
      * gets a paged data list from the db also does not load all the old data
      */
     fun getPagedUpdatedList(dbKey:Int,isBlog:Boolean = false): LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>> {
@@ -64,14 +92,14 @@ class ArticleRoomVM(application: Application):AndroidViewModel(application) {
      * insert a list of items
      */
     fun insert(data:List<FeedArticleDataHolder.FeedArticleHolder>){
-        articleRepo.insert(data)
+        timeOfSave = articleRepo.insert(data,timeOfSave,this)
     }
 
     /**
      * insert a single item
      */
     fun insert(data:FeedArticleDataHolder.FeedArticleHolder){
-        articleRepo.insert(data)
+        timeOfSave = articleRepo.insert(data,timeOfSave,this)
     }
 
     /**
@@ -79,5 +107,12 @@ class ArticleRoomVM(application: Application):AndroidViewModel(application) {
      */
     fun deleteAll(){
         articleRepo.deleteAll()
+    }
+
+    /**
+     * delete all articles
+     */
+    fun deleteAll(isBlog: Boolean,jni:JsonRpcResultInterface? = null){
+        articleRepo.deleteAll(isBlog,jni)
     }
 }
