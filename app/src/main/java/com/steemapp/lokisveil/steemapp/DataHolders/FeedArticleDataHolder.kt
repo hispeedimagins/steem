@@ -3,17 +3,9 @@ package com.steemapp.lokisveil.steemapp.DataHolders
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
-import android.os.Parcel
-import android.os.Parcelable
-import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
-import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
-import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import org.json.JSONArray
-import java.io.Serializable
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Created by boot on 2/5/2018.
@@ -171,10 +163,10 @@ class FeedArticleDataHolder {
         val entryId: Int?, //2363
 
 
-        val id: Int, //30142261
+        var id: Long, //30142261
 
         @PrimaryKey(autoGenerate = true)
-        val myDbKey:Int = 0,
+        var myDbKey:Int = 0,
 
         val author: String, //doghaus
         val permlink: String, //street-view
@@ -333,10 +325,10 @@ class FeedArticleDataHolder {
             val entryId: Int?, //2363
 
 
-            val id: Int, //30142261
+            var id: Long, //30142261
 
             @PrimaryKey(autoGenerate = true)
-            val myDbKey:Int = 0,
+            var myDbKey:Int = 0,
 
             val author: String, //doghaus
             val permlink: String, //street-view

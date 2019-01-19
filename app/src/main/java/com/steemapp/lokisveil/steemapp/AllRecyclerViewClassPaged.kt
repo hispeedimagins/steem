@@ -3,7 +3,6 @@ package com.steemapp.lokisveil.steemapp
 import android.app.Activity
 import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -78,7 +77,17 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
             override fun areContentsTheSame(old: Any,
                                             new: Any): Boolean{
                 if(old is FeedArticleDataHolder.FeedArticleHolder && new is FeedArticleDataHolder.FeedArticleHolder){
-                    return old.permlink == new.permlink
+                    return old.permlink == new.permlink &&
+                            old.netVotes == new.netVotes &&
+                            old.children == new.children &&
+                            old.datespan == new.datespan &&
+                            old.authorreputation == new.authorreputation &&
+                            old.pending_payout_value == new.pending_payout_value &&
+                            old.already_paid == new.already_paid &&
+                            old.uservoted == new.uservoted &&
+                            old.title == new.title &&
+                            old.summary == new.summary
+
                 } else if(old is prof.Resultfp && new is prof.Resultfp){
                     //if it is a profile object we check the unique name
                     return  old.uniqueName == new.uniqueName

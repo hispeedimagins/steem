@@ -8,10 +8,9 @@ import android.os.AsyncTask
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Interfaces.ArticleVmRepoInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
+import com.steemapp.lokisveil.steemapp.MiscConstants
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.ArticleDao
-import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.FollowsDao
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDatabaseApp
-import java.util.concurrent.Executors
 
 /**
  * The article repo for accessing the db
@@ -55,7 +54,7 @@ class ArticleRoomRepo(application: Application) {
      * get an article
      * @param id the steem id
      */
-    fun getFetchedItemId(id:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder> {
+    fun getFetchedItemId(id:Long): LiveData<FeedArticleDataHolder.FeedArticleHolder> {
         fetchedItem = articleDao.getArticle(id)
         return fetchedItem!!
     }
@@ -100,7 +99,6 @@ class ArticleRoomRepo(application: Application) {
 
     /**
      * get a paged list
-     * @param dbKey the id from where to start
      * @param isBlog true for blog posts else false for feed posts
      */
     fun getPagedUpdatedListTime(isBlog:Boolean = false): LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>> {
@@ -164,7 +162,20 @@ class ArticleRoomRepo(application: Application) {
                 item.saveTime = timeOfSave
                 //upt.updateSaveTime(sa)
                 if(dao.insert(item) == -1L){
-                    dao.update(item)
+                    var old = dao.getArticleNormal(item.id)
+                    val idDouble = MiscConstants.doubleTheId(item.id,item.isBlog)
+                    if(old == null) old = dao.getArticleNormal(idDouble)
+                    if(old != null){
+                        if(item.isBlog != old.isBlog){
+                            item.id = idDouble
+                            dao.insert(item)
+                            return null
+                        }
+                        item.myDbKey = old.myDbKey
+
+                        dao.update(item)
+                    }
+
                 }
             }
             return null
@@ -184,14 +195,25 @@ class ArticleRoomRepo(application: Application) {
                                                              private val upt: ArticleVmRepoInterface):
             AsyncTask<FeedArticleDataHolder.FeedArticleHolder, Void, Void>(){
         override fun doInBackground(vararg params: FeedArticleDataHolder.FeedArticleHolder): Void? {
-            var item = params[0]
+            val item = params[0]
             //check if a follower
             //val sa = timeOfSave - 100
             item.followsYou = fRepo.searchFollower(item.author)
             item.saveTime = timeOfSave
             //upt.updateSaveTime(sa)
             if(dao.insert(item) == -1L){
-                dao.update(item)
+                var old = dao.getArticleNormal(item.id)
+                val idDouble = MiscConstants.doubleTheId(item.id,item.isBlog)
+                if(old == null) old = dao.getArticleNormal(idDouble)
+                if(old != null){
+                    if(item.isBlog != old.isBlog){
+                        item.id = idDouble
+                        dao.insert(item)
+                        return null
+                    }
+                    item.myDbKey = old.myDbKey
+                    dao.update(item)
+                }
             }
             return null
         }

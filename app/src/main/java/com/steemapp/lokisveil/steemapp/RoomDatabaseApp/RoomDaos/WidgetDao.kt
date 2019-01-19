@@ -24,7 +24,11 @@ interface WidgetDao {
 
     //get a single item article id
     @Query("SELECT * from widget_holder where id == :eid")
-    fun getArticle(eid:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder>
+    fun getArticle(eid:Long): LiveData<FeedArticleDataHolder.FeedArticleHolder>
+
+    //get an item matching article id
+    @Query("SELECT * from widget_holder where id == :eid")
+    fun getArticleNormal(eid:Long): FeedArticleDataHolder.FeedArticleHolder?
 
     //get an item matching the dbkey
     @Query("SELECT * from widget_holder where myDbKey == :eid")
@@ -36,12 +40,12 @@ interface WidgetDao {
 
     //get a paged list
     @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime from widget_holder where isBlog == :isBlog ORDER BY myDbKey ASC")
-    fun getPagedList(isBlog:Boolean = false): DataSource.Factory<Integer, FeedArticleDataHolder.FeedArticleHolder>
+    fun getPagedList(isBlog:Boolean = false): DataSource.Factory<Int, FeedArticleDataHolder.FeedArticleHolder>
 
 
     //get a paged list paged list
     @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime from widget_holder where isBlog == :isBlog & myDbKey > :dbkey ORDER BY myDbKey ASC")
-    fun getPagedList(dbkey:Int,isBlog:Boolean = false): DataSource.Factory<Integer, FeedArticleDataHolder.FeedArticleHolder>
+    fun getPagedList(dbkey:Int,isBlog:Boolean = false): DataSource.Factory<Int, FeedArticleDataHolder.FeedArticleHolder>
 
 
     //get all items

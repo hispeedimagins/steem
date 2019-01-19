@@ -2,7 +2,6 @@ package com.steemapp.lokisveil.steemapp
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
@@ -10,23 +9,19 @@ import android.preference.PreferenceManager
 import android.support.v7.view.ContextThemeWrapper
 import android.text.format.DateUtils
 import android.util.Log
-import android.view.View
-import android.widget.PopupMenu
 import com.bumptech.glide.request.FutureTarget
 import com.steemapp.lokisveil.steemapp.HelperClasses.Links
 import com.steemapp.lokisveil.steemapp.HelperClasses.Physhy
 import com.steemapp.lokisveil.steemapp.HelperClasses.ProxifyUrl
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
-import java.net.URL
 import java.util.*
-import java.util.regex.Pattern
 
 class MiscConstants{
     companion object{
         fun ApplyMyTheme(context: Context){
-            var sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+            val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
             //var themval = sharedPref.getInt("theme_list_value",100)
-            var themname = sharedPref.getString("theme_list","1")
+            val themname = sharedPref.getString("theme_list","1")
             when(themname){
                 "0" ->{
                     context.setTheme(R.style.Plaid_Home_Dark)
@@ -38,9 +33,9 @@ class MiscConstants{
         }
 
         fun ApplyMyThemeSettings(context: Context){
-            var sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+            val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
             //var themval = sharedPref.getInt("theme_list_value",100)
-            var themname = sharedPref.getString("theme_list","1")
+            val themname = sharedPref.getString("theme_list","1")
             when(themname){
                 "0" ->{
                     context.setTheme(R.style.Plaid_Alert_Dark)
@@ -52,9 +47,9 @@ class MiscConstants{
         }
 
         fun ApplyMyThemeArticle(context: Context){
-            var sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+            val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
             //var themval = sharedPref.getInt("theme_list_value",100)
-            var themname = sharedPref.getString("theme_list","1")
+            val themname = sharedPref.getString("theme_list","1")
             when(themname){
                 "0" ->{
                     context.setTheme(R.style.Plaid_Translucent_DesignerNewsStory_Dark)
@@ -66,9 +61,9 @@ class MiscConstants{
         }
 
         fun ApplyMyThemePopUp(context: Context):Context {
-            var sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+            val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
             //var themval = sharedPref.getInt("theme_list_value",100)
-            var themname = sharedPref.getString("theme_list","1")
+            val themname = sharedPref.getString("theme_list","1")
             when(themname){
                 "0" ->{
                     return ContextThemeWrapper(context, R.style.Plaid_Home_Dark)
@@ -86,9 +81,9 @@ class MiscConstants{
 
 
         fun ApplyMyThemeRet(context: Context):Context {
-            var sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+            val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
             //var themval = sharedPref.getInt("theme_list_value",100)
-            var themname = sharedPref.getString("theme_list","1")
+            val themname = sharedPref.getString("theme_list","1")
             when(themname){
                 "0" ->{
                     return ContextThemeWrapper(context, R.style.Plaid_AlertDialog_AppCompat_Dark)
@@ -113,7 +108,7 @@ class MiscConstants{
         fun CorrectUsernamesK(value:String):String{
             //val regex = Regex("(@{1})([a-z0-9.-]{3,30})")
             val regex = Regex("(^|[^a-zA-Z0-9_!#\$%&*@＠/]|(^|[^a-zA-Z0-9_+~.-/#]))[@＠]([a-z][-.a-z\\d]+[a-z\\d])")
-            var s = regex.replace(value) { matchResult ->
+            val s = regex.replace(value) { matchResult ->
                 " <a class=\"mylink\" href=\"steemer://@${matchResult.groupValues[3]}\" >@${matchResult.groupValues[3]}</a> "
 
             }
@@ -133,7 +128,7 @@ class MiscConstants{
         fun CorrectLinks(value:String):String{
             //val regex = Regex("(@{1})([a-z0-9.-]{3,30})")
             val regex = Links.any()
-            var s = regex.replace(value) { matchResult ->
+            val s = regex.replace(value) { matchResult ->
                 //matchResult.destructured.component2()
                 if(Physhy.isPhyshy(matchResult.groupValues[2])){
                     matchResult.groupValues[1]+"<div class=\"phishy\">"+
@@ -164,11 +159,11 @@ class MiscConstants{
          */
         fun CorrectHashtags(value:String):String{
             val regex = "(^|\\s)(#[-a-z\\d]+)".toRegex()
-            var s = regex.replace(value) { matchResult ->
-                if ("/#[\\d]+$/".toRegex().matches(matchResult.value)) matchResult.value; // Don't allow numbers to be tags
+            val s = regex.replace(value) { matchResult ->
+                if ("/#[\\d]+$/".toRegex().matches(matchResult.value)) matchResult.value // Don't allow numbers to be tags
                 val space = if("^\\s/".toRegex().matches(matchResult.value)) matchResult.groupValues[1] else ""
-                val tag2 = matchResult.value.trim().substring(1);
-                val tagLower = tag2.toLowerCase();
+                val tag2 = matchResult.value.trim().substring(1)
+                val tagLower = tag2.toLowerCase()
                 "$space<a class=\"mytag\" href=\"steemer://#$tagLower\" >${matchResult.value}</a> "
                 //"<a href=\"/trending/$tagLower\">$matchResult.value</a>"
 
@@ -188,7 +183,7 @@ class MiscConstants{
             //val regex = Regex("(@{1})([a-z0-9.-]{3,30})")
             val urs = Links.urlwithoutex()
             val regex = Regex("[!]\\[([\\w\\d\\s().-]*)]\\(($urs)\\)")
-            var s = regex.replace(value) { matchResult ->
+            val s = regex.replace(value) { matchResult ->
                 "![${matchResult.groupValues[1]}](${ProxifyUrl.proxyurl(matchResult.groupValues[3])})"
 
             }
@@ -200,11 +195,11 @@ class MiscConstants{
 
 
         //This will fetch the btimap image
-        public fun getBitmap(context:Context, sh: FutureTarget<Drawable>, isPfp:Boolean = false): Bitmap?{
+        fun getBitmap(context:Context, sh: FutureTarget<Drawable>, isPfp:Boolean = false): Bitmap?{
             try{
-                var g  = sh.get()
+                val g  = sh.get()
                 //make a bitmap wit the height and width of the image
-                var bt = Bitmap.createBitmap(g.intrinsicWidth, g.intrinsicHeight, Bitmap.Config.ARGB_8888);
+                val bt = Bitmap.createBitmap(g.intrinsicWidth, g.intrinsicHeight, Bitmap.Config.ARGB_8888)
                 Log.d("bit map h and w ", "width : ${g.intrinsicWidth}, height: ${g.intrinsicHeight} ")
                 //load into the canvas
                 val canvas = Canvas(bt)
@@ -219,8 +214,8 @@ class MiscConstants{
                 var width = canvas.width
 
                 Log.d("canvas height","cheight:$height, cwidth:$width")
-                var dwf = dWidth/4
-                var hwf = dHeight / 4
+                val dwf = dWidth/4
+                val hwf = dHeight / 4
                 //do not scale the image if it is a pfp
                 if(!isPfp){
                     //now all the conditions do the same thing, with more testing
@@ -251,7 +246,7 @@ class MiscConstants{
                 canvas.setBitmap(null)
                 //var re = Bitmap.createScaledBitmap(bt,width,height,false)
                 //scale the bitmap
-                var re = getResizedBitmap(bt,width,height)
+                val re = getResizedBitmap(bt,width,height)
                 //bt.recycle()
                 return  re
             } catch (ex:Exception){
@@ -315,5 +310,9 @@ class MiscConstants{
             return DateUtils.getRelativeDateTimeString(context,created, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)
         }
 
+        fun doubleTheId(id:Long,isBlog:Boolean):Long{
+            val reId = Integer.parseInt(isBlog.toString().get(0).toString(),35)
+            return (id.toString() + reId).toLong()
+        }
     }
 }

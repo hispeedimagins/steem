@@ -8,8 +8,6 @@ import android.content.Context
 import android.os.AsyncTask
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
-import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.ArticleDao
-import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.FollowsDao
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.WidgetDao
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDatabaseApp
 
@@ -122,7 +120,11 @@ class WidgetRepo(application: Application?) {
                 item.followsYou = fRepo.searchFollower(item.author)
                 val conv = FeedArticleDataHolder.feedToWidget(item)
                 if(dao.insert(conv) == -1L){
-                    dao.update(conv)
+                    val old = dao.getArticleNormal(item.id)
+                    if(old != null){
+                        conv.myDbKey = old.myDbKey
+                        dao.update(conv)
+                    }
                 }
             }
             return null
@@ -132,11 +134,15 @@ class WidgetRepo(application: Application?) {
     private class insertTaskSingleAsync internal constructor(private val dao: WidgetDao, private val fRepo:FollowersRepo):
             AsyncTask<FeedArticleDataHolder.WidgetArticleHolder, Void, Void>(){
         override fun doInBackground(vararg params: FeedArticleDataHolder.WidgetArticleHolder): Void? {
-            var item = params[0]
+            val item = params[0]
             //check if the person follows the user
             item.followsYou = fRepo.searchFollower(item.author)
             if(dao.insert(item) == -1L){
-                dao.update(item)
+                val old = dao.getArticleNormal(item.id)
+                if(old != null){
+                    item.myDbKey = old.myDbKey
+                    dao.update(item)
+                }
             }
             return null
         }

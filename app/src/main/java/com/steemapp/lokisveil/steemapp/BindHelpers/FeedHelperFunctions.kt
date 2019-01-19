@@ -1,66 +1,36 @@
 package com.steemapp.lokisveil.steemapp.BindHelpers
 
+//import com.commonsware.cwac.anddown.AndDown
+/*import eu.bittrade.libs.steemj.SteemJ
+import eu.bittrade.libs.steemj.base.models.AccountName
+import eu.bittrade.libs.steemj.base.models.Permlink*/
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
-import android.media.Image
-import android.opengl.Visibility
-import android.os.AsyncTask
-import android.support.annotation.ColorInt
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
-import android.text.Html
-import android.util.Log
-import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import android.widget.NumberPicker
-import android.widget.Toast
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.commonsware.cwac.anddown.AndDown
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.steemapp.lokisveil.steemapp.*
-import com.steemapp.lokisveil.steemapp.Crypto.ECKey
-import com.steemapp.lokisveil.steemapp.Crypto.MyCrypto
-//import com.commonsware.cwac.anddown.AndDown
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
-import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
-import com.steemapp.lokisveil.steemapp.HelperClasses.*
+import com.steemapp.lokisveil.steemapp.HelperClasses.ArticlePopUpMenu
+import com.steemapp.lokisveil.steemapp.HelperClasses.GetDynamicAndBlock
+import com.steemapp.lokisveil.steemapp.HelperClasses.VoteWeightThenVote
+import com.steemapp.lokisveil.steemapp.HelperClasses.calendarcalculations
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
 import com.steemapp.lokisveil.steemapp.MyViewHolders.ArticleViewHolder
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.FollowType
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.PrivateKeyType
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.BlockId
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.SignedTransaction
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.*
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.SteemJConfig
-import com.steemapp.lokisveil.steemapp.jsonclasses.Block
-import org.apache.commons.lang3.tuple.ImmutablePair
-/*import eu.bittrade.libs.steemj.SteemJ
-import eu.bittrade.libs.steemj.base.models.AccountName
-import eu.bittrade.libs.steemj.base.models.Permlink*/
-import org.joou.UInteger
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.ExecutionException
-import kotlin.collections.ArrayList
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.CustomJsonOperation
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.ReblogOperation
+import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperation
 
 
 /**
@@ -87,9 +57,9 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
 
         }
 
-        var attrs  = intArrayOf(R.attr.textColorMine)
-        var ta = context.obtainStyledAttributes(attrs)
-        var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
+        val attrs  = intArrayOf(R.attr.textColorMine)
+        val ta = context.obtainStyledAttributes(attrs)
+        val textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
         ta.recycle()
         textColorMineTheme = ContextCompat.getColor(con, textColorMineThemeint)
     }
@@ -108,11 +78,11 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
     }
 
 
-    public fun Bind(mholder:RecyclerView.ViewHolder,position:Int){
+    fun Bind(mholder:RecyclerView.ViewHolder,position:Int){
         mholder.itemView.setSelected(selectedPos == position)
 
         val holder : ArticleViewHolder = mholder as ArticleViewHolder
-        var ho = adaptedcomms.getObject(position)
+        val ho = adaptedcomms.getObject(position)
         if(ho == null){
             return
         }
@@ -197,6 +167,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
             holder.article_image?.visibility = View.GONE
         }
         else{
+            holder.article_image?.visibility = View.GONE
             val im = holder.article?.image?.firstOrNull()
             if(im != null){
                 holder.article_image?.visibility = View.VISIBLE
@@ -206,11 +177,9 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
                         //.error(R.drawable.error)
                         .priority(Priority.HIGH)
 
-                //use first of null so the app does not crash if not images exist
+                //use first of null so the app does not crash if no images exist
                 Glide.with(con).load(im).apply(optionss)
-                        .into(holder.article_image as ImageView)
-            } else {
-                holder.article_image?.visibility = View.GONE
+                        .into(holder.article_image!!)
             }
 
 

@@ -5,10 +5,9 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
-import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.ArticleRoomRepo
-import android.arch.paging.LivePagedListBuilder
 import com.steemapp.lokisveil.steemapp.Interfaces.ArticleVmRepoInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
+import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.ArticleRoomRepo
 import java.util.*
 
 
@@ -51,7 +50,7 @@ class ArticleRoomVM(application: Application):AndroidViewModel(application),Arti
      * get an article
      * @param id the steem id
      */
-    fun getFetchedItemId(id:Int): LiveData<FeedArticleDataHolder.FeedArticleHolder> {
+    fun getFetchedItemId(id:Long): LiveData<FeedArticleDataHolder.FeedArticleHolder> {
         fetchedItem = articleRepo.getFetchedItemId(id)
         return fetchedItem!!
     }
