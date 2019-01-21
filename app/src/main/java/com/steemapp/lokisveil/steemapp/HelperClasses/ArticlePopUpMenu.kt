@@ -3,20 +3,19 @@ package com.steemapp.lokisveil.steemapp.HelperClasses
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.opengl.Visibility
-import android.os.Bundle
 import android.support.v7.widget.PopupMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import com.steemapp.lokisveil.steemapp.*
+import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.FavouritesDatabase
-import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
+import com.steemapp.lokisveil.steemapp.MiscConstants
+import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.FollowersRepo
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.FollowType
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
@@ -24,12 +23,17 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.CustomJsonOperation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.FollowOperation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
+import com.steemapp.lokisveil.steemapp.UserUpvoteActivity
 import org.json.JSONArray
 
 /**
  * Created by boot on 3/9/2018.
  */
-class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shareurlarticleu:String?,followInternal: MyOperationTypes?,followname:String?,followingname:String?,adaptedcomms: arvdinterface?,position:Int?,progressBar: ProgressBar?,globalInterface: GlobalInterface?,jsonArray: JSONArray? = null,useFav : Boolean = false) : GlobalInterface,JsonRpcResultInterface {
+class ArticlePopUpMenu(val context: Context, val view: View?,var shareurlauthor:String?, var shareurlarticle:String?, var followInternal: MyOperationTypes?, //var customJsonOperation = customJsonOperation
+                       var followname: String?, var followingname: String?, val adaptedcomms: arvdinterface?,
+                       val position: Int?,var progressBars: ProgressBar?,
+                       var globalInterfaces: GlobalInterface?, var jsonArray: JSONArray? = null,
+                       var userFavs : Boolean = false, var dbId:Int? = null) : GlobalInterface,JsonRpcResultInterface {
 
     //callback if person is following
     override fun searchFollowing(name: String, isFollowing: Boolean) {
@@ -80,21 +84,7 @@ class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shar
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    val context = context
-    val view = view
-    val shareurlauthor = shareurlauthoru
-    val shareurlarticle = shareurlarticleu
-    var followInternal = followInternal
-    //var customJsonOperation = customJsonOperation
-    var followname = followname
-    var followingname = followingname
     var followType = FollowType.BLOG
-    val adaptedcomms = adaptedcomms
-    val position = position
-    val globalInterfaces = globalInterface
-    val progressBars = progressBar
-    val userFavs = useFav
-    var jsonArray: JSONArray? = jsonArray
     var popupMenuItem: Menu? = null
     init {
         setup()
@@ -116,7 +106,7 @@ class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shar
             }
             popup.menu.findItem(R.id.article_dialog_follow).isVisible = false
             popup.menu.findItem(R.id.article_dialog_unfollow).isVisible = false
-            popup.menu.findItem(R.id.article_dialog_open_likes).isVisible = jsonArray != null
+            popup.menu.findItem(R.id.article_dialog_open_likes).isVisible = jsonArray != null || dbId != 0
             popup.menu.findItem(R.id.article_dialog_open_add_to_favourites).isVisible = userFavs
             popup.menu.findItem(R.id.article_dialog_open_Remove_From_favourites).isVisible = false
 
@@ -161,6 +151,7 @@ class ArticlePopUpMenu(context: Context,view: View?,shareurlauthoru:String?,shar
                         R.id.article_dialog_open_likes ->{
                             CentralConstantsOfSteem.getInstance().jsonArray = jsonArray
                             var intent = Intent(context,UserUpvoteActivity::class.java)
+                            intent.putExtra("dbId",dbId)
                             context.startActivity(intent)
                         }
                         R.id.article_dialog_open_add_to_favourites ->{

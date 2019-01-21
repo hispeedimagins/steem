@@ -198,7 +198,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
 
         }
 
-        val articlepop = ArticlePopUpMenu(con,mholder.shareTextView,"${CentralConstants.baseUrlView}@${holder?.article?.author}","${CentralConstants.baseUrlView}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}",null,name,holder.article?.author,adaptedcomms,position,holder?.progressbar,null,holder?.article?.activeVotes,true)
+        val articlepop = ArticlePopUpMenu(con,mholder.shareTextView,"${CentralConstants.baseUrlView}@${holder?.article?.author}","${CentralConstants.baseUrlView}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}",null,name,holder.article?.author,adaptedcomms,position,holder?.progressbar,null,holder?.article?.activeVotes,true,holder?.article?.myDbKey)
 
 
         mholder.article_like?.setOnClickListener{

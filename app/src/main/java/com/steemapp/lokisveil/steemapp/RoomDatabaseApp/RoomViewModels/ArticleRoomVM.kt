@@ -8,6 +8,7 @@ import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Interfaces.ArticleVmRepoInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.ArticleRoomRepo
+import org.json.JSONArray
 import java.util.*
 
 
@@ -28,7 +29,7 @@ class ArticleRoomVM(application: Application):AndroidViewModel(application),Arti
     private var pagedUpdatedList : LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>>? = null
     private var pagedUpdatedListTime : LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>>? = null
     private var lastDbKey:LiveData<Int>? = null
-
+    private var activeVotes:LiveData<JSONArray>? = null
 
     /**
      * the first five are to be got
@@ -113,5 +114,11 @@ class ArticleRoomVM(application: Application):AndroidViewModel(application),Arti
      */
     fun deleteAll(isBlog: Boolean,jni:JsonRpcResultInterface? = null){
         articleRepo.deleteAll(isBlog,jni)
+    }
+
+
+    fun getActiveVotes(dbKey: Int):LiveData<JSONArray>{
+        activeVotes = articleRepo.getActiveVotes(dbKey)
+        return activeVotes!!
     }
 }

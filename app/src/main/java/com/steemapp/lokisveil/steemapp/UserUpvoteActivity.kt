@@ -1,27 +1,20 @@
 package com.steemapp.lokisveil.steemapp
 
-import android.app.Activity
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
-import android.text.format.DateUtils
-import android.view.View
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
-import com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
+import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.ArticleRoomVM
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
-import com.steemapp.lokisveil.steemapp.jsonclasses.BusyNotificationJson
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
-
 import kotlinx.android.synthetic.main.activity_user_upvote.*
 import kotlinx.android.synthetic.main.content_user_upvote.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.text.SimpleDateFormat
 import java.util.*
 
 class UserUpvoteActivity : AppCompatActivity() {
@@ -32,17 +25,13 @@ class UserUpvoteActivity : AppCompatActivity() {
     var otherguy : String? = null
     var useOtherGuyOnly : Boolean? = false
     var key : String? = null
+    var dbKey = 0
+    lateinit var articleVm: ArticleRoomVM
+    //private var res: FeedArticleDataHolder.FeedArticleHolder? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyThemeArticle(this@UserUpvoteActivity)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_upvote)
-        /*setSupportActionBar(toolbar)
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }*/
-
 
         recyclerView = list
 
@@ -54,7 +43,21 @@ class UserUpvoteActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences(CentralConstants.sharedprefname, 0)
         username = sharedPreferences?.getString(CentralConstants.username, null)
         key = sharedPreferences?.getString(CentralConstants.key, null)
-        display(CentralConstantsOfSteem.getInstance().jsonArray)
+
+        if(intent != null){
+            dbKey = intent.getIntExtra("dbId",0)
+        }
+        if(dbKey != 0){
+            articleVm = ViewModelProviders.of(this@UserUpvoteActivity).get(ArticleRoomVM::class.java)
+            articleVm.getActiveVotes(dbKey).observe(this,android.arch.lifecycle.Observer {
+                if(it != null){
+                    display(it)
+                }
+            })
+        } else {
+            display(CentralConstantsOfSteem.getInstance().jsonArray)
+        }
+
     }
 
 

@@ -11,6 +11,7 @@ import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 import com.steemapp.lokisveil.steemapp.MiscConstants
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.ArticleDao
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDatabaseApp
+import org.json.JSONArray
 
 /**
  * The article repo for accessing the db
@@ -28,6 +29,7 @@ class ArticleRoomRepo(application: Application) {
     private var fetchedItemId : LiveData<FeedArticleDataHolder.FeedArticleHolder>? = null
     private var pagedUpdatedList : LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>>? = null
     private var pagedUpdatedListTime : LiveData<PagedList<FeedArticleDataHolder.FeedArticleHolder>>? = null
+    private var activeVotes:LiveData<JSONArray>? = null
 
     private var lastKey:LiveData<Int>? = null
     //private var timeOfSave = 0L
@@ -140,6 +142,12 @@ class ArticleRoomRepo(application: Application) {
         //upt.updateSaveTime(sa)
         insertTaskSingleAsync(articleDao,followerRepo,sa,upt).execute(data)
         return sa
+    }
+
+
+    fun getActiveVotes(dbKey: Int):LiveData<JSONArray>{
+        activeVotes = articleDao.fetchActiveVotes(dbKey)
+        return activeVotes!!
     }
 
 
