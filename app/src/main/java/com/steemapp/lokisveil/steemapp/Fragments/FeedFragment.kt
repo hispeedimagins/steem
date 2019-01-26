@@ -1,9 +1,7 @@
 package com.steemapp.lokisveil.steemapp.Fragments
 
-import android.app.Application
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -20,9 +18,8 @@ import android.view.ViewGroup
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.steemapp.lokisveil.steemapp.*
+import com.steemapp.lokisveil.steemapp.AllRecyclerViewClassPaged
+import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
@@ -33,17 +30,10 @@ import com.steemapp.lokisveil.steemapp.HelperClasses.MakeJsonRpc
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
-import com.steemapp.lokisveil.steemapp.MyViewHolders.ArticleViewHolder
-import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.FollowersRepo
+import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.ArticleRoomVM
-import com.steemapp.lokisveil.steemapp.jsonclasses.feed
-import org.apache.commons.lang3.StringEscapeUtils.escapeJson
-import org.apache.commons.lang3.StringEscapeUtils.unescapeJson
+import com.steemapp.lokisveil.steemapp.VolleyRequest
 import org.json.JSONObject
-import java.io.Serializable
-import java.lang.reflect.TypeVariable
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -108,6 +98,8 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
     var startPermlink : String? = null
     var startTag : String? = null
     var vm :ArticleRoomVM? = null
+    var lastSaveTime = 0L
+    var lastSaveOneCheck = true
     private var mListener: GlobalInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -141,6 +133,12 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
                 if(pagedList != null && pagedList.size > 0){
                     //submit the list to the adapter
                     adapter?.submitList(pagedList as PagedList<Any>)
+                    if(lastSaveOneCheck && lastSaveTime != 0L && lastSaveTime < pagedList.first().saveTime){
+                        recyclerView?.scrollToPosition(0)
+                        lastSaveOneCheck = false
+                    } else if(lastSaveTime == 0L){
+                        lastSaveTime = pagedList.first().saveTime
+                    }
                     //swipecommonactionsclass?.makeswipestop()
                 } else if(pagedList != null && pagedList.size == 0){
                     adapter?.submitList(pagedList as PagedList<Any>)

@@ -77,7 +77,7 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
             override fun areContentsTheSame(old: Any,
                                             new: Any): Boolean{
                 if(old is FeedArticleDataHolder.FeedArticleHolder && new is FeedArticleDataHolder.FeedArticleHolder){
-                    return old.permlink == new.permlink &&
+                    return old == new/*old.permlink == new.permlink &&
                             old.netVotes == new.netVotes &&
                             old.children == new.children &&
                             old.datespan == new.datespan &&
@@ -86,7 +86,7 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
                             old.already_paid == new.already_paid &&
                             old.uservoted == new.uservoted &&
                             old.title == new.title &&
-                            old.summary == new.summary
+                            old.summary == new.summary*/
 
                 } else if(old is prof.Resultfp && new is prof.Resultfp){
                     //if it is a profile object we check the unique name

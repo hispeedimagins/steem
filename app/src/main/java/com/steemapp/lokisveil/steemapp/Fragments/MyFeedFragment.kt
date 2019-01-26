@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,26 +18,19 @@ import android.view.ViewGroup
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
-import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
-import com.steemapp.lokisveil.steemapp.HelperClasses.*
+import com.steemapp.lokisveil.steemapp.HelperClasses.FabHider
+import com.steemapp.lokisveil.steemapp.HelperClasses.JsonRpcResultConversion
+import com.steemapp.lokisveil.steemapp.HelperClasses.MakeJsonRpc
+import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
-
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.ArticleRoomVM
-import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import org.json.JSONObject
-import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -99,6 +91,8 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
     var startTag : String? = null
     var globalInterface : GlobalInterface? = null
     var vm : ArticleRoomVM? = null
+    var lastSaveTime = 0L
+    var lastSaveOneCheck = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -126,6 +120,12 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
                     if(pagedList != null && pagedList.size > 0){
                         //submit the list to the adapter
                         adapter?.submitList(pagedList as PagedList<Any>)
+                        if(lastSaveOneCheck && lastSaveTime != 0L && lastSaveTime < pagedList.first().saveTime){
+                            recyclerView?.scrollToPosition(0)
+                            lastSaveOneCheck = false
+                        } else if(lastSaveTime == 0L){
+                            lastSaveTime = pagedList.first().saveTime
+                        }
                         //swipecommonactionsclass?.makeswipestop()
                     } else if(pagedList != null && pagedList.size == 0){
                         adapter?.submitList(pagedList as PagedList<Any>)
