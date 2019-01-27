@@ -177,11 +177,12 @@ class ArticleRoomRepo(application: Application) {
                         if(item.isBlog != old.isBlog){
                             item.id = idDouble
                             dao.insert(item)
-                            return null
+                            //return null
+                        } else {
+                            item.myDbKey = old.myDbKey
+                            dao.update(item)
                         }
-                        item.myDbKey = old.myDbKey
 
-                        dao.update(item)
                     }
 
                 }
@@ -217,10 +218,12 @@ class ArticleRoomRepo(application: Application) {
                     if(item.isBlog != old.isBlog){
                         item.id = idDouble
                         dao.insert(item)
-                        return null
+                        //return null
+                    } else {
+                        item.myDbKey = old.myDbKey
+                        dao.update(item)
                     }
-                    item.myDbKey = old.myDbKey
-                    dao.update(item)
+
                 }
             }
             return null

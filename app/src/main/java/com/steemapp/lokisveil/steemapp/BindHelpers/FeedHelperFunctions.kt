@@ -168,7 +168,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
         }
         else{
             holder.article_image?.visibility = View.GONE
-            val im = holder.article?.image?.firstOrNull()
+            val im = holder.article?.displayImage
             if(im != null){
                 holder.article_image?.visibility = View.VISIBLE
                 val optionss = RequestOptions()

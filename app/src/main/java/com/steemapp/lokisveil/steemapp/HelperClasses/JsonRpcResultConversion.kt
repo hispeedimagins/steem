@@ -319,7 +319,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 rootAuthor = if(commstr.has("root_author")) commstr.getString("root_author") else null,
                 rootPermlink = if(commstr.has("root_permlink")) commstr.getString("root_permlink") else null,
                 followsYou = false,
-                isBlog = blogData
+                isBlog = blogData,
+                displayImage = jsonMetadata?.image?.firstOrNull()
 
         )
         return fd
