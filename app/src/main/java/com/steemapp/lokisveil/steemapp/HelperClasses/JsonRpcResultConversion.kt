@@ -1,6 +1,7 @@
 package com.steemapp.lokisveil.steemapp.HelperClasses
 
 import android.content.Context
+import android.os.AsyncTask
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -169,6 +170,44 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         return  ArrayList()
     }
 
+    fun parseJsonBlogGetMain():JSONObject?{
+        return if(json?.has("result")!!) json?.getJSONObject("result") else null
+    }
+
+    fun parseJsonBlogGetMainAsArray():JSONArray?{
+        return if(json?.has("result")!!) json?.getJSONArray("result") else null
+    }
+
+    private fun parseJsonBlogGetContent():JSONObject?{
+        val result = parseJsonBlogGetMain()
+        if(result?.has("tag_idx")!!){
+            GetTrendingTags()
+        }
+        val content = result.getJSONObject("content")
+        return content
+    }
+
+    private fun parseJsonBlogGetUser():JSONArray?{
+        val result = parseJsonBlogGetMain()
+        if(result == null){
+            return null
+        }
+        val accounts = result.getJSONObject("accounts")
+        val user = if(accounts.has(username)) accounts.getJSONObject(username) else null
+        if(user == null){
+            return null
+        }
+        var getthis = "feed"
+        if(requestType == TypeOfRequest.blog){
+            getthis = "blog"
+        } else if(requestType == TypeOfRequest.comments){
+            getthis = "comments"
+        } else if(requestType == TypeOfRequest.replies){
+            getthis = "recent_replies"
+        }
+        return if(user.has(getthis))  user.getJSONArray(getthis) else null
+    }
+
     //close db connections to prevent leakages
     fun closedb(){
         followersDatabase?.close()
@@ -276,7 +315,6 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)*/
         val dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
         val du = MiscConstants.dateToRelDate(dd,contex)
-
         val fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
                 displayName = autho,
                 reblogBy = ls,
@@ -540,4 +578,156 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         return list
     }
 
+
+
+    fun processBlogAsync(jni:JsonRpcResultInterface?){
+        val content = parseJsonBlogGetContent()
+        val arr = parseJsonBlogGetUser()
+        class task : AsyncTask<Void, Void, ResultPasser>(){
+            override fun doInBackground(vararg params: Void): ResultPasser? {
+                if(arr != null){
+                    var runTimes = 0
+                    var returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList()
+                    for (x in 0 until arr.length()){
+
+                        //var st = x.toString()
+                        try{
+                            val ss = arr.getString(x)
+                            if(ss != null){
+                                val commstr : JSONObject? = content?.getJSONObject(ss)
+
+                                //if jni is not null we do a callback for saving to db,
+                                //else accumulate in the list and return
+                                if(commstr != null){
+                                    if(jni != null){
+                                        jni.insert(getprocessedfeed(commstr)!!)
+                                    } else {
+                                        returndata.add(getprocessedfeed(commstr)!!)
+                                    }
+                                    runTimes++
+                                }
+
+
+                            }
+                        }
+                        catch (ex : Exception){
+                            ex.message
+                        }
+                    }
+                    //jni?.processingDone(runTimes)
+                    return ResultPasser(runTimes,returndata)
+                }
+
+                return null
+            }
+
+            override fun onPostExecute(result: ResultPasser?) {
+                if(result == null) return
+                jni?.processingDone(result.times)
+                jni?.processedArticles(result.list)
+                super.onPostExecute(result)
+            }
+        }
+        task().execute()
+    }
+
+
+    fun processBlogMoreAsync(jni:JsonRpcResultInterface?){
+        class task : AsyncTask<Void, Void, ResultPasser>(){
+            override fun doInBackground(vararg params: Void): ResultPasser? {
+                //val body = gson.fromJson(json, JsonObject::class.java)
+                val result: JSONArray? = parseJsonBlogGetMainAsArray()
+                val returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList()
+                //val arr = user.get(getthis)?.asJsonArray
+                var skipz = false
+                var runTimes = 0
+                if(result?.length() != null){
+                    for (x in 0 until result?.length()){
+                        if(skipz){
+                            val commstr : JSONObject = result.getJSONObject(x) //x
+                            val s = getprocessedfeed(commstr,false,true)
+                            if(s != null){
+                                //if jni is not null we do a callback for saving to db,
+                                //else accumulate in the list and return
+                                if(jni != null){
+                                    jni?.insert(getprocessedfeed(commstr)!!)
+                                } else {
+                                    returndata.add(getprocessedfeed(commstr)!!)
+                                }
+                            }
+                            runTimes++
+                        }
+                        else{
+                            skipz = true
+                        }
+
+                    }
+                }
+                return ResultPasser(runTimes,returndata)
+
+                //return  ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
+            }
+
+            override fun onPostExecute(result: ResultPasser?) {
+                if(result == null) return
+                jni?.processingDone(result.times)
+                jni?.processedArticles(result.list)
+                super.onPostExecute(result)
+            }
+        }
+        task().execute()
+    }
+
+    private data class ResultPasser(val times:Int,val
+    list:List<FeedArticleDataHolder.FeedArticleHolder>)
+    /*private class deleteTaskAllBooleanAsync internal
+    constructor(commstr : JSONObject,
+                bodyasis : Boolean = false,
+                checkforbots:Boolean = false,
+                val content: JSONObject?,
+                val arr:JSONArray?,
+                private val jni:JsonRpcResultInterface?):
+            AsyncTask<Void, Void, Void>(){
+        override fun doInBackground(vararg params: Void): Void? {
+            if(arr != null){
+                var runTimes = 0
+                var returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList()
+                for (x in 0 until arr.length()){
+
+                    //var st = x.toString()
+                    try{
+                        val ss = arr.getString(x)
+                        if(ss != null){
+                            val commstr : JSONObject? = content?.getJSONObject(ss)
+
+                            //if jni is not null we do a callback for saving to db,
+                            //else accumulate in the list and return
+                            if(commstr != null){
+                                if(jni != null){
+                                    jni?.insert(getprocessedfeed(commstr)!!)
+                                } else {
+                                    returndata.add(getprocessedfeed(commstr)!!)
+                                }
+                                runTimes++
+                            }
+
+
+                        }
+                    }
+                    catch (ex : Exception){
+                        ex.message
+                    }
+                }
+                jni?.processingDone(runTimes)
+                return returndata
+            }
+
+            return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            jni?.deleDone()
+            super.onPostExecute(result)
+        }
+    }*/
 }

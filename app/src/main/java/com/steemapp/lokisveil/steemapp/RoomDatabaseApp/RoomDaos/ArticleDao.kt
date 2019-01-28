@@ -45,7 +45,7 @@ interface ArticleDao {
     fun getPagedList(isBlog:Boolean = false): DataSource.Factory<Int,FeedArticleDataHolder.FeedArticleHolder>
 
     //get a paged list of all items ordered by savetime
-    @Query("SELECT id,myDbKey,active,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,lastPayout,lastUpdate,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,uservoted,width,isBlog,saveTime from article_holder where isBlog == :isBlog ORDER BY saveTime DESC")
+    @Query("SELECT id,myDbKey,active,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,lastPayout,lastUpdate,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,displayImage,summary,tags,title,total_pending_payout_value,useFollow,uservoted,width,isBlog,saveTime from article_holder where isBlog == :isBlog ORDER BY saveTime DESC")
     fun getPagedListTime(isBlog:Boolean = false): DataSource.Factory<Int,FeedArticleDataHolder.FeedArticleHolder>
 
     //get a paged list after an id

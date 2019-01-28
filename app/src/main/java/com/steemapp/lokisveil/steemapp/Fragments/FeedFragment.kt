@@ -60,6 +60,9 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
         vm?.insert(data)
     }
 
+    override fun processedArticles(data: List<FeedArticleDataHolder.FeedArticleHolder>) {
+        displayMessageFeddArticle(data)
+    }
 
     //callback when deleting is done
     override fun deleDone() {
@@ -133,12 +136,18 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
                 if(pagedList != null && pagedList.size > 0){
                     //submit the list to the adapter
                     adapter?.submitList(pagedList as PagedList<Any>)
-                    val fir = pagedList.firstOrNull()
-                    if(lastSaveOneCheck && lastSaveTime != 0L && fir != null && lastSaveTime < fir.saveTime){
-                        recyclerView?.scrollToPosition(0)
-                        lastSaveOneCheck = false
-                    } else if(lastSaveTime == 0L){
-                        lastSaveTime = pagedList.first().saveTime
+                    if(lastSaveOneCheck){
+                        val fir = pagedList.firstOrNull()
+                        if(lastSaveOneCheck && lastSaveTime != 0L && fir != null){
+                            if(lastSaveTime < fir.saveTime){
+                                recyclerView?.scrollToPosition(0)
+                            }
+                            lastSaveOneCheck = false
+                        }
+
+                        if(lastSaveTime == 0L){
+                            lastSaveTime = pagedList.first().saveTime
+                        }
                     }
                     //swipecommonactionsclass?.makeswipestop()
                 } else if(pagedList != null && pagedList.size == 0){
@@ -330,13 +339,15 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
         if (context == null) return
         //we pass jni into the constructor to not get a list back but insert into the db
         val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.blog,context!!,this,false)
-        val result = con.ParseJsonBlogMore()
+        con.processBlogMoreAsync(this)
+
+        /*val result = con.ParseJsonBlogMore()
         if(result != null && !result.isEmpty()){
             displayMessageFeddArticle(result)
         }
         else{
-            displayMessageFeddArticle(ArrayList<FeedArticleDataHolder.FeedArticleHolder>())
-        }
+            displayMessageFeddArticle(ArrayList())
+        }*/
     }
 
     /**
@@ -348,10 +359,11 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
         if (context == null) return
         //we pass jni into the constructor to not get a list back but insert into the db
         val con = JsonRpcResultConversion(response,nametouse,TypeOfRequest.feed,context!!,this,false)
-        val result = con.ParseJsonBlog()
+        con.processBlogAsync(this)
+        /*val result = con.ParseJsonBlog()
         if(result != null && !result.isEmpty()){
             displayMessageFeddArticle(result)
-        }
+        }*/
 
         val req = RequestsDatabase(context!!)
         //delete old items

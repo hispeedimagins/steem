@@ -16,6 +16,9 @@ interface JsonRpcResultInterface {
     fun insert(data: List<FeedArticleDataHolder.FeedArticleHolder>){
 
     }
+    fun processedArticles(data: List<FeedArticleDataHolder.FeedArticleHolder>){
+
+    }
     fun insert(data: prof.Resultfp){
 
     }

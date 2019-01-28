@@ -120,12 +120,21 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
                     if(pagedList != null && pagedList.size > 0){
                         //submit the list to the adapter
                         adapter?.submitList(pagedList as PagedList<Any>)
-                        if(lastSaveOneCheck && lastSaveTime != 0L && lastSaveTime < pagedList.first().saveTime){
-                            recyclerView?.scrollToPosition(0)
-                            lastSaveOneCheck = false
-                        } else if(lastSaveTime == 0L){
-                            lastSaveTime = pagedList.first().saveTime
+
+                        if(lastSaveOneCheck){
+                            val fir = pagedList.firstOrNull()
+                            if(lastSaveOneCheck && lastSaveTime != 0L && fir != null){
+                                if(lastSaveTime < fir.saveTime){
+                                    recyclerView?.scrollToPosition(0)
+                                }
+                                lastSaveOneCheck = false
+                            }
+
+                            if(lastSaveTime == 0L){
+                                lastSaveTime = pagedList.first().saveTime
+                            }
                         }
+
                         //swipecommonactionsclass?.makeswipestop()
                     } else if(pagedList != null && pagedList.size == 0){
                         adapter?.submitList(pagedList as PagedList<Any>)
