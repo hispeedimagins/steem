@@ -4,13 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.support.v7.widget.RecyclerView
-import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.commonsware.cwac.anddown.AndDown
-import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
 import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.GetReputationDataHolder
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
@@ -19,7 +17,6 @@ import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
 import com.steemapp.lokisveil.steemapp.MyViewHolders.followViewHolder
 import com.steemapp.lokisveil.steemapp.OpenOtherGuyBlog
 import com.steemapp.lokisveil.steemapp.R
-import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 
 //class for displaying the users in search results
 class SearchUsersHelperFunctions(context : Context, username:String?, adapter: arvdinterface, adpterType: AdapterToUseFor) {
@@ -53,11 +50,11 @@ class SearchUsersHelperFunctions(context : Context, username:String?, adapter: a
         var fol : String? = holder.userUseWithSearch?.account
 
         holder.article_name?.text = holder.userUseWithSearch?.displayName
-        holder.article_name?.setOnClickListener(View.OnClickListener {
+        holder.article_name?.setOnClickListener {
             val i = Intent(con, OpenOtherGuyBlog::class.java)
             i.putExtra(CentralConstants.OtherGuyNamePasser,fol)
             con.startActivity(i)
-        })
+        }
         //options for glide to display the profile picture
         val options = RequestOptions()
                 .centerCrop()

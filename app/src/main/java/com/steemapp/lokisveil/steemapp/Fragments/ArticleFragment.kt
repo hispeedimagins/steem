@@ -2,67 +2,48 @@ package com.steemapp.lokisveil.steemapp.Fragments
 
 
 /*import `in`.uncod.android.bypass.Bypass*/
-import android.annotation.TargetApi
+
 import android.app.Activity
-import android.app.FragmentManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
-import android.support.v4.widget.NestedScrollView
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
 import android.text.Html
-import android.text.Spannable
-import android.text.format.DateUtils
-import android.text.format.DateUtils.SECOND_IN_MILLIS
-import android.text.format.DateUtils.WEEK_IN_MILLIS
 import android.text.method.LinkMovementMethod
-import android.text.method.Touch.onTouchEvent
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import br.tiagohm.markdownview.css.styles.Bootstrap
 import br.tiagohm.markdownview.css.styles.Github
 import br.tiagohm.markdownview.js.ExternalScript
-import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
-import com.commonsware.cwac.anddown.AndDown
-import com.commonsware.cwac.anddown.AndDown.*
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.*
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Databases.drafts
-import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
-import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
 import com.steemapp.lokisveil.steemapp.Interfaces.ArticleActivityInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.WebAppInterface
 import com.steemapp.lokisveil.steemapp.MyViewHolders.ArticleViewHolder
-
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
@@ -71,18 +52,7 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.ReblogOperation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperation
 import com.steemapp.lokisveil.steemapp.jsonclasses.Block
-import com.steemapp.lokisveil.steemapp.jsonclasses.feed
-import com.steemapp.lokisveil.steemapp.jsonclasses.prof
-import kotlinx.android.synthetic.main.article_preview.*
-import org.apache.commons.text.StringEscapeUtils
-
-import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
-import org.intellij.markdown.html.HtmlGenerator
-import org.intellij.markdown.parser.MarkdownParser
 import org.json.JSONObject
-import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.time.Period
 import java.util.*
 import java.util.regex.Pattern
 
@@ -369,7 +339,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
         // decide if edit is to be used
         if(username != null && username == holder.article?.author){
             holder.article_edit?.visibility = View.VISIBLE
-            holder.article_edit?.setOnClickListener(View.OnClickListener {
+            holder.article_edit?.setOnClickListener {
                 if(context != null){
                     var tags = ""
                     if(holder.article?.tags != null){
@@ -402,7 +372,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
 
 
 
-            })
+            }
         }
         else{
             holder.article_edit?.visibility = View.GONE
@@ -437,21 +407,21 @@ class ArticleFragment : Fragment() , GlobalInterface {
         else{
             holder.article_resteemed_by?.visibility = View.VISIBLE
             holder.article_resteemed_by?.text = "by "+ holder.article?.reblogBy?.get(0)
-            holder.article_resteemed_by?.setOnClickListener(View.OnClickListener {
+            holder.article_resteemed_by?.setOnClickListener {
                 val i = Intent(context, OpenOtherGuyBlog::class.java)
                 i.putExtra(CentralConstants.OtherGuyNamePasser,holder.article?.reblogBy?.get(0))
                 context?.startActivity(i)
-            })
+            }
         }
         holder.article_tag?.text = "in "+ holder.article?.category
-        holder.article_tag?.setOnClickListener(View.OnClickListener {
+        holder.article_tag?.setOnClickListener {
             var it = Intent(context,MainTags::class.java)
             it.putExtra(CentralConstants.MainRequest,"get_discussions_by_trending")
             it.putExtra(CentralConstants.MainTag,holder.article?.category)
             it.putExtra(CentralConstants.OriginalRequest,"trending")
             context?.startActivity(it)
 
-        })
+        }
         holder.article_title?.text = holder.article?.title
         //val and = AndDown()
         //val s : String = and.markdownToHtml(holder.article?.body, AndDown.HOEDOWN_EXT_QUOTE, 0)

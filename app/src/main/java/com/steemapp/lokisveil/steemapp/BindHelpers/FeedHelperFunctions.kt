@@ -137,11 +137,11 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
         if(holder.article?.reblogBy == null || holder.article?.reblogBy?.isEmpty() as Boolean){
             holder.article_resteemed_by?.visibility = View.GONE
             //hide the resteem bar if there are no resteems
-            holder.article_resteemed_by_Linear?.visibility = View.GONE
+            //holder.article_resteemed_by_Linear?.visibility = View.GONE
         }
         else{
             holder.article_resteemed_by?.visibility = View.VISIBLE
-            holder.article_resteemed_by_Linear?.visibility = View.VISIBLE
+            //holder.article_resteemed_by_Linear?.visibility = View.VISIBLE
             holder.article_resteemed_by?.text = "by "+ holder.article?.reblogBy?.get(0)
             holder.article_resteemed_by?.setOnClickListener {
                 val i = Intent(con, OpenOtherGuyBlog::class.java)
@@ -191,7 +191,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
             myIntent.putExtra("username", if(holder.article?.rootAuthor != null) holder.article?.rootAuthor else holder.article?.author)
             myIntent.putExtra("tag", holder.article?.category)
             myIntent.putExtra("permlink", if(holder.article?.rootPermlink != null) holder.article?.rootPermlink else holder.article?.permlink)
-            myIntent.putExtra("dbId",holder?.article?.myDbKey)
+            if(holder.article?.myDbKey != 0)myIntent.putExtra("dbId",holder.article?.myDbKey)
             if(adaptype == AdapterToUseFor.commentNoti || adaptype == AdapterToUseFor.replyNoti) myIntent.putExtra("permlinkToFind",holder.article?.permlink)
 
             con.startActivity(myIntent)

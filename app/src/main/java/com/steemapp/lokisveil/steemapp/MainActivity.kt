@@ -19,7 +19,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -27,11 +30,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
-import com.steemapp.lokisveil.steemapp.jsonclasses.prof
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import com.google.gson.reflect.TypeToken
-import com.splunk.mint.Mint
 import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Fragments.FeedFragment
 import com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment
@@ -41,6 +40,9 @@ import com.steemapp.lokisveil.steemapp.Interfaces.TagsInterface
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
+import com.steemapp.lokisveil.steemapp.jsonclasses.prof
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.follow_progress.*
 import kotlinx.android.synthetic.main.nav_header_main.*
@@ -551,7 +553,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                         //.error(R.drawable.error)
                                         .priority(Priority.HIGH)
                                         .circleCrop()
-                                Glide.with(applicationContext).load(resultp.profile.profileImage)
+                                Glide.with(applicationContext).load(CentralConstants.GetFeedImageUrl(username))
                                         .apply(options)
                                         .into(pfp as ImageView)
                                 val optionss = RequestOptions()
