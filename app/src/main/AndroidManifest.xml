@@ -3,8 +3,8 @@
     package="com.steemapp.lokisveil.steemapp">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -254,10 +254,10 @@
             android:label="@string/title_activity_follow_display"
             android:theme="@style/Plaid.Home" />
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".Post"
             android:label="@string/title_activity_post"
-            android:theme="@style/Plaid.Home" />
+            android:theme="@style/Plaid.Home"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".DraftActivity"
             android:label="@string/title_activity_draft"
@@ -313,8 +313,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/all_app_widget_info" />
         </receiver>
-
-
         <receiver android:name=".HelperClasses.LgAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -331,16 +329,14 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
 
-        <service android:name=".WidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS">
-
-        </service>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -349,11 +345,17 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name=".ImageDownloadActivity"
+            android:label="@string/title_activity_image_download"
+            android:theme="@style/Plaid"></activity>
     </application>
 
 </manifest>
