@@ -3,9 +3,11 @@ package com.steemapp.lokisveil.steemapp.BindHelpers
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -51,11 +53,13 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
     internal var metrics: DisplayMetrics = metrics
     var selectedPos = -1
     var floatingDateHolder = dateHolder
+    var animatedVec : AnimatedVectorDrawableCompat? = null
     init {
         if(name == null){
             val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
             name = sharedpref.getString(CentralConstants.username,null)
         }
+        animatedVec = AnimatedVectorDrawableCompat.create(con,R.drawable.animated_loader)
         var attrs  = intArrayOf(R.attr.textColorMine)
         var ta = context.obtainStyledAttributes(attrs)
         var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
@@ -269,7 +273,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
                     //tx.setTextColor(ContextCompat.getColor(con,R.color.black))
                     lparams.setMargins(GetPx(5f),0,GetPx(5f),0)
                     tx.layoutParams = lparams
-                    tx.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15.0f)
+                    tx.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.0f)
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                         // tvDocument.setText(Html.fromHtml(bodyData,Html.FROM_HTML_MODE_LEGACY))
                         tx.text = Html.fromHtml(x,Html.FROM_HTML_MODE_LEGACY,null, MyLiTagHandler())
@@ -279,20 +283,21 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
                         tx.text = Html.fromHtml(x,null,MyLiTagHandler())
                         //webview?.loadDataWithBaseURL("",s,null,"UTF-8",null)
                     }
+                    tx.movementMethod = LinkMovementMethod()
                     holder?.openarticle?.addView(tx)
                 }
                 else if(x is Int){
                     var iamge = ImageView(con)
                     iamge.layoutParams = lparams
                     iamge.adjustViewBounds = true
-                    val options = RequestOptions()
-
-                            .placeholder(R.drawable.ic_all_inclusive_black_24px)
+                    val noptions = RequestOptions()
+                            .placeholder(animatedVec)
                             //.error(R.drawable.error)
                             .priority(Priority.HIGH)
+                    animatedVec?.start()
                     holder?.openarticle?.addView(iamge)
                     var url = holder?.article?.image!![x]
-                    Glide.with(con).load(url).apply(options)
+                    Glide.with(con).load(url).apply(noptions)
                             // .placeholder(R.drawable.common_full_open_on_phone)
                             .into(iamge)
 

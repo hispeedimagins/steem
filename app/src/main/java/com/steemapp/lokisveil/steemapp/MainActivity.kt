@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.design.widget.TabLayout
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -48,7 +49,7 @@ import kotlinx.android.synthetic.main.follow_progress.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import java.util.*
 import kotlin.collections.ArrayList
-
+import com.splunk.mint.Mint
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,TagsInterface,GlobalInterface {
     override fun notifyRequestMadeSuccess() {
@@ -142,6 +143,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     internal var blogFragment :MyFeedFragment? = null
     internal var viewPagerAdapteradapter: ViewPagerAdapter? = null
     lateinit var runs: GeneralRequestsFeedIntoConstants
+    var animatedVec : AnimatedVectorDrawableCompat? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyTheme(this@MainActivity)
 
@@ -159,7 +161,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(i)
         }
         Mint.initAndStartSession(this.application, "dd37aa8e")
-
+        animatedVec = AnimatedVectorDrawableCompat.create(this,R.drawable.animated_loader)
         //for updating the value of the voting power when the drawer is opened
         //and readding the images and removing them to save RAM - next build
         val toggle = object : ActionBarDrawerToggle(

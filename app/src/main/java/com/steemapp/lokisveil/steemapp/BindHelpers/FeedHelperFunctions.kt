@@ -7,6 +7,7 @@ import eu.bittrade.libs.steemj.base.models.Permlink*/
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -49,14 +50,14 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
     //val globallist = ArrayList<Any>()
     val adaptype = adpterType
     var floatingDateHolder:FloatingDateHolder? = null
-
+    var animatedVec : AnimatedVectorDrawableCompat? = null
     init {
         floatingDateHolder = dateHolder
         if(name == null){
             name = sharedpref.getString(CentralConstants.username,null)
 
         }
-
+        animatedVec = AnimatedVectorDrawableCompat.create(con,R.drawable.animated_loader)
         val attrs  = intArrayOf(R.attr.textColorMine)
         val ta = context.obtainStyledAttributes(attrs)
         val textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
@@ -160,7 +161,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
             con.startActivity(it)
 
         }
-        holder.article_title?.text = holder.article?.title
+        holder.article_title?.text = holder.article?.title?.toUpperCase()
 
 
         if(adaptype == AdapterToUseFor.commentNoti || adaptype == AdapterToUseFor.replyNoti){
@@ -171,12 +172,14 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
             val im = holder.article?.displayImage
             if(im != null){
                 holder.article_image?.visibility = View.VISIBLE
+                //holder.article_image!!.setImageDrawable(animatedVec)
+
                 val optionss = RequestOptions()
                         .centerCrop()
-                        .placeholder(R.drawable.ic_all_inclusive_black_24px)
+                        .placeholder(animatedVec)
                         //.error(R.drawable.error)
                         .priority(Priority.HIGH)
-
+                animatedVec?.start()
                 //use first of null so the app does not crash if no images exist
                 Glide.with(con).load(im).apply(optionss)
                         .into(holder.article_image!!)
