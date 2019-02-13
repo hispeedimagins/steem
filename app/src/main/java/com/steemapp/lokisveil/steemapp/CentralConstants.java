@@ -47,6 +47,8 @@ public class CentralConstants {
     public static final String ArticlePermlinkToFindPasser = "permlinkToFind";
     public static final String ArticleNotiType = "notificationtypear";
 
+    public static final String ImageDownloadUrlPasser = "imageDownloadUrlPasser";
+
     public static final int FiveDaysInSeconds = 432000;
     public static final int SteemFullVote = 10000;
 

@@ -36,7 +36,7 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import java.util.*
 import kotlin.collections.ArrayList
 import android.arch.paging.AsyncPagedListDiffer
-
+import com.steemapp.lokisveil.steemapp.DataHolders.ImageDownloadDataHolder
 
 
 /**
@@ -157,6 +157,8 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
     private val isHeader = 900
     private val isSearchUser = 1000
     private val isDate = 1100
+    private val isImageDownloadView = 1200
+
     internal var datetopaste: Calendar? = null
     private val pastethedatespecifically: Boolean = false
     private val messagecounter: Long = 0
@@ -174,6 +176,7 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
     var headerHelperFunctions : HeaderHelperFunctions? = null
     var searchUsersHelperFunctions:SearchUsersHelperFunctions? = null
     var floatingDateHolder : FloatingDateHolder? = null
+    var imageDownloadHelperFunctions : ImageDownloadViewBindHelperFunctions? = null
     //private val adRequest: com.google.android.gms.ads.AdRequest? = null
     internal var adapterInterface: AllRecyclerViewAdapterInterface? = null
     var apptype = initiate
@@ -253,6 +256,9 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
                 this.searchUsersHelperFunctions = SearchUsersHelperFunctions(context as Context,appUserName as String ,this,AdapterToUseFor.followers)
                 this.headerHelperFunctions = HeaderHelperFunctions(context as Context,appUserName as String,this,apptype)
             }
+            AdapterToUseFor.imageDownload -> {
+                this.imageDownloadHelperFunctions = ImageDownloadViewBindHelperFunctions(context!!,appUserName!!,this)
+            }
             else -> {
             }
         }
@@ -311,6 +317,12 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
         else if(viewType == isDate){
             v = LayoutInflater.from(parent.context).inflate(R.layout.dateresourceforchat, parent, false)
             vh = DateViewHolder(v)
+        } else if(viewType == isImageDownloadView){
+            v = LayoutInflater.from(parent.context).inflate(R.layout.image_download_item_mini,parent,false)
+            vh = ImageDownloaderItemViewHolder(v)
+            v?.setOnClickListener {
+                imageDownloadHelperFunctions?.setSelectedPosition(vh)
+            }
         }
         /*
         } else if (viewType == isOpenAQuestionView) {
@@ -324,7 +336,7 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
                 openAQuestionHelperFunctions.OpenQuestionClickPasser(vhf)
             }
         */
-        return vh as RecyclerView.ViewHolder
+        return vh!!
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -370,6 +382,8 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
         }
         else if( ht == isDate){
             floatingDateHolder?.BindDateToDateTitle(holder,position)
+        } else if(ht == isImageDownloadView){
+            imageDownloadHelperFunctions?.Bind(holder,position)
         }
 
 
@@ -431,6 +445,8 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
         }
         else if(ins is DateTypeAndStringHolder){
             return isDate
+        } else if(ins is ImageDownloadDataHolder){
+            return isImageDownloadView
         }
 
         return isFeedView
@@ -618,5 +634,8 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
     }
 
 
+    override fun objectClicked(data: Any?) {
+        globalInterface?.objectClicked(data)
+    }
 }
 

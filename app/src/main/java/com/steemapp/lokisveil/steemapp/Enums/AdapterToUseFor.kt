@@ -17,5 +17,6 @@ enum class AdapterToUseFor {
     commentNoti,
     replyNoti,
     beneficiaries,
-    search
+    search,
+    imageDownload
 }

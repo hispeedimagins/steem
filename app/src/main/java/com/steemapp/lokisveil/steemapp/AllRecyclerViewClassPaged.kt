@@ -624,5 +624,7 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
 
     }
 
-
+    override fun objectClicked(data: Any?) {
+        globalInterface?.objectClicked(data)
+    }
 }
