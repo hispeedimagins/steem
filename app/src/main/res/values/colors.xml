@@ -1,17 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--<color name="colorPrimary">#1565c0</color>
+    <color name="colorPrimaryLight">#5e92f3</color>
+    <color name="colorPrimaryDark">#003c8f</color>
+    <color name="colorAccent">#c2185b</color>
+    <color name="secondaryLightColor">#fa5788</color>
+    <color name="colorAccentDark">#8c0032</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#ffffff</color>-->
     <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     &lt;!&ndash;<color name="colorAccent">#4aa87a</color>&ndash;&gt;
     <color name="colorAccent">#FF4081</color>-->
 
-    <color name="colorPrimary">#6200EE</color>
+    <!--<color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryLight">#484848</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#c2185b</color>
+    <color name="secondaryLightColor">#fa5788</color>
+    <color name="colorAccentDark">#8c0032</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#ffffff</color>-->
+
+    <color name="colorPrimary">#c2185b</color>
+    <color name="colorPrimaryLight">#fa5788</color>
+    <color name="colorPrimaryDark">#8c0032</color>
+    <color name="colorAccent">#fbc02d</color>
+    <color name="secondaryLightColor">#fff263</color>
+    <color name="colorAccentDark">#c49000</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#000000</color>
+
+    <!--<color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorPrimaryLight">#BB86FC</color>
-    <!--<color name="colorAccent">#4aa87a</color>-->
-    <color name="colorAccent">#03DAC6</color>
-    <color name="colorAccentDark">#018786</color>
 
+    <color name="colorAccent">#03DAC6</color>
+    <color name="colorAccentDark">#018786</color>-->
+    <!--<color name="colorAccent">#4aa87a</color>-->
 
     <color name="black">#000</color>
     <color name="white">#ffffff</color>

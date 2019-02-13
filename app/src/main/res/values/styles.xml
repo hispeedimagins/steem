@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -19,7 +20,7 @@
 
     <style name="MyMaterialTheme.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/dribbble_dark</item>
-
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="MyOverflowText" parent="TextAppearance.AppCompat.Medium">
@@ -38,7 +39,7 @@
     </style>
 
     <style name="MyMaterialTheme.NormalText" parent="Widget.AppCompat.EditText">
-
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginTop">5dp</item>
@@ -49,11 +50,13 @@
     <style name="Plaid.AlertDialog.AppCompat" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:popupBackground">@color/background_light</item>
         <item name="android:background">@color/background_light</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="Plaid.AlertDialog.AppCompat.Dark" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:popupBackground">@color/background_dark</item>
         <item name="android:background">@color/background_dark</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
 
@@ -76,6 +79,7 @@
         <item name="android:textColorSecondary">@color/text_disabled_light</item>
         <item name="android:textColorPrimary">@color/text_primary_light</item>
         <item name="android:alertDialogTheme">@style/Plaid.AlertDialog.AppCompat.Dark</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
 
@@ -85,7 +89,7 @@
         <!--<item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/primary</item>-->
         <item name="android:itemBackground">@color/background_dark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="textColorAlertDialogListItem">@color/background_light</item>
         <item name="mybackgroundcolor">@color/background_light</item>
         <!--<item name="android:actionModeBackground">@color/background_dark</item>-->
@@ -97,6 +101,7 @@
         <item name="android:textColor">@color/text_primary_dark</item>
         <item name="android:textColorSecondary">@color/text_primary_dark</item>
         <item name="android:alertDialogTheme">@style/Plaid.AlertDialog.AppCompat</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
 
@@ -107,7 +112,7 @@
         <!--<item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/primary</item>-->
 
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionModeBackground">@color/background_dark</item>
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/hint_disabled_dark</item>
@@ -122,6 +127,7 @@
         <item name="textColorMineInverse">@color/background_light</item>
         <item name="android:textColorPrimary">@color/text_primary_dark</item>
         <item name="android:alertDialogStyle">@style/Plaid.AlertDialog.AppCompat</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <!--<item name="android:navigationBarColor">@color/primary_super_dark</item>
         <item name="android:statusBarColor">@color/background_super_dark</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
@@ -131,11 +137,13 @@
 
 
     <style name="Plaid.Dark" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!-- <item name="colorPrimary">@color/colorPrimary</item>-->
-        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
         <!-- <item name="colorAccent">@color/colorAccent</item>-->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorAccent">@color/accent</item>
+        <!--<item name="colorPrimary">@color/primary</item>-->
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionModeBackground">@color/background_dark</item>
 
         <item name="android:colorBackground">@color/background_light</item>
@@ -150,8 +158,7 @@
         <item name="textColorMineInverse">@color/text_primary_dark</item>
         <item name="android:textColorPrimary">@color/text_primary_light</item>
         <item name="android:alertDialogStyle">@style/Plaid.AlertDialog.AppCompat.Dark</item>
-
-
+        <item name="android:fontFamily">sans-serif-light</item>
 
         <!--<item name="android:navigationBarColor">@color/primary_super_dark</item>
         <item name="android:statusBarColor">@color/background_super_dark</item>
@@ -164,6 +171,7 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <!--<item name="android:windowBackground">@color/background_dark</item>-->
         <!-- <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/immersive_bars</item>
@@ -177,7 +185,7 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
-
+        <item name="android:fontFamily">sans-serif-light</item>
         <!--<item name="android:windowBackground">@color/background_dark</item>-->
         <!-- <item name="android:windowDrawsSystemBarBackgrounds">true</item>
          <item name="android:statusBarColor">@color/immersive_bars</item>
@@ -195,6 +203,7 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <!-- <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
     </style>
 
@@ -212,9 +221,9 @@
         <item name="colorAccent">@color/designer_news</item>
         <item name="colorControlActivated">?colorAccent</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/hint_disabled_dark</item>
         <item name="android:popupBackground">@color/background_light</item>
@@ -240,10 +249,10 @@
         <item name="colorAccent">@color/designer_news</item>
         <item name="colorControlActivated">?colorAccent</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 
-
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:colorBackground">@color/background_light</item>
         <item name="android:textColorHint">@color/text_disabled_light</item>
         <item name="android:popupBackground">@color/background_dark</item>

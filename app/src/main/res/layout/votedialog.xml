@@ -10,6 +10,7 @@
         android:orientation="vertical"
         >
         <NumberPicker
+
             android:visibility="gone"
             android:id="@+id/dialog_number_picker"
             android:layout_width="match_parent"
@@ -19,6 +20,7 @@
             android:id="@+id/dialog_seekbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
         <!--<SeekBar
             android:id="@+id/dialog_seekbar"
             android:layout_width="match_parent"
@@ -26,14 +28,15 @@
 
         <TextView
             android:textAlignment="center"
-
+            android:fontFamily="sans-serif-light"
             android:id="@+id/dialog_vote_percent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:textAlignment="center"
 
+            android:textAlignment="center"
+            android:fontFamily="sans-serif-light"
             android:id="@+id/dialog_sbdworth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

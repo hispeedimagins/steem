@@ -4,14 +4,14 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:markdown="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:cardBackgroundColor="?attr/cardBackgroundColor"
     app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="true"
     contentPadding="1dp"
     android:layout_margin="5dp"
     android:layout_gravity="center_horizontal"
-    android:id="@+id/cardviewchat"
-    >
+    android:id="@+id/cardviewchat">
 
     <LinearLayout
         android:padding="2dp"
@@ -130,7 +130,7 @@
                     android:id="@+id/article_name"
                     android:text="name"
 
-
+                    tools:fontFamily="@font/roboto_light"
                     android:textStyle="bold"
                     />
 
