@@ -2,12 +2,14 @@ package com.steemapp.lokisveil.steemapp.HelperClasses
 
 import android.Manifest
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.design.widget.TextInputLayout
@@ -19,6 +21,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import com.steemapp.lokisveil.steemapp.MiscConstants
 import com.steemapp.lokisveil.steemapp.R
 import com.yalantis.ucrop.UCrop
@@ -235,8 +238,8 @@ class ImagePickersWithHelpers{
          * @param activity the activity which is requesting it
          * @return returns false if permissions need to be request else true
          */
-        fun getCameraPermission(applicationContext: Context, context: Context,activity: Activity):Boolean{
-            val perm = getCameraPermissions()
+        fun getCameraPermission(applicationContext: Context, context: Context,activity: Activity,
+                                perm:Array<String> = getCameraPermissions()):Boolean{
             if (!EasyPermissions.hasPermissions(applicationContext, *perm)) {
                 EasyPermissions.requestPermissions(activity, context.getString(R.string.camera_permission),
                         RC_CAMERA_STORAGE_PERMS, *perm)
@@ -244,6 +247,16 @@ class ImagePickersWithHelpers{
             }
             return true
         }
+
+        /**
+         * fetches the permission array required for saving a picture
+         * @return Array<String> with permissions to request.
+         */
+        fun getExternalStoragePermissions():Array<String>{
+            return arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+
+
 
         /**
          * Starts the camera for taking a photo
@@ -322,6 +335,82 @@ class ImagePickersWithHelpers{
             return image
         }
 
+
+
+
+
+        /**
+         * Starts the camera for taking a photo
+         * @param applicationContext the application context
+         * @param context the acitvity context
+         * @param activity the acitvity
+         */
+        fun saveImage(applicationContext: Context, context: Context,activity: Activity,url:String,title:String) {
+            // Check that we have permission to read images from external storage.
+            //String perm = Manifest.permission.CAMERA;
+            if(!getCameraPermission(applicationContext,context,activity, getExternalStoragePermissions())){
+                return
+            }
+
+            startImageDownload(context,url,title)
+        }
+
+
+
+        fun getPublicAlbumStorageDir(albumName: String): File? {
+            // Get the directory for the user's public pictures directory.
+            val file = File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), albumName)
+            if (!file?.mkdirs()) {
+                Log.e("firecreation", "Directory not created")
+                //return null
+            }
+            return file
+        }
+
+
+        /**
+         * Checks the download progress in the android system and displays
+         * a toast to the user which shows to progress of the download in percentage
+         */
+        fun startImageDownload(context: Context,url:String,title:String) {
+            class someTask : AsyncTask<Void, Void, Long>() {
+                override fun doInBackground(vararg params: Void?): Long {
+                    var downloadRef = 0L
+                    try{
+                        val fileurl = url
+                        val dl  = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                        val fileDir = getPublicAlbumStorageDir("steemer")
+                        if(fileDir != null){
+                            val file = File(fileDir, "$title.jpg")
+                            val req = DownloadManager.Request(Uri.parse(fileurl))
+                            req.setDestinationUri(Uri.fromFile(file))
+                            req.setTitle(title)
+                            req.setDescription("Image")
+                            downloadRef = dl.enqueue(req)
+                        }
+
+                    } catch (ex:Exception){
+                        Log.d("download ex",ex.message)
+                    }
+
+
+                    return downloadRef
+                }
+
+                override fun onPostExecute(result: Long) {
+                    if(result != 0L){
+                        Toast.makeText(context,context.getString(R.string.download_request_made), Toast.LENGTH_LONG).show()
+                    }
+
+                    super.onPostExecute(result)
+                }
+
+            }
+            someTask().execute()
+
+
+        }
 
 
     }
