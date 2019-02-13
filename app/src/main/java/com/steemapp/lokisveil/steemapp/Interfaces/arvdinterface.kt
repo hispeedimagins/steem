@@ -32,4 +32,6 @@ interface arvdinterface {
     fun getActivity(): Activity
     abstract fun AddItemDivider()
     fun GetGlobalInterface() : GlobalInterface?
+
+    fun objectClicked(data:Any?)
 }

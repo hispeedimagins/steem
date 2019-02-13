@@ -145,19 +145,15 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        //MiscConstants.Companion.ApplyMyTheme(context);
+        MiscConstants.Companion.ApplyMyTheme(context);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
-
         super.onCreateView(inflater,container,savedInstanceState);
         //int th = getTheme();
         view = inflater.inflate(R.layout.addaquestionbottom, container, false);
-
 
         //view = v;
 

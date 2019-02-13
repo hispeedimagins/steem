@@ -19,8 +19,8 @@ interface GlobalInterface {
      fun notifyitemcchanged(position: Int)
      fun notifyitemcchanged(position: Int,payload:Any)*/
 
-    fun notifyRequestMadeSuccess()
-    fun notifyRequestMadeError()
+    fun notifyRequestMadeSuccess(){}
+    fun notifyRequestMadeError(){}
      fun getObjectMine(): Any
      //fun getSize(): Int
 
@@ -76,6 +76,7 @@ interface GlobalInterface {
         return null
     }
 
+    fun objectClicked(data:Any?){}
 
 
     //fun AddItemDivider()
