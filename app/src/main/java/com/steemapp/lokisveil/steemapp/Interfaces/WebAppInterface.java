@@ -6,8 +6,12 @@ import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.steemapp.lokisveil.steemapp.CentralConstants;
+import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem;
+import com.steemapp.lokisveil.steemapp.ImageDownloadActivity;
 import com.steemapp.lokisveil.steemapp.OpenOtherGuyBlog;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +28,18 @@ public class WebAppInterface {
     }
     public WebAppInterface(ArticleActivityInterface c) {
         articleActivityInterface = c;
+    }
+
+    @JavascriptInterface
+    public void imageClicked(String url, String[] urls){
+        ArrayList<String> v =new ArrayList<String>();
+        for (int i =0;i<urls.length;i++) {
+            v.add(urls[i]);
+        }
+        CentralConstantsOfSteem.getInstance().setUrls(v);
+        Intent i = new Intent(articleActivityInterface.getContextMine(), ImageDownloadActivity.class);
+        i.putExtra(CentralConstants.ImageDownloadUrlPasser,url);
+        articleActivityInterface.getContextMine().startActivity(i);
     }
 
     /** Show a toast from the web page */

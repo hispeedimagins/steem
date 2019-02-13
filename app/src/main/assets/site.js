@@ -1,3 +1,5 @@
+var urls = []
+
 function setusernameslink(){
     var contents = document.getElementsByClassName("mylink");
     var tags = document.getElementsByClassName("mytag");
@@ -20,10 +22,6 @@ function setusernameslink(){
 
         },false);
     }
-
-
-
-
 }
 
  function ContentClick(event) {
@@ -83,4 +81,22 @@ function loadremark(mar) {
     );
     console.log("shit " + reb);
     document.getElementById("md").innerHTML = reb;
+    clickImagesSet()
+}
+
+function clickImagesSet(){
+    var allImages = document.getElementsByTagName("img");
+    for(var i = 0; i < allImages.length; i++){
+        console.log(allImages[i].src)
+        urls.push(allImages[i].src)
+        allImages[i].addEventListener("click", imageClicked, false);
+    }
+    console.log(urls)
+}
+
+function imageClicked(event){
+    console.log("image clicked",event.target.src,urls)
+    console.log(event.target.src)
+    console.log(urls)
+    Android.imageClicked(event.target.src,urls)
 }
