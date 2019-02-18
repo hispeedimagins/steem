@@ -1,12 +1,12 @@
 package com.steemapp.lokisveil.steemapp.HelperClasses
 
-import android.support.v7.widget.RecyclerView
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.widget.NestedScrollView
+
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.ScrollView
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.RecyclerView
 import com.github.clans.fab.FloatingActionMenu
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class FabHider(recyclerView: RecyclerView?, fabs: FloatingActionButton?,nestedscroll:NestedScrollView? = null) {

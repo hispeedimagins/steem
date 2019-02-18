@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text" />-->
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -44,7 +44,7 @@
         android:background="?attr/cardBackgroundColor"
         android:layout_gravity="center_horizontal"
         >
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
 
             android:id="@+id/TextMainOneTextLayout"
@@ -68,8 +68,8 @@
                 />
 
 
-        </android.support.design.widget.TextInputLayout>
-    </android.support.v7.widget.CardView>
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:padding="5dp"

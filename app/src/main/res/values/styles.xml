@@ -9,6 +9,13 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
+    <style name="AppTheme.LauncherSplash">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+    <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
+     <item name="colorPrimaryDark">@color/background_dark</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

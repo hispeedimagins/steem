@@ -1,5 +1,5 @@
 
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
 
 android:layout_width="match_parent"
 android:layout_height="match_parent"
@@ -11,13 +11,13 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 <!-- <include layout="@layout/layoutemptyfile"></include>-->
 
 
-<android.support.v4.widget.SwipeRefreshLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:id="@+id/activity_feed_swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/feedFragment"
@@ -25,7 +25,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        app:layoutManager="LinearLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context="com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment"
 
 
@@ -35,22 +35,6 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 <include layout="@layout/dateholderandanimator" />
-
-
-<!--<android.support.design.widget.FloatingActionButton
-    android:id="@+id/addaquestionfabmine"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
-    android:layout_margin="@dimen/fab_margin"
-    android:elevation="5dp"
-    android:src="@drawable/ic_add_white"
-    app:layout_anchor="@id/questionListFragment"
-    app:layout_anchorGravity="end|bottom"
-    />-->
-
-
-
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

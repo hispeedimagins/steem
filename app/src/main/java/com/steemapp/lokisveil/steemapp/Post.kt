@@ -1,34 +1,38 @@
 package com.steemapp.lokisveil.steemapp
 
-import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.Context
-import android.content.CursorLoader
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.annotation.NonNull
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.TabLayout
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.RecyclerView
+import android.util.Log
+import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.annotation.NonNull
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.loader.content.CursorLoader
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.github.clans.fab.FloatingActionMenu
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.tabs.TabLayout
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.ImageUploadedUrls
 import com.steemapp.lokisveil.steemapp.Databases.beneficiariesDatabase
@@ -48,7 +52,6 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.ImageUpload.SteemImag
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
 import com.yalantis.ucrop.UCrop
-import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.android.synthetic.main.bottom_sheet_beneficiaries_view.*
 import kotlinx.android.synthetic.main.content_post.*
@@ -103,15 +106,15 @@ ImagePickersWithHelpers.onTakePick{
     override fun attachCheckboxListner(box:CheckBox?) {
 
         //checkdevs(box?.isChecked!!)
-        box?.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener({buttonView, isChecked ->
+        box?.setOnCheckedChangeListener{buttonView, isChecked ->
 
             checkdevs(isChecked)
-        }))
+        }
     }
 
     //Use or remove develpers are beneficiaries
     fun checkdevs(isChecked:Boolean){
-        var ben = getList(false)
+        val ben = getList(false)
         var i = 0
         for(item in ben!!){
             /*var tagsi = item.tags?.trim()?.split(" ")
@@ -176,7 +179,7 @@ ImagePickersWithHelpers.onTakePick{
         beneficiaryrecycler?.adapter = beneficiaryAdapter
         beneficiaryBottomSheet?.state = BottomSheetBehavior.STATE_HIDDEN
         //beneficiaryAdapter?.beneficiaryHelperFunctionsOb?.addDummies()
-        var sd = beneficiariesDatabase(this@Post)
+        val sd = beneficiariesDatabase(this@Post)
         beneficiaryAdapter?.beneficiaryHelperFunctionsOb?.add(sd.GetAllQuestions())
         beneficiary_add_fab.setOnClickListener { view ->
             //var add = AddABeneficiary(this@Post,this@Post)
@@ -198,7 +201,7 @@ ImagePickersWithHelpers.onTakePick{
         post_menu_item.setOnClickListener { view ->
             fabmenu.close(true)
             //val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemePopUp(this@Post))
-            val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@Post))
+            val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@Post))
             alertDialogBuilder.setTitle("Post the article?")
             alertDialogBuilder.setMessage("This action is not reversible")
 
@@ -206,11 +209,11 @@ ImagePickersWithHelpers.onTakePick{
 
 
                 val mine = MakeOperationsMine()
-                var tags = writePost?.gettags()?.trim()
-                var title = writePost?.gettitle()?.trim()
-                var content = writePost?.getedittext()?.trim()
-                var ben = getList()
-                var sd = beneficiariesDatabase(this@Post)
+                val tags = writePost?.gettags()?.trim()
+                val title = writePost?.gettitle()?.trim()
+                val content = writePost?.getedittext()?.trim()
+                val ben = getList()
+                val sd = beneficiariesDatabase(this@Post)
                 for(item in ben!!){
                     if(item.isbuiltin == 0){
                         sd.update(item)
@@ -236,7 +239,7 @@ ImagePickersWithHelpers.onTakePick{
                         if(isedit){
                             //a different function called if it is for editing a post
                             //different enum used for GetDynamicAndBlock
-                            var ops = mine.updatePost(AccountName(username),Permlink(permlinkedit),title,content, tags?.split(" ")?.toTypedArray())
+                            val ops = mine.updatePost(AccountName(username),Permlink(permlinkedit),title,content, tags?.split(" ")?.toTypedArray())
                             val block = GetDynamicAndBlock(applicationContext, null, 0, ops, "posted $title", MyOperationTypes.edit_comment, writePost?.progressBar, this@Post)
                             block.GetDynamicGlobalProperties()
                         } else{
@@ -256,9 +259,9 @@ ImagePickersWithHelpers.onTakePick{
 
             }
 
-            alertDialogBuilder.setNegativeButton("No", DialogInterface.OnClickListener { diin, num ->
+            alertDialogBuilder.setNegativeButton("No") { diin, num ->
 
-            })
+            }
             val alertDialog = alertDialogBuilder.create()
 
             alertDialog.show()
@@ -318,10 +321,10 @@ ImagePickersWithHelpers.onTakePick{
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         //check the tags and see if we can enable a tag beneficiary
-                        var vtag = writePost?.gettags()?.trim()
-                        if(vtag?.isNotEmpty()!! && vtag?.isNotBlank()!!){
-                            var ben = getList(false)
-                            var tags = "\\b(?:${writePost?.gettags()?.trim()?.replace(" ","|")})\\b"
+                        val vtag = writePost?.gettags()?.trim()
+                        if(vtag?.isNotEmpty()!! && vtag.isNotBlank()){
+                            val ben = getList(false)
+                            val tags = "\\b(?:${writePost?.gettags()?.trim()?.replace(" ","|")})\\b"
                             val pattern = Pattern.compile(
                                     tags,
                                     Pattern.CASE_INSENSITIVE)
@@ -331,7 +334,7 @@ ImagePickersWithHelpers.onTakePick{
                                 if(tags?.contains(item.tags)!!){
                                     item.usenow = 1
                                 }*/
-                                if(pattern.matcher(item.tags?.trim()).find() && item.uncheckedbyuser == 0){
+                                if(pattern.matcher(item.tags.trim()).find() && item.uncheckedbyuser == 0){
                                     item.usenow = 1
                                     beneficiaryAdapter?.notifyitemcchanged(i,item)
                                 }
@@ -348,6 +351,9 @@ ImagePickersWithHelpers.onTakePick{
                     BottomSheetBehavior.STATE_DRAGGING -> {
                     }
                     BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED ->{
+
                     }
                 }
             }
@@ -381,7 +387,7 @@ ImagePickersWithHelpers.onTakePick{
 
     //sort the list by default and return it, alphabetically
     fun getList(getSorted:Boolean = true):List<FeedArticleDataHolder.beneficiariesDataHolder>?{
-        var arl = ArrayList<FeedArticleDataHolder.beneficiariesDataHolder>()
+        val arl = ArrayList<FeedArticleDataHolder.beneficiariesDataHolder>()
         for(item in beneficiaryAdapter?.getList()!!){
             arl.add(item as FeedArticleDataHolder.beneficiariesDataHolder)
         }
@@ -427,7 +433,8 @@ ImagePickersWithHelpers.onTakePick{
         }
          else if (resultCode == UCrop.RESULT_ERROR) {
             if(data != null){
-                val cropError = UCrop.getError(data);
+                val cropError = UCrop.getError(data)
+                Log.d("ucrop erro",if(cropError?.message != null) cropError.message else "" )
             }
         }
 
@@ -442,10 +449,10 @@ ImagePickersWithHelpers.onTakePick{
         val picUri : Uri   = imageUri!! //data.data
 
         filePath = imageUri?.path
-        var file = File(filePath)
+        val file = File(filePath)
 
         //val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(this@Post)
-        val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@Post))
+        val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@Post))
         alertDialogBuilder.setTitle("Upload this image?")
 
         val inflater = layoutInflater
@@ -463,7 +470,7 @@ ImagePickersWithHelpers.onTakePick{
                 override fun doInBackground(vararg params: Void?): String? {
                     //catch errors while signing and uploading the image and display them
                     try{
-                        var result = SteemImageUpload.uploadImage(AccountName(username),key,file,filePath )
+                        val result = SteemImageUpload.uploadImage(AccountName(username),key,file,filePath )
 
                         return result
                     } catch (ex:Exception){
@@ -479,8 +486,8 @@ ImagePickersWithHelpers.onTakePick{
 
                     //check if the reult is not null before adding it to the database
                     if(result != null){
-                        var db = ImageUploadedUrls(applicationContext)
-                        var ins = db.Insert(result!!)
+                        val db = ImageUploadedUrls(applicationContext)
+                        var ins = db.Insert(result)
                         writePost?.addtexturl(result,file.name)
                         writePost?.progress(View.GONE)
                     }
@@ -493,9 +500,9 @@ ImagePickersWithHelpers.onTakePick{
 
         }
 
-        alertDialogBuilder.setNegativeButton("No", DialogInterface.OnClickListener { diin, num ->
+        alertDialogBuilder.setNegativeButton("No") { diin, num ->
 
-        })
+        }
         val alertDialog = alertDialogBuilder.create()
 
         alertDialog.show()
@@ -524,11 +531,12 @@ ImagePickersWithHelpers.onTakePick{
     }
 
     // Get Path of selected image
-    private fun getPath(contentUri: Uri?): String {
+    private fun getPath(contentUri: Uri): String {
         val proj = arrayOf<String>(MediaStore.Images.Media.DATA)
         val loader = CursorLoader(applicationContext, contentUri, proj, null, null, null)
         val cursor = loader.loadInBackground()
-        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        val column_index = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        if(column_index == null) throw Exception()
         cursor.moveToFirst()
         val result = cursor.getString(column_index)
         cursor.close()
@@ -751,7 +759,7 @@ ImagePickersWithHelpers.onTakePick{
         private val mFragmentTitleList = ArrayList<String>()
         private var managers: FragmentManager? = null
 
-        private val mFragmentTags = HashMap<Int, String>()
+        private val mFragmentTags = SparseArray<String>()
 
         init {
             managers = manager

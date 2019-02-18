@@ -2,13 +2,12 @@ package com.steemapp.lokisveil.steemapp.BindHelpers
 
 import android.app.Activity
 import android.content.Context
-import android.support.v7.widget.CardView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.animation.TranslateAnimation
 import android.widget.TextView
-import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.steemapp.lokisveil.steemapp.DataHolders.DateTypeAndStringHolder
 import com.steemapp.lokisveil.steemapp.HelperClasses.calendarcalculations
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface

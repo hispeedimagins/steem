@@ -1,29 +1,30 @@
 package com.steemapp.lokisveil.steemapp
 
+//import com.google.android.gms.ads.AdRequest
+
 import android.app.Activity
-import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.os.AsyncTask
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-//import com.google.android.gms.ads.AdRequest
+import androidx.paging.AsyncPagedListDiffer
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import com.steemapp.lokisveil.steemapp.BindHelpers.*
 import com.steemapp.lokisveil.steemapp.DataHolders.DateTypeAndStringHolder
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.DataHolders.GetReputationDataHolder
+import com.steemapp.lokisveil.steemapp.DataHolders.ImageDownloadDataHolder
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Interfaces.AllRecyclerViewAdapterInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
@@ -34,16 +35,20 @@ import com.steemapp.lokisveil.steemapp.jsonclasses.OperationJson
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 import java.util.*
-import kotlin.collections.ArrayList
-import android.arch.paging.AsyncPagedListDiffer
-import com.steemapp.lokisveil.steemapp.DataHolders.ImageDownloadDataHolder
 
 
 /**
  * Created by boot on 2/4/2018.
+ * This is an AIO class to use for all recyclerviews. Makes life a lot easy
  */
 
 class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRecyclerView: RecyclerView, view: View?, initiate: AdapterToUseFor,globalInterface: GlobalInterface? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() , arvdinterface , FastScrollRecyclerView.SectionedAdapter {
+
+
+    /**
+     * called when you need to display the title at the
+     * scroller
+     */
     override fun getSectionName(position: Int): String {
         var ob = mValues?.get(position)
         when(apptype){
@@ -65,7 +70,7 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
 
     }
 
-    public class ArticlePaged():PagedListAdapter<FeedArticleDataHolder.FeedArticleHolder, ArticleViewHolder>(AllRecyclerViewAdapter.article_DIFF_CALLBACK){
+    public class ArticlePaged(): PagedListAdapter<FeedArticleDataHolder.FeedArticleHolder, ArticleViewHolder>(AllRecyclerViewAdapter.article_DIFF_CALLBACK){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
             return ArticleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.article_preview, parent, false))
         }
@@ -267,6 +272,9 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
     }
 
 
+    /**
+     * inflate the views here, decide using the return from the gettype function
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var v: View? = null
         var vh: RecyclerView.ViewHolder? = null
@@ -339,6 +347,10 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
         return vh!!
     }
 
+    /**
+     * this is where we bind the code with the data to the ui
+     * decide using the gettype function call the appropriate binder
+     */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val ht = getItemViewType(position)
@@ -390,16 +402,27 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
 
     }
 
+    /**
+     * clear the adapter and notify
+     */
     fun clear() {
         mValues?.clear()
         notifyDataSetChanged()
     }
 
+    /**
+     * add a Long value to the adapter and notify it
+     * @param num number to add
+     */
     fun add(num: Long) {
         mValues?.add(num)
         notifyDataSetChanged()
     }
 
+    /**
+     * fetch the list which backs the data
+     * @return returns the current list
+     */
     fun getList():MutableList<Any>?{
         return mValues
     }
@@ -411,6 +434,11 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
     }*/
 
 
+    /**
+     * this is where we return which view to inflate and bind
+     * @param position position of the item
+     * @return return the type to inflate in int
+     */
     override fun getItemViewType(position: Int): Int {
 
         val ins = mValues?.get(position)
@@ -453,11 +481,19 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
     }
 
 
+    /**
+     * set an emtpy view
+     * @param v the empty view to display
+     */
     fun setEmptyView(v: View) {
         emptyView = v
     }
 
 
+    /**
+     * called by the listener on the recyclerview
+     * to show an empty view in the list
+     */
     fun showEmptyView(): Boolean {
 
 
@@ -490,6 +526,10 @@ class AllRecyclerViewAdapter(activity: Activity, items: MutableList<Any>, thisRe
         return mValues?.size as Int
     }
 
+    /**
+     * add a list of Type Any to the main list
+     * @param all the list to add to the adapter list
+     */
     fun add(all: List<Any>) {
         for(x in all){
             add(x)

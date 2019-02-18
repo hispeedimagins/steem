@@ -3,9 +3,6 @@ package com.steemapp.lokisveil.steemapp.BindHelpers
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.DisplayMetrics
@@ -15,21 +12,24 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Response
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.commonsware.cwac.anddown.AndDown
 import com.google.gson.Gson
-import com.steemapp.lokisveil.steemapp.*
+import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
+import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
-import com.steemapp.lokisveil.steemapp.HelperClasses.ArticlePopUpMenu
 import com.steemapp.lokisveil.steemapp.HelperClasses.GetDynamicAndBlock
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import com.steemapp.lokisveil.steemapp.HelperClasses.VoteWeightThenVote
-import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
 import com.steemapp.lokisveil.steemapp.MyViewHolders.ArticleViewHolder
+import com.steemapp.lokisveil.steemapp.OpenOtherGuyBlog
+import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
@@ -40,19 +40,28 @@ import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperat
 import com.steemapp.lokisveil.steemapp.jsonclasses.Block
 import org.json.JSONObject
 
-class ArticleHelperFunctions(context : Context, username:String?, adapter: AllRecyclerViewAdapter, adpterType: AdapterToUseFor ,scale: Float,metrics: DisplayMetrics) {
-    val con: Context = context
-    var name:String? = username
-    val adaptedcomms: arvdinterface = adapter
-    internal var scale: Float = scale
-    internal var metrics: DisplayMetrics = metrics
+/**
+ * Binder functions for articles
+ * @param con application context
+ * @param name username of the current user
+ * @param adaptedcomms the callback to the adapter
+ * @param adaptype the adapter enum in use
+ * @param scale the scale of the ui
+ * @param metrics the display metrics in use
+ */
+class ArticleHelperFunctions(val con : Context,
+                             var name:String?,
+                             val adaptedcomms: AllRecyclerViewAdapter,
+                             val adaptype: AdapterToUseFor ,
+                             val scale: Float,
+                             val metrics: DisplayMetrics) {
+
     val and = AndDown()
     private var selectedPos = -1
-    val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
+    val sharedpref : SharedPreferences = con.getSharedPreferences(CentralConstants.sharedprefname,0)
 
     var key = sharedpref.getString(CentralConstants.key,null)
     val globallist = ArrayList<Any>()
-    val adaptype = adpterType
 
     init {
         if(name == null){
@@ -61,6 +70,11 @@ class ArticleHelperFunctions(context : Context, username:String?, adapter: AllRe
     }
 
 
+    /**
+     * convert digital pixels to pixels
+     * @param db the value of dp in float
+     * @return pixels in Int
+     */
     fun GetPx(dp : Float) : Int{
 
         return TypedValue.applyDimension(
@@ -70,6 +84,10 @@ class ArticleHelperFunctions(context : Context, username:String?, adapter: AllRe
         ).toInt()
     }
 
+    /**
+     * Maked the layout parameters
+     * @param mar the margin to use
+     */
     fun GetLayourParamsMargin(mar : Int) : LinearLayout.LayoutParams{
         var param : LinearLayout.LayoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -81,13 +99,13 @@ class ArticleHelperFunctions(context : Context, username:String?, adapter: AllRe
         return param
     }
 
-    public fun add(article : FeedArticleDataHolder.FeedArticleHolder){
+    fun add(article : FeedArticleDataHolder.FeedArticleHolder){
         adaptedcomms.add(article)
         //adapter.notifyDataSetChanged();
         adaptedcomms.notifyitemcinserted(adaptedcomms.getSize())
     }
 
-    public fun add(articles:List<FeedArticleDataHolder.FeedArticleHolder>){
+    fun add(articles:List<FeedArticleDataHolder.FeedArticleHolder>){
         for (x in articles){
             add(x)
         }
@@ -104,7 +122,13 @@ class ArticleHelperFunctions(context : Context, username:String?, adapter: AllRe
         SetVisibilityOfButtons(VhUniv)*//*
     }*/
 
-    public fun Bind(mholder: RecyclerView.ViewHolder, position:Int){
+
+    /**
+     * Bind the ui to the data
+     * @param mholder the article holder
+     * @param position the position of the item in the list
+     */
+    fun Bind(mholder: RecyclerView.ViewHolder, position:Int){
         mholder.itemView.setSelected(selectedPos == position)
         val holder : ArticleViewHolder = mholder as ArticleViewHolder
         holder.article = adaptedcomms.getObject(position) as FeedArticleDataHolder.FeedArticleHolder
@@ -250,6 +274,11 @@ class ArticleHelperFunctions(context : Context, username:String?, adapter: AllRe
     }
 
 
+    /**
+     * set the webview with the data
+     * @param s the body in string
+     * @param holder the holder which has the article and the ui
+     */
     fun setWebView(s:String,holder : ArticleViewHolder){
         holder?.openarticle?.removeAllViews()
         //univBody = s

@@ -1,7 +1,7 @@
 package com.steemapp.lokisveil.steemapp.HelperClasses
 
 import android.app.Activity
-import android.support.v4.widget.SwipeRefreshLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.steemapp.lokisveil.steemapp.R
 
 /**

@@ -6,9 +6,9 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.preference.PreferenceManager
-import android.support.v7.view.ContextThemeWrapper
 import android.text.format.DateUtils
 import android.util.Log
+import androidx.appcompat.view.ContextThemeWrapper
 import com.bumptech.glide.request.FutureTarget
 import com.steemapp.lokisveil.steemapp.HelperClasses.Links
 import com.steemapp.lokisveil.steemapp.HelperClasses.Physhy

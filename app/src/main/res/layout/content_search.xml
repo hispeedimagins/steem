@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,23 +8,24 @@
     tools:context=".SearchActivity"
     tools:showIn="@layout/activity_search">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        app:layout_constraintBaseline_toBaselineOf="parent"
         android:id="@+id/swiperefreshsearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
 
             android:id="@+id/list"
             android:name="com.steemapp.lokisveil.steemapp.SearchActivity"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            app:layoutManager="LinearLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:context=".SearchActivity"
             tools:listitem="@layout/article_preview" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <include android:id="@+id/dateanim" layout="@layout/dateholderandanimator" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

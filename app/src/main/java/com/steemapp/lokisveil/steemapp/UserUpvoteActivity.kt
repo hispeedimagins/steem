@@ -1,11 +1,12 @@
 package com.steemapp.lokisveil.steemapp
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.ArticleRoomVM
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_user_upvote.*
 import kotlinx.android.synthetic.main.content_user_upvote.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
+
 
 class UserUpvoteActivity : AppCompatActivity() {
     private var adapter: AllRecyclerViewAdapter? = null
@@ -49,7 +50,7 @@ class UserUpvoteActivity : AppCompatActivity() {
         }
         if(dbKey != 0){
             articleVm = ViewModelProviders.of(this@UserUpvoteActivity).get(ArticleRoomVM::class.java)
-            articleVm.getActiveVotes(dbKey).observe(this,android.arch.lifecycle.Observer {
+            articleVm.getActiveVotes(dbKey).observe(this, Observer {
                 if(it != null){
                     display(it)
                 }

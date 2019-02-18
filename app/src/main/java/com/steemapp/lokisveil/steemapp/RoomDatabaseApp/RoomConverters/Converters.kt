@@ -1,6 +1,7 @@
 package com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomConverters
 
-import android.arch.persistence.room.TypeConverter
+
+import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import org.json.JSONArray

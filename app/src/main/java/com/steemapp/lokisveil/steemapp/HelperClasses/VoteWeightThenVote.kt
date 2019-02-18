@@ -3,20 +3,23 @@ package com.steemapp.lokisveil.steemapp.HelperClasses
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.support.v7.app.AlertDialog
 import android.view.View
-import android.widget.*
+import android.widget.NumberPicker
+import android.widget.ProgressBar
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatSeekBar
+import com.steemapp.lokisveil.steemapp.CentralConstants
+import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem
+import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
+import com.steemapp.lokisveil.steemapp.MiscConstants
 import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperation
-import org.apache.commons.lang3.Conversion
-import android.widget.SeekBar.OnSeekBarChangeListener
-import com.steemapp.lokisveil.steemapp.CentralConstants
-import com.steemapp.lokisveil.steemapp.CentralConstantsOfSteem
-import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
-import com.steemapp.lokisveil.steemapp.MiscConstants
 import java.util.*
 
 
@@ -93,7 +96,7 @@ class VoteWeightThenVote(context: Context, activity: Activity, vote:VoteOperatio
         numberPicker.maxValue = 100
         numberPicker.minValue = 0
         numberPicker.wrapSelectorWheel = false
-        val seekbar = dialogView.findViewById<android.support.v7.widget.AppCompatSeekBar>(R.id.dialog_seekbar)
+        val seekbar = dialogView.findViewById<AppCompatSeekBar>(R.id.dialog_seekbar)
        //cannot use as it requires min api 26 we are at 19
        //seekbar.min = -100
         seekbar.max = 200

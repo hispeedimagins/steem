@@ -1,38 +1,28 @@
 package com.steemapp.lokisveil.steemapp.Fragments
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
+
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.android.volley.Response
-import com.google.gson.Gson
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.steemapp.lokisveil.steemapp.*
-import com.steemapp.lokisveil.steemapp.Databases.FollowersDatabase
-import com.steemapp.lokisveil.steemapp.Databases.FollowingDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.HelperClasses.GeneralRequestsFeedIntoConstants
 import com.steemapp.lokisveil.steemapp.HelperClasses.JsonRpcResultConversion
-import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
-import com.steemapp.lokisveil.steemapp.Interfaces.GetFollowListsBack
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.FollowViewModel
-
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
-import org.json.JSONObject
-import java.util.ArrayList
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -63,7 +53,7 @@ class FollowerFragment : Fragment() {
 
     internal var swipecommonactionsclass: swipecommonactionsclass? = null
 
-    private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
+    private var fragmentActivity: FragmentActivity? = null
 
     private var adapter: AllRecyclerViewAdapter? = null
     private var adapterPaged: AllRecyclerViewClassPaged? = null

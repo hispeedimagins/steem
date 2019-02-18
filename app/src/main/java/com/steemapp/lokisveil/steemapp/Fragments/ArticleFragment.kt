@@ -8,11 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.DisplayMetrics
@@ -26,6 +21,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.tiagohm.markdownview.css.styles.Github
 import br.tiagohm.markdownview.js.ExternalScript
 import com.android.volley.Response
@@ -307,7 +308,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
     }
 
 
-    fun fabclicked(fragmentManager: android.support.v4.app.FragmentManager){
+    fun fabclicked(fragmentManager: FragmentManager){
         var mod = ModalBottomSheetMy()
         mod.show(fragmentManager, "answer dialog")
         mod.showsDialog = true

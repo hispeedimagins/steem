@@ -2,19 +2,15 @@ package com.steemapp.lokisveil.steemapp
 
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.steemapp.lokisveil.steemapp.Databases.NotificationsBusyDb
-import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.HelperClasses.NotificationsWebSocketListener
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.NotificationsInterface
 import com.steemapp.lokisveil.steemapp.jsonclasses.BusyNotificationJson
-
 import kotlinx.android.synthetic.main.activity_notifications_busy_d.*
-
 import kotlinx.android.synthetic.main.content_notifications_busy_d.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,7 +19,7 @@ import okhttp3.WebSocket
 import okio.ByteString
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.ArrayList
+import java.util.*
 
 class NotificationsBusyD : AppCompatActivity(),NotificationsInterface {
     override fun onOpen(webSocket: WebSocket?, response: Response?) {

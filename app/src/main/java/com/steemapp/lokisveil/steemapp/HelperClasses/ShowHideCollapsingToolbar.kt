@@ -2,12 +2,10 @@ package com.steemapp.lokisveil.steemapp.HelperClasses
 
 
 
-import android.support.design.widget.AppBarLayout
-import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.activity_open_other_guy_blog.*
+import com.google.android.material.appbar.AppBarLayout
 
 /**
  * Created by boot on 3/20/2018.

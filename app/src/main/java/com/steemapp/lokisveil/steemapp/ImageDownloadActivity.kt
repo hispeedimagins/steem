@@ -2,15 +2,12 @@ package com.steemapp.lokisveil.steemapp
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
@@ -46,10 +43,20 @@ class ImageDownloadActivity : AppCompatActivity(),GlobalInterface {
         setMainImage(createImageDownloadClass(intent.getStringExtra(CentralConstants.ImageDownloadUrlPasser)))
     }
 
+    /**
+     * Returns the ImageDownloadData holder
+     * @param url the url of the image to add to the holder
+     * @return image holder to add to the recycler adapter
+     */
     fun createImageDownloadClass(url:String):ImageDownloadDataHolder{
         return ImageDownloadDataHolder(url,"","")
     }
 
+    /**
+     * create a list of ImageDownloadDataholder from the list of urls
+     * @param data list of urls to convert
+     * @return returns the list to enter into the adapter
+     */
     fun createList(data:List<String>):List<ImageDownloadDataHolder>{
         val arl = ArrayList<ImageDownloadDataHolder>()
         for(item in data){
@@ -58,6 +65,10 @@ class ImageDownloadActivity : AppCompatActivity(),GlobalInterface {
         return arl
     }
 
+    /**
+     * sets the main image in the ui
+     * @param data the image data holder
+     */
     fun setMainImage(data:ImageDownloadDataHolder){
         currentMainImage = data
         val optionss = RequestOptions()

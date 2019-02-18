@@ -1,7 +1,8 @@
 package com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos
 
-import android.arch.paging.DataSource
-import android.arch.persistence.room.*
+
+import androidx.paging.DataSource
+import androidx.room.*
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
 
 @Dao

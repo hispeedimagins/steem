@@ -1,18 +1,14 @@
 package com.steemapp.lokisveil.steemapp
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.steemapp.lokisveil.steemapp.HelperClasses.GeneralRequestsFeedIntoConstants
 import com.steemapp.lokisveil.steemapp.HelperClasses.RegisterJob
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface

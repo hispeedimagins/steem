@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
@@ -16,7 +16,7 @@
 
     >
     <!--app:layout_behavior="android.support.design.widget.BottomSheetBehavior"-->
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -101,7 +101,7 @@
                 android:orientation="vertical"
                 >
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -113,7 +113,7 @@
                     android:background="?attr/cardBackgroundColor"
                     android:layout_gravity="center_horizontal"
                     >
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
 
                         android:id="@+id/TextMainOneTextLayout"
@@ -136,10 +136,10 @@
                             />
 
 
-                    </android.support.design.widget.TextInputLayout>
-                </android.support.v7.widget.CardView>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -159,9 +159,9 @@
                         android:textColor="?attr/textColorMine"
                         android:id="@+id/CheckboxMainOne"
                         />
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/cardviewThree"
@@ -175,7 +175,7 @@
 
 
                     >
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
                         android:background="?attr/cardBackgroundColor"
                         android:id="@+id/EditMainTextTwoTextLayout"
@@ -198,12 +198,12 @@
                             />
 
 
-                    </android.support.design.widget.TextInputLayout>
-                </android.support.v7.widget.CardView>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.cardview.widget.CardView>
 
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/cardBackgroundColor"
@@ -214,7 +214,7 @@
 
                     android:layout_gravity="center_horizontal"
                     >
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
 
                         android:id="@+id/EditMainTextThreeTextLayout"
@@ -237,15 +237,15 @@
                             />
 
 
-                    </android.support.design.widget.TextInputLayout>
-                </android.support.v7.widget.CardView>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.cardview.widget.CardView>
 
 
             </LinearLayout>
 
 
         </LinearLayout>
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addaquestionfabminebc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -256,9 +256,9 @@
             app:layout_anchorGravity="end|top"
             />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>
 
 

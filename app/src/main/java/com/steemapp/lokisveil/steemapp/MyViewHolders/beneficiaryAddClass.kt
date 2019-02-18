@@ -1,12 +1,13 @@
 package com.steemapp.lokisveil.steemapp.MyViewHolders
 
-import android.support.design.widget.TextInputLayout
-import android.support.v7.widget.AppCompatCheckBox
-import android.support.v7.widget.AppCompatSeekBar
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
+
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatSeekBar
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputLayout
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.R
 

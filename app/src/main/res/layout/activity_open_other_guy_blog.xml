@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
@@ -8,7 +9,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.steemapp.lokisveil.steemapp.OpenOtherGuyBlog">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
 
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -16,7 +17,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
 
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
-                    app:srcCompat="@drawable/ic_all_inclusive_black_24px"
+                    app:srcCompat="@drawable/animated_loader"
                     android:fitsSystemWindows="true"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
@@ -129,7 +130,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             >
-                            <android.support.v7.widget.CardView
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
 
@@ -154,9 +155,9 @@
                                     android:text="1000 followers"
                                     android:textAlignment="center"
                                      />
-                            </android.support.v7.widget.CardView>
+                            </androidx.cardview.widget.CardView>
 
-                            <android.support.v7.widget.CardView
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -180,9 +181,9 @@
                                     android:text="1000 posts"
 
                                     />
-                            </android.support.v7.widget.CardView>
+                            </androidx.cardview.widget.CardView>
 
-                            <android.support.v7.widget.CardView
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -206,7 +207,7 @@
                                     android:text="1000 following"
 
                                     />
-                            </android.support.v7.widget.CardView>
+                            </androidx.cardview.widget.CardView>
 
                         </LinearLayout>
 
@@ -216,7 +217,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             >
-                            <android.support.v7.widget.CardView
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -240,7 +241,7 @@
                                     android:text="Omaumau"
 
                                     />
-                            </android.support.v7.widget.CardView>
+                            </androidx.cardview.widget.CardView>
 
                             <!--<TextView
                                 android:layout_weight="1"
@@ -255,7 +256,7 @@
                                 android:text="website"
                                 android:textColor="@android:color/white"
                                 />-->
-                            <android.support.v7.widget.CardView
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -279,10 +280,10 @@
                                     android:text="July 2017"
 
                                     />
-                            </android.support.v7.widget.CardView>
+                            </androidx.cardview.widget.CardView>
 
                         </LinearLayout>
-                        <android.support.v7.widget.CardView
+                        <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
@@ -306,90 +307,14 @@
                                 android:text="website"
 
                                 />
-                        </android.support.v7.widget.CardView>
+                        </androidx.cardview.widget.CardView>
 
                     </LinearLayout>
 
                 </FrameLayout>
             </RelativeLayout>
-            <!--<ImageView
-                android:src="@drawable/common_full_open_on_phone"
 
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:adjustViewBounds="true"
-                android:id="@+id/profileFullImage"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.7" />
-
-            <FrameLayout
-
-                android:id="@+id/main.framelayout.title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-
-                android:orientation="vertical"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.3"
-                >
-
-                <LinearLayout
-
-                    android:id="@+id/main.linearlayout.title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical"
-                    >
-
-
-                    <ImageView
-                        android:src="@drawable/common_full_open_on_phone"
-                        android:id="@+id/pfp_outer"
-                        app:layout_collapseParallaxMultiplier="0.7"
-                        android:maxWidth="200dp"
-                        android:padding="5dp"
-                        android:adjustViewBounds="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        app:layout_collapseMode="parallax"
-
-                        />
-
-
-
-                    <TextView
-                        android:padding="1dp"
-                        android:background="@color/accback"
-                        android:id="@+id/activity_username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="bottom|center"
-                        android:text="hispeedimagins"
-                        android:textColor="@android:color/white"
-                        android:textSize="30sp"
-                        />
-
-                    <TextView
-                        android:padding="1dp"
-                        android:textAlignment="center"
-                        android:background="@color/accback"
-                        android:id="@+id/activity_motto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="5dp"
-                        android:text="rise rise and rise again"
-                        android:textColor="@android:color/white"
-                        />
-
-                </LinearLayout>
-            </FrameLayout>-->
-           <!-- android:layout_height="?attr/actionBarSize"-->
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 app:titleEnabled="false"
                 android:padding="5dp"
                 app:title=" "
@@ -406,27 +331,6 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     >
-
-                   <!-- <Space
-                        android:layout_width="@dimen/image_final_width"
-                        android:layout_height="@dimen/image_final_width"
-                        />-->
-
-                    <!--<Space
-                        android:layout_width="68dp"
-                        android:layout_height="68dp"
-                        />-->
-                    <!--<ImageView
-                        android:id="@+id/pfp"
-
-                        android:maxWidth="68dp"
-                        android:padding="5dp"
-                        android:adjustViewBounds="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        app:layout_collapseMode="pin"
-                        />-->
                     <ImageView
                         android:elevation="5dp"
                         android:scaleType="centerCrop"
@@ -451,23 +355,10 @@
                         />
 
                 </LinearLayout>
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
-            <!--<ImageView
-                android:src="@drawable/common_full_open_on_phone"
-                android:id="@+id/pfp_outer"
-                app:layout_collapseParallaxMultiplier="0.7"
-                android:maxWidth="200dp"
-                android:padding="5dp"
-                android:adjustViewBounds="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                app:layout_collapseMode="parallax"
 
-                />-->
-
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
        <!-- <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -482,7 +373,7 @@
         </android.support.v7.widget.Toolbar>-->
 
 
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
 
 
             android:elevation="4dp"
@@ -492,9 +383,9 @@
             app:tabMode="fixed"
             app:tabGravity="fill"/>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:layout_gravity="fill_vertical"
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -502,7 +393,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|end"
         android:id="@+id/fab"
@@ -512,83 +403,4 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_person_add_black_24px" />
 
-
-    <!--<ImageView
-        android:layout_width="@dimen/image_width"
-        android:layout_height="@dimen/image_width"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/common_full_open_on_phone"
-
-        android:id="@+id/pfp_outer"
-        app:finalHeight="@dimen/image_final_width"
-        app:finalYPosition="2dp"
-        app:layout_behavior="@string/imageview_scrolling_view_behavior"
-        app:startHeight="2dp"
-        app:startToolbarPosition="2dp"
-        app:startXPosition="2dp"
-        />-->
-    <!--<android.support.v7.widget.Toolbar
-        app:title=" "
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_anchor="@id/toolbar_layout"
-
-
-        app:popupTheme="@style/AppTheme.PopupOverlay" >
-        <LinearLayout
-            android:id="@+id/toolbar_linear"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
-
-            &lt;!&ndash; <Space
-                 android:layout_width="@dimen/image_final_width"
-                 android:layout_height="@dimen/image_final_width"
-                 />&ndash;&gt;
-
-            <Space
-                android:layout_width="68dp"
-                android:layout_height="68dp"
-                />
-            &lt;!&ndash;<ImageView
-                android:id="@+id/pfp"
-
-                android:maxWidth="68dp"
-                android:padding="5dp"
-                android:adjustViewBounds="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                app:layout_collapseMode="pin"
-                />&ndash;&gt;
-
-            <TextView
-                android:id="@+id/activity_username_toolbar"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:gravity="center_vertical"
-                android:text="usernametoolbar"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                />
-
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="@dimen/image_width"
-        android:layout_height="@dimen/image_width"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/common_full_open_on_phone"
-        android:id="@+id/pfp_outer"
-        app:finalHeight="@dimen/image_final_width"
-        app:finalYPosition="0dp"
-        app:layout_behavior="com.steemapp.lokisveil.steemapp.HelperClasses.AvatarImageBehavior"
-        app:startHeight="0dp"
-        app:startToolbarPosition="0dp"
-        app:startXPosition="0dp"
-        />-->
-
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,19 +1,15 @@
 package com.steemapp.lokisveil.steemapp
 
+
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_comment_notifications.*
 import kotlinx.android.synthetic.main.content_comment_notifications.*
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 class CommentNotifications : AppCompatActivity() {
     var username : String? = null
@@ -75,25 +71,7 @@ class CommentNotifications : AppCompatActivity() {
             repliesNotificationsFragment = fi
         }
 
-        /*val ft = fragmentManager.findFragmentByTag(makeFragmentName(vid, 1))
-        if (ft != null && ft is questionslistFragment) {
-            questionslistFragmentf = ft as questionslistFragment
-        }
-
-        val fth = fragmentManager.findFragmentByTag(makeFragmentName(vid, 2))
-        if (fth != null && fth is MyPeopleFragment) {
-            myPeopleFragmentf = fth as MyPeopleFragment
-        }
-
-        val ff = fragmentManager.findFragmentByTag(makeFragmentName(vid, 3))
-        if (ff != null && ff is NotificationsFragment) {
-            notificationsFragment = ff as NotificationsFragment
-        }*/
-
         val args = Bundle()
-
-        //boolean tokenisrefreshingHoldon = false;
-        //args.putBoolean("isrefreshing",tokenisrefreshingHoldon)
         if (commentNotificationsSteemitFragment == null) {
             commentNotificationsSteemitFragment = CommentNotificationsSteemitFragment()
             commentNotificationsSteemitFragment?.setArguments(args)
@@ -104,57 +82,14 @@ class CommentNotifications : AppCompatActivity() {
         }
 
 
-        /*if (myChatMessageFragmentf == null) {
-            myChatMessageFragmentf = MyChatMessageFragment()
-            myChatMessageFragmentf.setArguments(args)
-        }
-
-
-        if (myPeopleFragmentf == null) {
-            myPeopleFragmentf = MyPeopleFragment()
-            myPeopleFragmentf.setArguments(args)
-        }
-
-
-        if (notificationsFragment == null) {
-            notificationsFragment = NotificationsFragment()
-            notificationsFragment.setArguments(args)
-        }*/
-
-
         if (viewPagerAdapteradapter == null) {
 
             viewPagerAdapteradapter = ViewPagerAdapter(supportFragmentManager)
             //Chat
             viewPagerAdapteradapter?.addFragment(commentNotificationsSteemitFragment as CommentNotificationsSteemitFragment, "Your comments", CentralConstants.FragmentTagCommentsNoti)
             viewPagerAdapteradapter?.addFragment(repliesNotificationsFragment as RepliesNotificationsFragment,"Replies",CentralConstants.FragmentTagReplies)
-
-            //Questions
-            /*viewPagerAdapteradapter.addFragment(questionslistFragmentf, "Discuss", CentralConstantsRepository.FragmentTagQuestions)
-
-            //People
-            viewPagerAdapteradapter.addFragment(myPeopleFragmentf, "", CentralConstantsRepository.FragmentTagPeople)
-
-            viewPagerAdapteradapter.addFragment(notificationsFragment, "", CentralConstantsRepository.FragmentTagNotifications)*/
-
-            /*adapter.addFragment(new TwoFragment(), "TWO");
-        adapter.addFragment(new ThreeFragment(), "THREE");*/
             viewPager?.adapter = viewPagerAdapteradapter
         }
-
-        /*if (frag1 == null) frag1 = viewPagerAdapteradapter.mFragmentList.get(1) as questionslistFragment
-        if (frag2 == null) frag2 = viewPagerAdapteradapter.mFragmentList.get(0) as MyChatMessageFragment
-
-        if (fragnotification == null) fragnotification = viewPagerAdapteradapter.mFragmentList.get(3) as NotificationsFragment
-
-        frag2.SetShareText(SharedTextToMe)*/
-
-
-        /* if (usechatpage) {
-             viewPager.setCurrentItem(0, true)
-         } else {
-             viewPager.setCurrentItem(1, true)
-         }*/
 
 
     }
@@ -182,9 +117,6 @@ class CommentNotifications : AppCompatActivity() {
         fun addFragment(fragment: Fragment, title: String, tag: String) {
             mFragmentList.add(fragment)
             mFragmentTitleList.add(title)
-
-            //managers.beginTransaction().remove(fragment);
-            // managers.beginTransaction().add(fragment,tag);
         }
 
         override fun getPageTitle(position: Int): CharSequence {

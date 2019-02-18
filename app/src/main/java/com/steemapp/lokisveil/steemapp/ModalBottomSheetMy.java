@@ -3,15 +3,7 @@ package com.steemapp.lokisveil.steemapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.CardView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,22 +13,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder;
 import com.steemapp.lokisveil.steemapp.HelperClasses.GetDynamicAndBlock;
 import com.steemapp.lokisveil.steemapp.HelperClasses.TextInputLayoutErrorHandler;
-import com.steemapp.lokisveil.steemapp.Interfaces.ArticleActivityInterface;
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface;
-import com.steemapp.lokisveil.steemapp.MyViewHolders.ArticleViewHolder;
-import com.steemapp.lokisveil.steemapp.MyViewHolders.CommentViewHolder;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink;
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 
 /**
  * Created by boot on 3/4/2018.

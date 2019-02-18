@@ -1,20 +1,20 @@
 package com.steemapp.lokisveil.steemapp.Fragments
 
-
-import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -68,7 +68,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
 
     internal var swipecommonactionsclass: swipecommonactionsclass? = null
 
-    private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
+    private var fragmentActivity: FragmentActivity? = null
 
     private var adapter: AllRecyclerViewClassPaged? = null
     private var adapterNormal: AllRecyclerViewAdapter? = null
@@ -116,7 +116,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
             if(GetNameToUseOtherGuy()){
                 adapter = AllRecyclerViewClassPaged(getActivity() as FragmentActivity, recyclerView as RecyclerView, view as View, AdapterToUseFor.feed)
                 vm = ViewModelProviders.of(this).get(ArticleRoomVM::class.java)
-                vm?.getPagedUpdatedListTime(true)?.observe(this,android.arch.lifecycle.Observer { pagedList ->
+                vm?.getPagedUpdatedListTime(true)?.observe(this, Observer { pagedList ->
                     if(pagedList != null && pagedList.size > 0){
                         //submit the list to the adapter
                         adapter?.submitList(pagedList as PagedList<Any>)

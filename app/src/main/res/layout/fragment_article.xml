@@ -1,14 +1,14 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:id="@+id/activity_feed_swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
         android:id="@+id/nestedscroll"
         android:layout_height="wrap_content"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,19 +27,6 @@
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:layout_height="match_parent">
-
-                <!-- <TextView
-                     android:padding="5dp"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:id="@+id/article_resteemed_by"
-                     android:text="name"
-
-
-                     android:drawablePadding="4dp"
-                     android:drawableLeft="@drawable/ic_repeat_black_24px"
-                     android:textStyle="bold"
-                     />-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -158,16 +145,6 @@
                             />
 
                     </LinearLayout>
-                    <!--<TextView
-                        android:padding="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/article_tag"
-                        android:text="tag"
-
-                        tools:fontFamily="@font/roboto_light"
-                        android:textStyle="bold"
-                        />-->
                 </LinearLayout>
 
                 <LinearLayout
@@ -196,25 +173,6 @@
                         android:id="@+id/article_image"
                         />
 
-                    <!--<eu.fiskur.markdownview.MarkdownView
-                        android:id="@+id/article_summary_markdown"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />-->
-
-                    <!--<ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    </ScrollView>-->
-
-                    <!--<WebView
-                        android:id="@+id/article_webview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                    </WebView>-->
-
                     <TextView
                         android:visibility="gone"
                         android:id="@+id/article_summary"
@@ -225,18 +183,6 @@
                         android:paddingLeft="5sp"
 
                         />
-
-                    <!--<TextView
-                        android:padding="5dp"
-                        android:textAlignment="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/article_title"
-                        android:text="tag"
-
-                        android:maxLines="2"
-                        android:textStyle="bold"
-                        />-->
                 </LinearLayout>
 
 
@@ -380,7 +326,7 @@
 
 
 
-        </android.support.v7.widget.CardView>
-    </android.support.v4.widget.NestedScrollView>
+        </androidx.cardview.widget.CardView>
+    </androidx.core.widget.NestedScrollView>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

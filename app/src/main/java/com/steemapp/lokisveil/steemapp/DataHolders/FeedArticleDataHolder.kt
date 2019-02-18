@@ -1,8 +1,9 @@
 package com.steemapp.lokisveil.steemapp.DataHolders
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import org.json.JSONArray
 import java.util.*
@@ -157,7 +158,7 @@ class FeedArticleDataHolder {
     /**
      * declared room entity
      */
-    @Entity(tableName = "article_holder" ,indices = [Index(value = ["id"],unique = true),Index(value = ["saveTime"],unique = false)])
+    @Entity(tableName = "article_holder" ,indices = [Index(value = ["id"],unique = true), Index(value = ["saveTime"],unique = false)])
     data class FeedArticleHolder  (
         val reblogBy: List<String>?,
         val reblogOn: String?, //2018-02-04T13:44:21

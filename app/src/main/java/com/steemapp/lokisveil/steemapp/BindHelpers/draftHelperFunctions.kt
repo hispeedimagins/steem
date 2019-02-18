@@ -4,18 +4,17 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.RecyclerView
 import com.commonsware.cwac.anddown.AndDown
-import com.steemapp.lokisveil.steemapp.*
-import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
+import com.steemapp.lokisveil.steemapp.MiscConstants
 import com.steemapp.lokisveil.steemapp.MyViewHolders.DraftViewHolder
+import com.steemapp.lokisveil.steemapp.Post
 import com.steemapp.lokisveil.steemapp.jsonclasses.OperationJson
 import org.json.JSONObject
 
@@ -113,7 +112,7 @@ class draftHelperFunctions (context : Context, username:String?, adapter: arvdin
         })
 
         //event for draft delete
-        mholder.shareTextView?.setOnClickListener({
+        mholder.shareTextView?.setOnClickListener {
 
             //use a dialogue for miss clicks
             val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(con))
@@ -140,114 +139,6 @@ class draftHelperFunctions (context : Context, username:String?, adapter: arvdin
             val alertDialog = alertDialogBuilder.create()
 
             alertDialog.show()
-        })
-
-        //val articlepop = ArticlePopUpMenu(con, mholder.shareTextView, "${CentralConstants.baseUrlView}@${holder?.article?.author}", "${CentralConstants.baseUrlView}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}", null, name, holder.article?.author, adaptedcomms, position, holder?.progressbar, null, holder?.article?.activeVotes, true)
-
-/*        *//* mholder.shareTextView.setOnClickListener(View.OnClickListener{
-             *//**//*val sendIntent: Intent =  Intent()
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "${CentralConstants.baseUrl}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}")
-            sendIntent.setType("text/plain");
-            con.startActivity(Intent.createChooser(sendIntent,"Share Link"))*//**//*
-
-
-
-            val popup = PopupMenu(con,mholder.shareTextView)
-            //inflating menu from xml resource
-            popup.inflate(R.menu.article_dialog_menu)
-            //adding click listener
-            popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-                override fun onMenuItemClick(item: MenuItem): Boolean {
-                    when (item.getItemId()) {
-                        R.id.article_dialog_share_author_profile -> {
-                        }
-                        R.id.article_dialog_share_article -> {
-                        }
-                        *//**//*R.id.menu3 -> {
-                        }*//**//*
-                    }//handle menu1 click
-                    //handle menu2 click
-                    //handle menu3 click
-                    return false
-                }
-            })
-            //displaying the popup
-            popup.show()
-
-
-        })*//*
-
-        mholder.article_like?.setOnClickListener(View.OnClickListener {
-            // Toast.makeText(con,"Processing. Please wait....",Toast.LENGTH_LONG).show()
-            //ForReturningQuestionsLite q = item;
-            var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
-            //var s : SteemJ = SteemJ()
-            //s.vote(AccountName(holder.article?.author), Permlink(holder.article?.permlink),10000)
-            var vop: VoteOperation = VoteOperation(AccountName(name), AccountName(articles.author), Permlink(articles.permlink))
-            vop.weight = 100
-            var obs = Response.Listener<JSONObject> { response ->
-                //var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
-                val gson = Gson()
-                var ress = gson.fromJson<Block.BlockAdded>(response.toString(), Block.BlockAdded::class.java)
-                if (ress != null && ress.result != null) {
-                    //con.run { Toast.makeText(con,"Upvoted ${vop.permlink}",Toast.LENGTH_LONG).show() }
-                    Toast.makeText(con, "Upvoted ${vop.permlink}", Toast.LENGTH_LONG).show()
-                    holder.article?.uservoted.to(true)
-                    holder.article_likes?.setTextColor(ContextCompat.getColor(con, R.color.colorAccent))
-                    adaptedcomms.notifyitemcchanged(mholder.adapterPosition)
-                    //Runnable { run {  } }
-                    //Toast.makeText(con,"$name has upvoted ${vop.author.name}",Toast.LENGTH_LONG).show()
-                }
-            }
-            //var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,mholder,null,vop,obs,"Upvoted ${vop.permlink.link}",MyOperationTypes.vote)
-            *//*var list  = ArrayList<Operation>()
-            list.add(vop)
-            var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,list,"Upvoted ${vop.permlink.link}",MyOperationTypes.vote)
-            bloc.GetDynamicGlobalProperties()*//*
-            val weight = VoteWeightThenVote(con, adaptedcomms.getActivity(), vop, adaptedcomms, position, holder.progressbar, null)
-            weight.makeDialog()
-            *//*globallist.add(bloc)
-
-            Log.d("buttonclick",globallist.toString())*//*
-            //GetDynamicGlobalProperties(mholder.article as FeedArticleDataHolder.FeedArticleHolder)
-
-        })
-
-        mholder.article_reblog_now?.setOnClickListener(View.OnClickListener {
-            //Toast.makeText(con,"Processing. Please wait....",Toast.LENGTH_LONG).show()
-            //ForReturningQuestionsLite q = item;
-            var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
-            var vop = ReblogOperation(AccountName(name), AccountName(articles.author), Permlink(articles.permlink))
-            var al = ArrayList<AccountName>()
-            al.add(AccountName(name))
-            var cus = CustomJsonOperation(null, al, "follow", vop.toJson())
-
-
-            *//*var l : List<FollowType> = ArrayList()
-            l += FollowType.BLOG
-            var fop = FollowOperation(AccountName(name), AccountName(articles.author), l)
-            var fus = CustomJsonOperation(null,al,"follow",fop.toJson())
-
-            var obs = Response.Listener<JSONObject> { response ->
-                //var articles = mholder.article as FeedArticleDataHolder.FeedArticleHolder
-                val gson = Gson()
-                var ress = gson.fromJson<Block.BlockAdded>(response.toString(),Block.BlockAdded::class.java)
-                if(ress != null && ress.result != null ){
-                    *//**//*Runnable { run { Toast.makeText(con,"$name has upvoted ${vop.author.name}",Toast.LENGTH_LONG).show() } }*//**//*
-                    Toast.makeText(con,"Reblogged ${vop.permlink.link}",Toast.LENGTH_LONG).show()
-
-                }
-            }*//*
-            var list = ArrayList<Operation>()
-            list.add(cus)
-            //var bloc = GetDynamicAndBlock(con ,adaptedcomms,position,mholder,null,cus,obs,"Reblogged ${vop.permlink.link}",MyOperationTypes.reblog)
-            var bloc = GetDynamicAndBlock(con, adaptedcomms, position, list, "Reblogged ${vop.permlink.link}", MyOperationTypes.reblog)
-            bloc.GetDynamicGlobalProperties()
-
-        })*/
-
-
-
+        }
     }
 }

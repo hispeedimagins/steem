@@ -1,8 +1,8 @@
 package com.steemapp.lokisveil.steemapp.Interfaces
 
-import android.arch.paging.PagedList
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.RecyclerView
 
 interface CommonRecyclerAndPaged {
     fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder

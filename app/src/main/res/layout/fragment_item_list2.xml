@@ -17,7 +17,7 @@
 
     >
     <!--app:layout_behavior="android.support.design.widget.BottomSheetBehavior"-->
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -28,53 +28,11 @@
             android:orientation="vertical"
             >
 
-            <!--<LinearLayout
-
-                android:background="@color/colorPrimary"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:id="@+id/linearlayoutanchormodal"
-
-                >
-
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:text=""
-                    android:id="@+id/titleholder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-
-                    />
-
-                &lt;!&ndash;<ProgressBar
-                    android:id="@+id/AskingQuestion_progress_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminateTintMode="src_in"
-
-                    android:layout_gravity="right" />&ndash;&gt;
-            </LinearLayout>-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-
-                <!--<android.support.v4.widget.ContentLoadingProgressBar
-                    android:id="@+id/toolbar_progress_bar_flat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    android:indeterminateBehavior="repeat"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:indeterminateOnly="true"
-
-                    />-->
                 <ProgressBar
                     android:id="@+id/mprogressbar"
                     android:visibility="gone"
@@ -101,21 +59,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 >
-
-                <!--<android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:id="@+id/cardviewOne"
-
-                    app:cardUseCompatPadding="true"
-                    app:cardPreventCornerOverlap="true"
-                    contentPadding="1dp"
-
-                    android:layout_gravity="center_horizontal"
-                    >
-
-                </android.support.v7.widget.CardView>-->
                 <ScrollView
                     android:id="@+id/content_scroller"
                     android:layout_weight="1"
@@ -126,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         >
-                        <android.support.design.widget.TextInputLayout
+                        <com.google.android.material.textfield.TextInputLayout
 
                             android:hint="Title"
                             android:id="@+id/TextMainOneTextLayout"
@@ -149,24 +92,12 @@
                                 />
 
 
-                        </android.support.design.widget.TextInputLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
 
 
 
-                        <!--<android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/cardviewThree"
 
-                            app:cardUseCompatPadding="true"
-                            app:cardPreventCornerOverlap="true"
-                            contentPadding="1dp"
-
-                            android:layout_gravity="center_horizontal"
-                            >
-
-                        </android.support.v7.widget.CardView>-->
-                        <android.support.design.widget.TextInputLayout
+                        <com.google.android.material.textfield.TextInputLayout
                             app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
                             android:hint="Tags (Seperated by spaces)"
                             android:id="@+id/EditMainTextTwoTextLayout"
@@ -188,25 +119,11 @@
                                 />
 
 
-                        </android.support.design.widget.TextInputLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
 
 
 
-                        <!--<android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-
-                            android:id="@+id/cardviewFour"
-                            app:cardUseCompatPadding="true"
-                            app:cardPreventCornerOverlap="true"
-                            contentPadding="1dp"
-
-                            android:layout_gravity="center_horizontal"
-                            >
-
-                        </android.support.v7.widget.CardView>-->
-
-                        <android.support.design.widget.TextInputLayout
+                        <com.google.android.material.textfield.TextInputLayout
                             android:overScrollMode="always"
                             android:layout_weight="1"
                             app:hintTextAppearance="@style/MyMaterialTheme.TextInputLayout"
@@ -235,7 +152,7 @@
                                 />
 
 
-                        </android.support.design.widget.TextInputLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
                 </ScrollView>
 
@@ -243,7 +160,7 @@
 
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -265,87 +182,8 @@
                         android:background="?attr/cardBackgroundColor"
                         android:id="@+id/CheckboxMainOne"
                         />
-                </android.support.v7.widget.CardView>
-
-                <!--<RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:id="@+id/bentext"
-                        android:textSize="20sp"
-                        android:layout_margin="4dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Beneficiaries"
-
-                        />
-
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/beneficiary_add_fab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="bottom|end"
-                        app:layout_anchor="@id/bentext"
-                        android:layout_margin="5dp"
-
-                        app:srcCompat="@drawable/ic_person_add_black_24px" />
-                </RelativeLayout>
-
-
-                <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:id="@+id/beneficiaryrecycler"
-                    android:name="ccom.steemapp.lokisveil.steemapp.Fragments.WritePost"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    app:layoutManager="LinearLayoutManager"
-                    tools:context="com.steemapp.lokisveil.steemapp.Fragments.WritePost"
-
-
-                    android:scrollbarStyle="insideOverlay"
-                    tools:listitem="@layout/beneficiaryview"
-                    />-->
-
-
-
-
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
-
-
         </LinearLayout>
-        <!--<android.support.design.widget.FloatingActionButton
-            android:id="@+id/addaquestionfabminebc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_send_white_24px"
-            app:layout_anchor="@id/linearlayoutanchormodal"
-            app:layout_anchorGravity="end|top"
-            />-->
-        <!--<include layout="@layout/bottom_sheet_beneficiaries_view" />-->
-    </android.support.design.widget.CoordinatorLayout>
-
-
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>
-
-
-
-    <!--
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/list"
-        android:name="com.steemapp.lokisveil.steemapp.Fragments.WritePost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layoutManager="LinearLayoutManager"
-        tools:context="com.steemapp.lokisveil.steemapp.Fragments.WritePost"
-        tools:listitem="@layout/fragment_item" />
-    -->

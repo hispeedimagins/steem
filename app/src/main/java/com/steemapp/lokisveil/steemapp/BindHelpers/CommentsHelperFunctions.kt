@@ -3,41 +3,34 @@ package com.steemapp.lokisveil.steemapp.BindHelpers
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.DisplayMetrics
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import com.android.volley.Response
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.commonsware.cwac.anddown.AndDown
-import com.google.gson.Gson
 import com.steemapp.lokisveil.steemapp.*
-
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
-import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
-import com.steemapp.lokisveil.steemapp.HelperClasses.*
+import com.steemapp.lokisveil.steemapp.HelperClasses.ArticlePopUpMenu
+import com.steemapp.lokisveil.steemapp.HelperClasses.MyLiTagHandler
+import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
+import com.steemapp.lokisveil.steemapp.HelperClasses.VoteWeightThenVote
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
 import com.steemapp.lokisveil.steemapp.MyViewHolders.CommentViewHolder
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.CustomJsonOperation
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.Operation
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.ReblogOperation
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperation
-import com.steemapp.lokisveil.steemapp.jsonclasses.Block
-import org.json.JSONObject
 
 /**
  * Created by boot on 2/16/2018.
@@ -213,7 +206,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
             mholder.article_edit?.setOnClickListener {
 
                 var mod = ModalBottomSheetMy()
-                var hs = adaptedcomms.getActivity() as android.support.v4.app.FragmentActivity
+                var hs = adaptedcomms.getActivity() as FragmentActivity
                 mod.show( hs.supportFragmentManager, "answer dialog")
                 mod.showsDialog = true
                 mod.setUsername(name)
@@ -232,7 +225,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
         mholder.article_reblog_now?.setOnClickListener(View.OnClickListener {
 
             var mod = ModalBottomSheetMy()
-            var hs = adaptedcomms.getActivity() as android.support.v4.app.FragmentActivity
+            var hs = adaptedcomms.getActivity() as FragmentActivity
             mod.show( hs.supportFragmentManager, "answer dialog")
             mod.showsDialog = true
             mod.setUsername(name)

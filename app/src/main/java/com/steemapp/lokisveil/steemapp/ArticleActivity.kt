@@ -1,20 +1,21 @@
 package com.steemapp.lokisveil.steemapp
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
@@ -31,7 +32,7 @@ import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels.WidgetVM
 import com.steemapp.lokisveil.steemapp.jsonclasses.Block
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import kotlinx.android.synthetic.main.app_bar_main.*
-import java.util.*
+
 
 class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
     override fun getFab(): FloatingActionButton? {
@@ -211,7 +212,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
                     if(fromWidget){
                         //if from a widget we load from the widget vm
                         widgetVm = ViewModelProviders.of(this@ArticleActivity).get(WidgetVM::class.java)
-                        widgetVm.getFetchedItem(dbId).observe(this@ArticleActivity,android.arch.lifecycle.Observer {
+                        widgetVm.getFetchedItem(dbId).observe(this@ArticleActivity, Observer {
                             if(it != null) {
                                 res = it
                                 articleFragment?.displayMessage(it)
@@ -219,7 +220,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
                         })
                     } else {
                         articleVm = ViewModelProviders.of(this@ArticleActivity).get(ArticleRoomVM::class.java)
-                        articleVm.getFetchedItem(dbId).observe(this@ArticleActivity,android.arch.lifecycle.Observer {
+                        articleVm.getFetchedItem(dbId).observe(this@ArticleActivity,Observer {
                             if(it != null) {
                                 res = it
                                 articleFragment?.displayMessage(it)

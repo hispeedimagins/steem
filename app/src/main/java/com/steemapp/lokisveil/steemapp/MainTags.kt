@@ -2,17 +2,16 @@ package com.steemapp.lokisveil.steemapp
 
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -26,12 +25,10 @@ import com.steemapp.lokisveil.steemapp.HelperClasses.MakeJsonRpc
 import com.steemapp.lokisveil.steemapp.HelperClasses.TagRequestHelper
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.TagsInterface
-import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
-
 import kotlinx.android.synthetic.main.activity_main_tags.*
 import kotlinx.android.synthetic.main.content_main_tags.*
-import java.util.ArrayList
+import java.util.*
 
 class MainTags : AppCompatActivity(), TagsInterface {
     override fun okclicked(originalval: String, tag: String, limit: String, request: String) {
@@ -52,7 +49,7 @@ class MainTags : AppCompatActivity(), TagsInterface {
 
     internal var swipecommonactionsclass: swipecommonactionsclass? = null
 
-    private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
+    private var fragmentActivity: FragmentActivity? = null
 
     private var adapter: AllRecyclerViewAdapter? = null
     private var activity: Context? = null

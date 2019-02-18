@@ -2,30 +2,27 @@ package com.steemapp.lokisveil.steemapp.Fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
 import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
-import com.steemapp.lokisveil.steemapp.Enums.FollowInternal
 import com.steemapp.lokisveil.steemapp.FollowApiConstants
 import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
-
-import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.HelperClasses.dummy.DummyContent.DummyItem
+import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.jsonclasses.feed
-import java.text.SimpleDateFormat
-import java.util.ArrayList
+import java.util.*
 
 /**
  * A fragment representing a list of Items.
@@ -44,7 +41,7 @@ class upvotesFragment : Fragment() {
     private var mListener: OnListFragmentInteractionListener? = null
 
 
-    private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
+    private var fragmentActivity: FragmentActivity? = null
 
     private var adapter: AllRecyclerViewAdapter? = null
     private var activity: Context? = null

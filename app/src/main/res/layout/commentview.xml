@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -26,20 +26,6 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="match_parent">
-
-            <!--<TextView
-                android:padding="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/article_resteemed_by"
-                android:text="name"
-
-
-                android:drawablePadding="4dp"
-                android:drawableLeft="@drawable/ic_repeat_black_24px"
-                android:textStyle="bold"
-                />
-    -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -164,65 +150,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 >
-                <!--<TextView
-                    android:padding="5dp"
-                    android:textAlignment="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/article_title"
-                    android:text="tag"
-
-                    android:maxLines="2"
-                    android:textStyle="bold"
-                    />-->
-
-                <!--<ImageView
-                    android:adjustViewBounds="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/article_image"
-                    />-->
-
-                <!--<eu.fiskur.markdownview.MarkdownView
-                    android:id="@+id/article_summary_markdown"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />-->
-
-                <!--<ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </ScrollView>-->
-
-                <!--<WebView
-                    android:id="@+id/article_webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </WebView>-->
-
-                <!--<TextView
-                    android:id="@+id/article_summary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="20sp"
-                    android:paddingLeft="5sp"
-
-                    />-->
-
-                <!--<TextView
-                    android:padding="5dp"
-                    android:textAlignment="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/article_title"
-                    android:text="tag"
-
-                    android:maxLines="2"
-                    android:textStyle="bold"
-                    />-->
             </LinearLayout>
 
             <ProgressBar
@@ -356,5 +283,5 @@
 
 
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout >

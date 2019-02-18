@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        app:layout_constraintBaseline_toBaselineOf="parent"
         android:id="@+id/mainremo"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -29,7 +31,7 @@
             android:id="@+id/tags_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />-->
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tag (Optional)"
@@ -55,4 +57,4 @@
 
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

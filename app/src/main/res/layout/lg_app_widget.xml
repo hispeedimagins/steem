@@ -16,7 +16,7 @@
 
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/widget_heading"
@@ -58,13 +58,6 @@
         android:layout_height="wrap_content"
 
         android:padding="@dimen/widget_margin">
-
-        <!--<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/stack_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:loopViews="true" />-->
         <LinearLayout
             android:id="@+id/stack_view"
             android:layout_width="match_parent"
@@ -72,31 +65,6 @@
             android:orientation="vertical">
 
         </LinearLayout>
-        <!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="?attr/cardBackgroundColor"
-
-            android:textStyle="bold"
-            android:text="Loading"
-            android:textSize="20sp" />-->
-
-
-        <!--<TextView-->
-        <!--android:id="@+id/appwidget_text"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_margin="8dp"-->
-        <!--android:background="#09C"-->
-        <!--android:contentDescription="@string/appwidget_text"-->
-        <!--android:text="@string/appwidget_text"-->
-        <!--android:textColor="#ffffff"-->
-        <!--android:textSize="24sp"-->
-        <!--android:textStyle="bold|italic" />-->
 
     </RelativeLayout>
 

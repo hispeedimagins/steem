@@ -1,11 +1,11 @@
 package com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos
 
 import android.app.Application
-import android.arch.lifecycle.LiveData
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
 import android.content.Context
 import android.os.AsyncTask
+import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDaos.FollowsDao
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomDatabaseApp

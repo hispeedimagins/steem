@@ -4,53 +4,35 @@ import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.TabLayout
 import android.text.Html
-import android.text.format.DateUtils
 import android.text.method.LinkMovementMethod
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AlphaAnimation
+import android.view.*
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.steemapp.lokisveil.steemapp.Databases.FollowersDatabase
-import com.steemapp.lokisveil.steemapp.Databases.FollowingDatabase
-import com.steemapp.lokisveil.steemapp.Fragments.ArticleFragment
-import com.steemapp.lokisveil.steemapp.Fragments.CommentsFragment
-import com.steemapp.lokisveil.steemapp.Fragments.FeedFragment
 import com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
 import com.steemapp.lokisveil.steemapp.jsonclasses.prof
-
 import kotlinx.android.synthetic.main.activity_open_other_guy_blog.*
 import kotlinx.android.synthetic.main.fragment_open_other_guy_blog.view.*
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
     override fun notifyRequestMadeError() {
@@ -90,22 +72,12 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
     var key: String? = null
     internal var tabLayout: TabLayout? = null
     internal var viewPager: ViewPager? = null
-    //internal var articleFragment : ArticleFragment? = null
-    //internal var commentsFragment : CommentsFragment? = null
     internal var viewPagerAdapteradapter: ViewPagerAdapter? = null
     internal var articleuser = ""
     internal var articletag = ""
     internal var articlepermlink = ""
-    //internal var feedFragment : FeedFragment? = null
     internal var blogFragment :MyFeedFragment? = null
 
-    /*private val PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f
-    //private val PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f
-    private val PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.9f
-    private val PERCENTAGE_TO_HIDE_TITLE_DETAILS_two = 0.82f
-    private val ALPHA_ANIMATIONS_DURATION : Long = 200
-    private var mIsTheTitleVisible = false
-    private var mIsTheTitleContainerVisible = true*/
     var articlepop : ArticlePopUpMenu? = null
     var followCount: prof.FollowCount? = null
     var followers: List<prof.Resultfp> = ArrayList()

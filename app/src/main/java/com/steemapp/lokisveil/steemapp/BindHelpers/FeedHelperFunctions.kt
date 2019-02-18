@@ -1,17 +1,14 @@
 package com.steemapp.lokisveil.steemapp.BindHelpers
 
-//import com.commonsware.cwac.anddown.AndDown
-/*import eu.bittrade.libs.steemj.SteemJ
-import eu.bittrade.libs.steemj.base.models.AccountName
-import eu.bittrade.libs.steemj.base.models.Permlink*/
+
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
@@ -168,9 +165,9 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
             holder.article_image?.visibility = View.GONE
         }
         else{
-            holder.article_image?.visibility = View.GONE
+
             val im = holder.article?.displayImage
-            if(im != null){
+                if(im != null){
                 holder.article_image?.visibility = View.VISIBLE
                 //holder.article_image!!.setImageDrawable(animatedVec)
 
@@ -180,10 +177,12 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
                         //.error(R.drawable.error)
                         .priority(Priority.HIGH)
                 animatedVec?.start()
-                //use first of null so the app does not crash if no images exist
                 Glide.with(con).load(im).apply(optionss)
                         .into(holder.article_image!!)
-            }
+            } else {
+                    holder.article_image?.visibility = View.GONE
+                    holder.article_image?.setImageDrawable(null)
+                }
 
 
         }
@@ -219,7 +218,7 @@ class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterfa
         }
         else{
             mholder.article_reblog_now?.visibility = View.VISIBLE
-            holder.article_image?.visibility = View.VISIBLE
+            if(holder.article?.displayImage != null) holder.article_image?.visibility = View.VISIBLE
         }
         if(holder.article?.author == name){
             mholder.article_reblog_now?.visibility = View.GONE

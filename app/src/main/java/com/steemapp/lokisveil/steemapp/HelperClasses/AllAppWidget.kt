@@ -5,16 +5,11 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.widget.RemoteViews
 import android.widget.Toast
-
-import com.steemapp.lokisveil.steemapp.R
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
-import android.app.PendingIntent.getBroadcast
-import android.net.Uri
-import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import com.steemapp.lokisveil.steemapp.ArticleActivity
+import com.steemapp.lokisveil.steemapp.R
 import com.steemapp.lokisveil.steemapp.WidgetService
 import java.util.*
 

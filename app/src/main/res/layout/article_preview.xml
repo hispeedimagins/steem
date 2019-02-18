@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -54,10 +54,8 @@
                 android:id="@+id/textViewOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="5dp"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="5dp"
                 android:drawableEnd="@drawable/ic_baseline_more_vert_24px"
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textStyle="bold" />
@@ -82,7 +80,8 @@
             android:layout_marginTop="7dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
             <LinearLayout
                 android:layout_marginStart="5dp"
                 android:layout_weight="0"
@@ -161,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:layout_toEndOf="@id/article_name"
+
                     android:padding="5dp"
                     android:text="tag"
                     android:textColor="@color/colorAccent"
@@ -274,7 +273,8 @@
                 android:layout_height="wrap_content"
                 android:text="body"
                 android:textSize="16sp"
-                android:paddingLeft="5sp"
+                android:paddingStart="5sp"
+                android:paddingEnd="5sp"
                 android:maxLines="3"
                 android:ellipsize="end"
                 />
@@ -308,7 +308,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            >
+            android:baselineAligned="false">
 
 
 
@@ -333,7 +333,7 @@
 
                     android:gravity="center"
 
-                    android:drawableLeft="@drawable/ic_thumb_up_black_24px"
+                    android:drawableStart="@drawable/ic_thumb_up_black_24px"
                     android:drawablePadding="4dp"
                     android:textStyle="bold"
                     />
@@ -356,9 +356,9 @@
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
 
-                    android:drawableLeft="@drawable/ic_comment_black_24px"
+                    android:drawableStart="@drawable/ic_comment_black_24px"
                     android:textStyle="bold"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     />
             </LinearLayout>
 
@@ -381,7 +381,7 @@
                     android:drawablePadding="2dp"
                     android:gravity="center_vertical"
 
-                    android:drawableLeft="@drawable/ic_repeat_black_24px"
+                    android:drawableStart="@drawable/ic_repeat_black_24px"
                     android:textStyle="bold"
                     />
             </LinearLayout>
@@ -405,7 +405,7 @@
                     android:drawablePadding="2dp"
                     android:gravity="center_vertical"
 
-                    android:drawableLeft="@drawable/ic_attach_money_black_24px"
+                    android:drawableStart="@drawable/ic_attach_money_black_24px"
                     android:textStyle="bold"
                     />
             </LinearLayout>
@@ -419,4 +419,4 @@
 
 
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

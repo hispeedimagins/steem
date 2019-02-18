@@ -2,19 +2,14 @@ package com.steemapp.lokisveil.steemapp
 
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.RecyclerView
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.steemapp.lokisveil.steemapp.Databases.drafts
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
-
 import kotlinx.android.synthetic.main.activity_draft.*
 import kotlinx.android.synthetic.main.content_draft.*
-
-import java.util.ArrayList
+import java.util.*
 
 class DraftActivity : AppCompatActivity() {
     private var adapter: AllRecyclerViewAdapter? = null

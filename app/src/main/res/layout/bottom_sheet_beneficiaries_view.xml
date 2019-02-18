@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="?attr/cardBackgroundColor"
-    android:elevation="5dp"
     android:id="@+id/bottomsheetmain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,7 +8,8 @@
     app:behavior_hideable="true"
     app:layout_constraintBaseline_toBaselineOf="parent"
     app:behavior_peekHeight="62dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 <!--    app:behavior_peekHeight="56dp"
@@ -28,11 +28,11 @@
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Beneficiaries"
+            android:text="@string/beneficiaries"
 
             />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/beneficiary_add_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
     </RelativeLayout>
 
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/beneficiaryrecycler"
@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        app:layoutManager="LinearLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context="com.steemapp.lokisveil.steemapp.Fragments.WritePost"
 
 

@@ -12,16 +12,16 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.design.widget.TextInputLayout
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.FileProvider
-import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import com.google.android.material.textfield.TextInputLayout
 import com.steemapp.lokisveil.steemapp.MiscConstants
 import com.steemapp.lokisveil.steemapp.R
 import com.yalantis.ucrop.UCrop
@@ -162,7 +162,7 @@ class ImagePickersWithHelpers{
          * clears errors from a textinputlayout
          *
          */
-        fun clearError(til:TextInputLayout, text: Editable? = null, lengthCheck:Int? = null, clear:Boolean = false){
+        fun clearError(til: TextInputLayout, text: Editable? = null, lengthCheck:Int? = null, clear:Boolean = false){
             if(text != null && text.isNotEmpty()){
                 if(lengthCheck == null) {
                     til.error = null

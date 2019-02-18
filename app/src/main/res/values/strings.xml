@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Steemer</string>
+    <string name="app_name">Steem</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -168,4 +168,6 @@
     <string name="camera_permission">Permission denied</string>
     <string name="title_activity_image_download">Images</string>
     <string name="download_request_made">Downloading…</string>
+    <string name="beneficiaries">Beneficiaries</string>
+    <string name="profile_image">Profile Image</string>
 </resources>

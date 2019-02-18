@@ -5,18 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.NavigationView
-import android.support.design.widget.TabLayout
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -24,12 +12,24 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import androidx.viewpager.widget.ViewPager
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.Databases.drafts
@@ -49,7 +49,6 @@ import kotlinx.android.synthetic.main.follow_progress.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import java.util.*
 import kotlin.collections.ArrayList
-import com.splunk.mint.Mint
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,TagsInterface,GlobalInterface {
     override fun notifyRequestMadeSuccess() {

@@ -1,11 +1,10 @@
 package com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.paging.PagedList
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
-import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.ArticleRoomRepo
 import com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomRepos.WidgetRepo
 
 /**

@@ -2,40 +2,30 @@ package com.steemapp.lokisveil.steemapp.Fragments
 
 import android.app.Activity
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.TextInputLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.*
 import android.text.Editable
-import android.text.method.ScrollingMovementMethod
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-
-import com.steemapp.lokisveil.steemapp.R
-import com.steemapp.lokisveil.steemapp.Fragments.dummy.DummyContent
-import com.steemapp.lokisveil.steemapp.Fragments.dummy.DummyContent.DummyItem
-import com.steemapp.lokisveil.steemapp.HelperClasses.TextInputLayoutErrorHandler
-import android.text.Selection.getSelectionEnd
-import android.text.Selection.getSelectionStart
-import android.text.TextWatcher
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textfield.TextInputLayout
 import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
-import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.drafts
-import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
+import com.steemapp.lokisveil.steemapp.Fragments.dummy.DummyContent.DummyItem
 import com.steemapp.lokisveil.steemapp.HelperClasses.FabHider
+import com.steemapp.lokisveil.steemapp.HelperClasses.TextInputLayoutErrorHandler
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
-import java.util.ArrayList
-import android.text.method.TextKeyListener.clear
-
-
+import com.steemapp.lokisveil.steemapp.R
+import java.util.*
 
 
 /**

@@ -1,25 +1,19 @@
 package com.steemapp.lokisveil.steemapp
 
 import android.app.SearchManager
-import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-
-import kotlinx.android.synthetic.main.activity_search.*
-import android.app.SearchManager.QUERY
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.RecyclerView
+import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.DataHolders.GetReputationDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.FollowersDatabase
@@ -28,13 +22,11 @@ import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.HelperClasses.*
 import com.steemapp.lokisveil.steemapp.jsonclasses.AskSteemSearch
-import com.steemapp.lokisveil.steemapp.jsonclasses.feed
+import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.content_search.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.regex.Pattern
 
 
 //this is the search activity

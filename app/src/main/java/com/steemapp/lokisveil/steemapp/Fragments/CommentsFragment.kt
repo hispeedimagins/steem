@@ -4,15 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.RecyclerView
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.commonsware.cwac.anddown.AndDown
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -23,17 +22,10 @@ import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.HelperClasses.FabHider
-import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
-import com.steemapp.lokisveil.steemapp.HelperClasses.calendarcalculations
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
 import com.steemapp.lokisveil.steemapp.Interfaces.ArticleActivityInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.GlobalInterface
-
 import com.steemapp.lokisveil.steemapp.R
-import com.steemapp.lokisveil.steemapp.jsonclasses.feed
-import org.json.JSONObject
-import java.io.Serializable
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -71,7 +63,7 @@ class CommentsFragment : Fragment(),GlobalInterface {
 
     internal var swipecommonactionsclass: swipecommonactionsclass? = null
 
-    private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
+    private var fragmentActivity: FragmentActivity? = null
 
     var adapter: AllRecyclerViewAdapter? = null
     private var activity: Context? = null

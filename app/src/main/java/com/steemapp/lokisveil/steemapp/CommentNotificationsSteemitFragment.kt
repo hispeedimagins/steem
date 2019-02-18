@@ -2,22 +2,20 @@ package com.steemapp.lokisveil.steemapp
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Databases.RequestsDatabase
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
@@ -25,10 +23,7 @@ import com.steemapp.lokisveil.steemapp.Enums.TypeOfRequest
 import com.steemapp.lokisveil.steemapp.HelperClasses.JsonRpcResultConversion
 import com.steemapp.lokisveil.steemapp.HelperClasses.MakeJsonRpc
 import com.steemapp.lokisveil.steemapp.HelperClasses.swipecommonactionsclass
-
-import com.steemapp.lokisveil.steemapp.dummy.DummyContent
 import com.steemapp.lokisveil.steemapp.dummy.DummyContent.DummyItem
-import com.steemapp.lokisveil.steemapp.jsonclasses.feed
 import kotlinx.android.synthetic.main.fragment_commentnotificationssteemit_list.*
 import org.json.JSONObject
 import java.util.*
@@ -47,7 +42,7 @@ class CommentNotificationsSteemitFragment : Fragment() {
     private var listener: OnListFragmentInteractionListener? = null
     internal var swipecommonactionsclass: swipecommonactionsclass? = null
 
-    private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
+    private var fragmentActivity: FragmentActivity? = null
 
     private var adapter: AllRecyclerViewAdapter? = null
     private var activity: Context? = null
@@ -84,18 +79,18 @@ class CommentNotificationsSteemitFragment : Fragment() {
         username = sharedPreferences?.getString(CentralConstants.username, null)
         key = sharedPreferences?.getString(CentralConstants.key, null)
         // Set the adapter
+
         var recy = listm
         if(recy == null){
             recy = view.findViewById(R.id.listm)
         }
-        if (recy is RecyclerView) {
-            with(recy) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-
+        recy as RecyclerView
+        with(recy) {
+            layoutManager = when {
+                columnCount <= 1 -> LinearLayoutManager(context)
+                else -> GridLayoutManager(context, columnCount)
             }
+
         }
 
         adapter = AllRecyclerViewAdapter(getActivity() as FragmentActivity, ArrayList(), recy, view, AdapterToUseFor.replyNoti)
@@ -153,9 +148,9 @@ class CommentNotificationsSteemitFragment : Fragment() {
     activity = getActivity()?.applicationContext
     var swipeRefreshLayout = view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout_comm)
 
-        swipeRefreshLayout?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+        swipeRefreshLayout?.setOnRefreshListener {
         refreshcontent()
-    })
+    }
 
     swipecommonactionsclass = swipecommonactionsclass(swipeRefreshLayout!!)
     fragmentActivity = getActivity()

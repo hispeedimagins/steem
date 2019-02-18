@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/fragment_follow_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         xmlns:android="http://schemas.android.com/apk/res/android">
-        <!--<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/list"
-            android:name="com.steemapp.lokisveil.steemapp.Fragments.FollowingFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            app:layoutManager="LinearLayoutManager"
-            tools:context="com.steemapp.lokisveil.steemapp.Fragments.FollowingFragment"
-            tools:listitem="@layout/follow_view_resource" />-->
         <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
             android:id="@+id/list"
             android:name="com.steemapp.lokisveil.steemapp.Fragments.FollowingFragment"
@@ -34,8 +23,8 @@
             tools:context="com.steemapp.lokisveil.steemapp.Fragments.FollowingFragment"
             tools:listitem="@layout/follow_view_resource"
             />
-    </android.support.v4.widget.SwipeRefreshLayout>
-</android.support.design.widget.CoordinatorLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 

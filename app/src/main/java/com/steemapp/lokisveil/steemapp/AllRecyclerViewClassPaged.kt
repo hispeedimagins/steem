@@ -1,18 +1,20 @@
 package com.steemapp.lokisveil.steemapp
 
 import android.app.Activity
-import android.arch.paging.AsyncPagedListDiffer
-import android.arch.paging.PagedList
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.RecyclerView
+
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.AsyncPagedListDiffer
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import com.steemapp.lokisveil.steemapp.BindHelpers.*
@@ -500,7 +502,7 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
     /**
      * we submit the paged list here
      */
-    fun submitList(list:PagedList<Any>){
+    fun submitList(list: PagedList<Any>){
         mDiffer.submitList(list)
     }
 

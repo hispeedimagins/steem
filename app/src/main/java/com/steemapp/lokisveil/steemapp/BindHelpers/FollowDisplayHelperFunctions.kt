@@ -3,14 +3,11 @@ package com.steemapp.lokisveil.steemapp.BindHelpers
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
 import com.commonsware.cwac.anddown.AndDown
-import com.steemapp.lokisveil.steemapp.AllRecyclerViewAdapter
 import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.Enums.AdapterToUseFor
 import com.steemapp.lokisveil.steemapp.HelperClasses.ArticlePopUpMenu

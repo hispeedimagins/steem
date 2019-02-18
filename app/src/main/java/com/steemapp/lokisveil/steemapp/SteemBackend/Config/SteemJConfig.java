@@ -1,6 +1,5 @@
 package com.steemapp.lokisveil.steemapp.SteemBackend.Config;
 
-import android.support.v4.util.Pair;
 import android.util.Log;
 
 import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.AddressPrefixType;
@@ -18,9 +17,10 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+
+import androidx.core.util.Pair;
 
 /**
  * Created by boot on 2/23/2018.

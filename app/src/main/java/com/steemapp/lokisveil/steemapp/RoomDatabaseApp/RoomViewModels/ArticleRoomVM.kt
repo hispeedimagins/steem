@@ -1,9 +1,9 @@
 package com.steemapp.lokisveil.steemapp.RoomDatabaseApp.RoomViewModels
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.paging.PagedList
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
 import com.steemapp.lokisveil.steemapp.Interfaces.ArticleVmRepoInterface
 import com.steemapp.lokisveil.steemapp.Interfaces.JsonRpcResultInterface
@@ -15,7 +15,7 @@ import java.util.*
 /**
  * the article viewmodel class
  */
-class ArticleRoomVM(application: Application):AndroidViewModel(application),ArticleVmRepoInterface {
+class ArticleRoomVM(application: Application): AndroidViewModel(application),ArticleVmRepoInterface {
     override fun updateSaveTime(sTime: Long) {
         timeOfSave = sTime
     }

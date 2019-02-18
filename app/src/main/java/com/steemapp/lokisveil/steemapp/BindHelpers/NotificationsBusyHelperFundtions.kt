@@ -1,12 +1,11 @@
 package com.steemapp.lokisveil.steemapp.BindHelpers
 
-import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
@@ -35,31 +34,10 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
         }
     }
 
-    /*fun GetPx(dp : Float) : Int{
-
-        return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp + 5,
-                metrics
-        ).toInt()
-    }
-
-    fun GetLayourParamsMargin(mar : Int) : LinearLayout.LayoutParams{
-        var param : LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        param.leftMargin = mar
-        //param.setMargins(mar, 0, 5, 0)
-
-        return param
-    }*/
 
 
 
-
-
-    public fun add(article : BusyNotificationJson.Result){
+    fun add(article : BusyNotificationJson.Result){
 
         if(article.date != null) floatingDateHolder?.checktimeandaddQuestions(article.date!!) else floatingDateHolder?.checktimeandaddQuestions(Date((article.timestamp!!*1000).toLong()))
         adaptedcomms.add(article)
@@ -67,14 +45,14 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
         adaptedcomms.notifyitemcinserted(adaptedcomms.getSize())
     }
 
-    public fun add(articles:List<BusyNotificationJson.Result>){
+    fun add(articles:List<BusyNotificationJson.Result>){
         for (x in articles){
             add(x)
         }
     }
 
 
-    public fun resetDate(){
+    fun resetDate(){
         floatingDateHolder?.prevdate = Calendar.getInstance()
     }
 
@@ -178,15 +156,6 @@ class NotificationsBusyHelperFundtions(context : Context, username:String?, adap
 
         holder.article_summary?.text = body
 
-        /*mholder.mView.setOnClickListener(View.OnClickListener {
-            //ForReturningQuestionsLite q = item;
-
-            *//*val myIntent = Intent(con, ArticleActivity::class.java)
-            myIntent.putExtra("username", holder.article?.author)
-            myIntent.putExtra("tag", holder.article?.category)
-            myIntent.putExtra("permlink", holder.article?.permlink)
-            con.startActivity(myIntent)*//*
-        })*/
 
     }
     }

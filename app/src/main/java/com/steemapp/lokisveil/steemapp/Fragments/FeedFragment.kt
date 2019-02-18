@@ -1,20 +1,22 @@
 package com.steemapp.lokisveil.steemapp.Fragments
 
-import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
+
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -80,7 +82,7 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
 
     internal var swipecommonactionsclass: swipecommonactionsclass? = null
 
-    private var fragmentActivity: android.support.v4.app.FragmentActivity? = null
+    private var fragmentActivity: FragmentActivity? = null
 
     private var adapter: AllRecyclerViewClassPaged? = null
     private var activity: Context? = null
@@ -132,7 +134,7 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
             //observe the last db result only once
 
             //fetch the data from the paged list item sorted by saved time
-            vm?.getPagedUpdatedListTime()?.observe(this,android.arch.lifecycle.Observer { pagedList ->
+            vm?.getPagedUpdatedListTime()?.observe(this, Observer { pagedList ->
                 if(pagedList != null && pagedList.size > 0){
                     //submit the list to the adapter
                     adapter?.submitList(pagedList as PagedList<Any>)

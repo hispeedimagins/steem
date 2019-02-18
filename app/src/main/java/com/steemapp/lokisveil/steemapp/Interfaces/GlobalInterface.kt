@@ -2,11 +2,10 @@ package com.steemapp.lokisveil.steemapp.Interfaces
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
-import android.support.design.widget.FloatingActionButton
+
 import android.widget.CheckBox
 import com.github.clans.fab.FloatingActionMenu
-import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**
  * Created by boot on 3/21/2018.

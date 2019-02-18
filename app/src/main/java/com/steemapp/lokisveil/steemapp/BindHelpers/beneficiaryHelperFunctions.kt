@@ -3,30 +3,20 @@ package com.steemapp.lokisveil.steemapp.BindHelpers
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
-import android.text.Html
-import android.util.DisplayMetrics
-import android.util.TypedValue
 import android.view.View
-import android.widget.*
+import android.widget.CompoundButton
+import android.widget.ImageView
+import android.widget.SeekBar
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.request.RequestOptions
-import com.commonsware.cwac.anddown.AndDown
-import com.steemapp.lokisveil.steemapp.*
+import com.steemapp.lokisveil.steemapp.CentralConstants
 import com.steemapp.lokisveil.steemapp.DataHolders.FeedArticleDataHolder
-import com.steemapp.lokisveil.steemapp.HelperClasses.ArticlePopUpMenu
-import com.steemapp.lokisveil.steemapp.HelperClasses.MyLiTagHandler
-import com.steemapp.lokisveil.steemapp.HelperClasses.StaticMethodsMisc
-import com.steemapp.lokisveil.steemapp.HelperClasses.VoteWeightThenVote
 import com.steemapp.lokisveil.steemapp.Interfaces.arvdinterface
-import com.steemapp.lokisveil.steemapp.MyViewHolders.CommentViewHolder
 import com.steemapp.lokisveil.steemapp.MyViewHolders.beneficiaryViewHolder
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Enums.MyOperationTypes
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.AccountName
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Models.Permlink
-import com.steemapp.lokisveil.steemapp.SteemBackend.Config.Operations.VoteOperation
+import com.steemapp.lokisveil.steemapp.OpenOtherGuyBlog
+import com.steemapp.lokisveil.steemapp.R
 
 //simple helper functions for recycler view in beneficiaries
 class beneficiaryHelperFunctions(context : Context, username:String?, adapter: arvdinterface)  {

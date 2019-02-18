@@ -1,7 +1,5 @@
 package com.steemapp.lokisveil.steemapp.Crypto;
 
-import android.support.annotation.Nullable;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -33,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import androidx.annotation.Nullable;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -45,7 +45,7 @@ public class CryptoUtils {
 
 
 
-    /** Mock for testing. */
+
     //private static BlockingQueue<Boolean> mockSleepQueue;
 
     /**
@@ -218,10 +218,10 @@ public class CryptoUtils {
      * 64-bit integer in little endian format.
      */
     public static long readInt64(byte[] bytes, int offset) {
-        return (bytes[offset] & 0xffl) | ((bytes[offset + 1] & 0xffl) << 8) | ((bytes[offset + 2] & 0xffl) << 16)
-                | ((bytes[offset + 3] & 0xffl) << 24) | ((bytes[offset + 4] & 0xffl) << 32)
-                | ((bytes[offset + 5] & 0xffl) << 40) | ((bytes[offset + 6] & 0xffl) << 48)
-                | ((bytes[offset + 7] & 0xffl) << 56);
+        return (bytes[offset] & 0xffL) | ((bytes[offset + 1] & 0xffL) << 8) | ((bytes[offset + 2] & 0xffL) << 16)
+                | ((bytes[offset + 3] & 0xffL) << 24) | ((bytes[offset + 4] & 0xffL) << 32)
+                | ((bytes[offset + 5] & 0xffL) << 40) | ((bytes[offset + 6] & 0xffL) << 48)
+                | ((bytes[offset + 7] & 0xffL) << 56);
     }
 
     /**
@@ -229,8 +229,8 @@ public class CryptoUtils {
      * 32-bit integer in big endian format.
      */
     public static long readUint32BE(byte[] bytes, int offset) {
-        return ((bytes[offset] & 0xffl) << 24) | ((bytes[offset + 1] & 0xffl) << 16)
-                | ((bytes[offset + 2] & 0xffl) << 8) | (bytes[offset + 3] & 0xffl);
+        return ((bytes[offset] & 0xffL) << 24) | ((bytes[offset + 1] & 0xffL) << 16)
+                | ((bytes[offset + 2] & 0xffL) << 8) | (bytes[offset + 3] & 0xffL);
     }
 
     /**

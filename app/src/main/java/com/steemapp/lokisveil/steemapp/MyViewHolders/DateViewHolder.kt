@@ -1,8 +1,9 @@
 package com.steemapp.lokisveil.steemapp.MyViewHolders
 
-import android.support.v7.widget.RecyclerView
+
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.steemapp.lokisveil.steemapp.R
 import java.util.*
 
