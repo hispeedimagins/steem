@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.steemapp.lokisveil.steemapp">
+    package="com.insteem.ipfreely.steem">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -24,7 +24,7 @@
         android:theme="@style/Plaid">
         <activity
 
-            android:name=".MainActivity"
+            android:name="com.insteem.ipfreely.steem.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.LauncherSplash">
@@ -110,12 +110,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.insteem.ipfreely.steem.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".ArticleActivity"
+            android:name="com.insteem.ipfreely.steem.ArticleActivity"
             android:label="@string/title_activity_article"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.insteem.ipfreely.steem.MainActivity"
             android:theme="@style/Plaid.Translucent.DesignerNewsStory">
 
             <!--
@@ -224,14 +224,14 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.steemapp.lokisveil.steemapp.MainActivity" />
+                android:value="com.insteem.ipfreely.steem.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.insteem.ipfreely.steem.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/Plaid.Home" />
         <activity
-            android:name=".OpenOtherGuyBlog"
+            android:name="com.insteem.ipfreely.steem.OpenOtherGuyBlog"
             android:label="@string/title_activity_open_other_guy_blog"
             android:theme="@style/Plaid.Home">
             <intent-filter>
@@ -243,33 +243,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserUpvoteActivity"
+            android:name="com.insteem.ipfreely.steem.UserUpvoteActivity"
             android:label="@string/title_activity_user_upvote"
             android:theme="@style/Plaid.Translucent.DesignerNewsStory" />
         <activity
-            android:name=".FavouritesActivity"
+            android:name="com.insteem.ipfreely.steem.FavouritesActivity"
             android:label="@string/title_activity_favourites"
             android:theme="@style/Plaid.Home" />
         <activity
-            android:name=".FollowDisplay"
+            android:name="com.insteem.ipfreely.steem.FollowDisplay"
             android:label="@string/title_activity_follow_display"
             android:theme="@style/Plaid.Home" />
         <activity
-            android:name=".Post"
+            android:name="com.insteem.ipfreely.steem.Post"
             android:label="@string/title_activity_post"
             android:theme="@style/Plaid.Home"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DraftActivity"
+            android:name="com.insteem.ipfreely.steem.DraftActivity"
             android:label="@string/title_activity_draft"
             android:theme="@style/Plaid.Home" />
         <activity
-            android:name=".MainTags"
+            android:name="com.insteem.ipfreely.steem.MainTags"
             android:label="@string/title_activity_main_tags"
             android:theme="@style/Plaid.Home" />
 
         <service
-            android:name=".NotificationService"
+            android:name="com.insteem.ipfreely.steem.NotificationService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE">
@@ -279,20 +279,20 @@
         </service>
 
         <activity
-            android:name=".CommentNotifications"
+            android:name="com.insteem.ipfreely.steem.CommentNotifications"
             android:label="@string/title_activity_comment_notifications"
             android:theme="@style/Plaid.Translucent.DesignerNewsStory" />
         <activity
-            android:name=".NotificationsBusyD"
+            android:name="com.insteem.ipfreely.steem.NotificationsBusyD"
             android:label="@string/title_activity_notifications_busy_d"
             android:theme="@style/Plaid.Translucent.DesignerNewsStory" />
 
         <provider
-            android:name=".SearchSuggestionsProvider"
-            android:authorities="com.steemapp.lokisveil.steemapp.MySuggestionProvider" />
+            android:name="com.insteem.ipfreely.steem.SearchSuggestionsProvider"
+            android:authorities="com.insteem.ipfreely.steem.MySuggestionProvider" />
 
         <activity
-            android:name=".SearchActivity"
+            android:name="com.insteem.ipfreely.steem.SearchActivity"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop"
             android:theme="@style/Plaid">
@@ -305,7 +305,7 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <receiver android:name=".HelperClasses.AllAppWidget">
+        <receiver android:name="com.insteem.ipfreely.steem.HelperClasses.AllAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -314,7 +314,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/all_app_widget_info" />
         </receiver>
-        <receiver android:name=".HelperClasses.LgAppWidget">
+        <receiver android:name="com.insteem.ipfreely.steem.HelperClasses.LgAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -324,14 +324,14 @@
                 android:resource="@xml/lg_smart_bulletin_widget" />
         </receiver>
 
-        <activity android:name=".HelperClasses.AllAppWidgetConfigureActivity">
+        <activity android:name="com.insteem.ipfreely.steem.HelperClasses.AllAppWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <service
-            android:name=".WidgetService"
+            android:name="com.insteem.ipfreely.steem.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"></service>
 
         <activity
@@ -354,7 +354,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".ImageDownloadActivity"
+            android:name="com.insteem.ipfreely.steem.ImageDownloadActivity"
             android:label="@string/title_activity_image_download"
             android:theme="@style/Plaid"></activity>
     </application>

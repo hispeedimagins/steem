@@ -28,7 +28,7 @@ android {
     buildToolsVersion '28.0.3'
     defaultConfig {
         //android.defaultConfig.vectorDrawables.useSupportLibrary = true
-        applicationId "com.steemapp.lokisveil.steemapp"
+        applicationId "com.insteem.ipfreely.steem"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 39
@@ -59,7 +59,8 @@ dependencies {
     def paging_version = '2.0.0-beta01'
     def sup_libs = '1.0.0-beta01'
     def work_version = "1.0.0-beta03"
-    def nav_version = "1.0.0-beta02"
+    def nav_version = "1.0.0-rc01"
+    def appCenterSdkVersion = '1.11.3'
 
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -135,4 +136,6 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui:$nav_version" // For Kotlin use navigation-ui-ktx
 
 
+    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 }

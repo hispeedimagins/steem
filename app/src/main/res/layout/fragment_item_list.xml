@@ -20,7 +20,7 @@
             app:fastScrollPopupTextColor="@android:color/primary_text_dark"
             app:fastScrollThumbColor="@color/colorAccent"
             app:layoutManager="LinearLayoutManager"
-            tools:context="com.steemapp.lokisveil.steemapp.Fragments.FollowingFragment"
+            tools:context="com.insteem.ipfreely.steem.Fragments.FollowingFragment"
             tools:listitem="@layout/follow_view_resource"
             />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

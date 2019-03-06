@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.steemapp.lokisveil.steemapp.FavouritesActivity"
+    tools:context="com.insteem.ipfreely.steem.FavouritesActivity"
     tools:showIn="@layout/activity_favourites">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/activity_feed_swipe_refresh_layout_favs"
@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
 
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:context="com.steemapp.lokisveil.steemapp.FavouritesActivity"
+            tools:context="com.insteem.ipfreely.steem.FavouritesActivity"
             tools:listitem="@layout/article_preview" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <include android:id="@+id/dateanim" layout="@layout/dateholderandanimator" />

@@ -26,7 +26,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         android:layout_height="match_parent"
 
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:context="com.steemapp.lokisveil.steemapp.Fragments.MyFeedFragment"
+        tools:context="com.insteem.ipfreely.steem.Fragments.MyFeedFragment"
 
 
         android:scrollbarStyle="insideOverlay"

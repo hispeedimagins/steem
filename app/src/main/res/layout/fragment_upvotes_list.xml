@@ -12,7 +12,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:context="com.steemapp.lokisveil.steemapp.Fragments.upvotesFragment"
+        tools:context="com.insteem.ipfreely.steem.Fragments.upvotesFragment"
         tools:listitem="@layout/likes_layout" />
     <include android:id="@+id/dateanim" layout="@layout/dateholderandanimator" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

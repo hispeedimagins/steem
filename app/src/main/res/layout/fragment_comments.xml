@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
 
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:context="com.steemapp.lokisveil.steemapp.Fragments.CommentsFragment"
+            tools:context="com.insteem.ipfreely.steem.Fragments.CommentsFragment"
 
 
             android:scrollbarStyle="insideOverlay"

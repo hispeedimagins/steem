@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
 
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:context="com.steemapp.lokisveil.steemapp.Fragments.WritePost"
+        tools:context="com.insteem.ipfreely.steem.Fragments.WritePost"
 
 
         android:scrollbarStyle="insideOverlay"

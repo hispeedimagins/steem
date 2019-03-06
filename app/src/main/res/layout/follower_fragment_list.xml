@@ -9,5 +9,5 @@
     app:fastScrollEnabled="true"
 
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    tools:context="com.steemapp.lokisveil.steemapp.Fragments.FollowerFragment"
+    tools:context="com.insteem.ipfreely.steem.Fragments.FollowerFragment"
     tools:listitem="@layout/follow_view_resource" />
