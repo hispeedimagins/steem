@@ -19,6 +19,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -50,7 +51,7 @@
 
                 android:textStyle="bold" />
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/textViewOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,7 +59,7 @@
                 android:paddingEnd="5dp"
                 android:drawableEnd="@drawable/ic_baseline_more_vert_24px"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:textStyle="bold" />
+                android:textStyle="bold" />-->
             <!--<TextView
                 android:id="@+id/textViewOptions"
                 android:layout_width="wrap_content"
@@ -71,6 +72,45 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textStyle="bold" />-->
             <!--android:text="&#8942;"-->
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/article_overflowholder_by_Linear"
+            >
+
+
+
+
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/article_tag"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+
+                android:padding="5dp"
+                android:text="tag"
+                android:textColor="@color/colorAccent"
+
+                android:fontFamily="@font/roboto_light"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="5dp"
+                android:drawableEnd="@drawable/ic_baseline_more_vert_24px"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textStyle="bold" />
         </LinearLayout>
 
 
@@ -154,7 +194,7 @@
                     android:textStyle="bold"
                     tools:fontFamily="@font/roboto_light" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/article_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -166,7 +206,7 @@
                     android:textColor="@color/colorAccent"
 
                     android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold" />
+                    android:textStyle="bold" />-->
 
                 <TextView
                     android:layout_marginTop="2dp"
