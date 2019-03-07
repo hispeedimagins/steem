@@ -195,8 +195,8 @@ class AllRecyclerViewClassPaged(activity: Activity, thisRecyclerView: RecyclerVi
         appUserName = if(appUserName != null) appUserName as String else context?.getSharedPreferences(CentralConstants.sharedprefname, 0)!!.getString("username", null)
         when (initiate) {
             AdapterToUseFor.feed -> {
-                //this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
-                this.feedHelperFunctions = FeedHelperFunctions(context as Context,appUserName!!,this, AdapterToUseFor.feed)
+                this.floatingDateHolder = FloatingDateHolder(context!!,view!!,recyclerView!!,this)
+                this.feedHelperFunctions = FeedHelperFunctions(context as Context,appUserName!!,this, AdapterToUseFor.feed,this.floatingDateHolder)
             }
             AdapterToUseFor.blog -> {
                 //this.floatingDateHolder = FloatingDateHolder(context!!, view!!, recyclerView!!, this)

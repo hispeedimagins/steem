@@ -15,6 +15,7 @@ import com.insteem.ipfreely.steem.HelperClasses.Links
 import com.insteem.ipfreely.steem.HelperClasses.Physhy
 import com.insteem.ipfreely.steem.HelperClasses.ProxifyUrl
 import com.insteem.ipfreely.steem.HelperClasses.StaticMethodsMisc
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MiscConstants{
@@ -299,6 +300,12 @@ class MiscConstants{
         fun dateToRelDate(created: Date, context: Context?):String{
             val du = dateToRelDate(created.time,context)
             return du.toString()
+        }
+
+
+        fun dateToDisplayHolder(date:Long):String{
+            val sdf = SimpleDateFormat("dd MMMM", Locale.getDefault())
+            return sdf.format(date)
         }
 
         /**

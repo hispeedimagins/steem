@@ -52,3 +52,6 @@ anddown/build/intermediates/transforms/stripDebugSymbol/release/0/lib/x86/liband
 anddown/build/intermediates/transforms/stripDebugSymbol/release/0/lib/x86_64/libanddown.so
 anddown/build/intermediates/transforms/stripDebugSymbol/release/__content__.json
 anddown/build/outputs/logs/manifest-merger-release-report.txt
+*.ser
+anddown/build/intermediates/incremental/debug-mergeJniLibs/merge-state
+anddown/build/intermediates/incremental/packageDebugResources/compile-file-map.properties

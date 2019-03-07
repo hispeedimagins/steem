@@ -66,7 +66,7 @@ data class ProfileJsonSteemit(
             val voting_manabar: VotingManabar?,
             val voting_power: Int?,
             val withdraw_routes: Int?,
-            val withdrawn: Int?,
+            val withdrawn: Long?,
             val witness_votes: List<String?>?,
             val witnesses_voted_for: Int?
     ) {

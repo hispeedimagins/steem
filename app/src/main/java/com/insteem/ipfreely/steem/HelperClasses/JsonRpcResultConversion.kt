@@ -19,6 +19,8 @@ import com.insteem.ipfreely.steem.jsonclasses.feed
 import com.insteem.ipfreely.steem.jsonclasses.prof
 import org.json.JSONArray
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Pattern
 
 
@@ -315,6 +317,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         var du = DateUtils.getRelativeDateTimeString(contex,dd.time, DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,0)*/
         val dd = StaticMethodsMisc.FormatDateGmt(commstr.getString("created"))
         val du = MiscConstants.dateToRelDate(dd,contex)
+        //val sdf = SimpleDateFormat("dd MMMM", Locale.getDefault())
         val fd : FeedArticleDataHolder.FeedArticleHolder = FeedArticleDataHolder.FeedArticleHolder(
                 displayName = autho,
                 reblogBy = ls,
@@ -358,7 +361,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 rootPermlink = if(commstr.has("root_permlink")) commstr.getString("root_permlink") else null,
                 followsYou = false,
                 isBlog = blogData,
-                displayImage = jsonMetadata?.image?.firstOrNull()
+                displayImage = jsonMetadata?.image?.firstOrNull(),
+                sDate = MiscConstants.dateToDisplayHolder(dd.time)
 
         )
         return fd
@@ -400,7 +404,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         if(result == null){
             return list
         }
-        val content : JSONObject = result.getJSONObject("content")
+        val content : JSONObject = if(body?.has("content")) result.getJSONObject("content") else return list
 
         val com : JSONObject = content.getJSONObject(UserAndPermlinkWithDash)
         val article  = getprocessedfeed(com,true) //gson.fromJson<feed.Comment>(com.toString(),feed.Comment::class.java)
@@ -546,7 +550,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 paretn_author = parentAuthor,
                 rootAuthor = if(commstr.has("root_author")) commstr.getString("root_author") else null,
                 rootPermlink = if(commstr.has("root_permlink")) commstr.getString("root_permlink") else null,
-                followsYou = tfollowsYou
+                followsYou = tfollowsYou,
+                sDate = MiscConstants.dateToDisplayHolder(dd.time)
                 //datespan = du.toString()
         )
         //adapter?.add(fd)

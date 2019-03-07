@@ -40,17 +40,17 @@ interface WidgetDao {
     fun getPagedList(): DataSource.Factory<Int,FeedArticleDataHolder.FeedArticleHolder>*/
 
     //get a paged list
-    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime from widget_holder where isBlog == :isBlog ORDER BY myDbKey ASC")
+    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime,sDate from widget_holder where isBlog == :isBlog ORDER BY myDbKey ASC")
     fun getPagedList(isBlog:Boolean = false): DataSource.Factory<Int, FeedArticleDataHolder.FeedArticleHolder>
 
 
     //get a paged list paged list
-    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime from widget_holder where isBlog == :isBlog & myDbKey > :dbkey ORDER BY myDbKey ASC")
+    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime,sDate from widget_holder where isBlog == :isBlog & myDbKey > :dbkey ORDER BY myDbKey ASC")
     fun getPagedList(dbkey:Int,isBlog:Boolean = false): DataSource.Factory<Int, FeedArticleDataHolder.FeedArticleHolder>
 
 
     //get all items
-    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime from widget_holder where isBlog == :isBlog & myDbKey > :dbkey ORDER BY myDbKey ASC")
+    @Query("SELECT id,myDbKey,active,activeVotes,already_paid,app,author,authorreputation,cashoutTime,category,children,created,createdcon,date,datespan,depth,displayName,entryId,followsYou,format,image,lastPayout,lastUpdate,links,pending_payout_value,netVotes,permlink,promoted,reblogBy,reblogOn,replies,rootAuthor,rootComment,rootPermlink,summary,tags,title,total_pending_payout_value,useFollow,users,uservoted,width,isBlog,saveTime,sDate from widget_holder where isBlog == :isBlog & myDbKey > :dbkey ORDER BY myDbKey ASC")
     fun getList(dbkey:Int,isBlog:Boolean = false): List<FeedArticleDataHolder.FeedArticleHolder>
 
     //get the last items db id

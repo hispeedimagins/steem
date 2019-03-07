@@ -2,6 +2,7 @@ package com.insteem.ipfreely.steem.BindHelpers
 
 import android.app.Activity
 import android.content.Context
+import android.opengl.Visibility
 import android.view.View
 import android.view.animation.TranslateAnimation
 import android.widget.TextView
@@ -9,6 +10,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.insteem.ipfreely.steem.DataHolders.DateTypeAndStringHolder
+import com.insteem.ipfreely.steem.DataHolders.FeedArticleDataHolder
 import com.insteem.ipfreely.steem.HelperClasses.calendarcalculations
 import com.insteem.ipfreely.steem.Interfaces.arvdinterface
 import com.insteem.ipfreely.steem.MyViewHolders.DateViewHolder
@@ -61,7 +63,7 @@ class FloatingDateHolder {
             } else {
                 //down
                 //use the last visible items, may change it back to the first visible items
-                pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                pastVisiblesItems = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 
 
                 previsbiggerthannext = false
@@ -73,14 +75,17 @@ class FloatingDateHolder {
 
                     val re = arvdinterface!!.getObject(i)
                     if (re is DateTypeAndStringHolder) {
-                        val h = re as DateTypeAndStringHolder
-                        updateStickyHeader(h.sDate!!, h.sDate!!, h, previsbiggerthannext)
-
-
+                        updateStickyHeader(re.sDate!!, re.sDate!!, re, previsbiggerthannext)
+                        break
+                    } else if(re is FeedArticleDataHolder.FeedArticleHolder){
+                        if(re.sDate != null){
+                            if(cardView?.visibility == View.GONE){
+                                cardView?.visibility = View.VISIBLE
+                            }
+                            updateStickyHeader(re.sDate!!, re.sDate!!, DateTypeAndStringHolder(null,re.sDate), previsbiggerthannext)
+                        }
 
                         break
-
-
                     }
                 }
             }

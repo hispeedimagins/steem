@@ -34,29 +34,28 @@ import com.insteem.ipfreely.steem.SteemBackend.Config.Operations.VoteOperation
 /**
  * Created by boot on 2/4/2018.
  */
-class FeedHelperFunctions(context : Context,username:String?,adapter:arvdinterface ,adpterType:AdapterToUseFor,dateHolder: FloatingDateHolder? = null) {
-    val con:Context = context
-    var name:String? = username
+class FeedHelperFunctions(val con : Context,var name:String?,val adaptedcomms:arvdinterface ,val adaptype:AdapterToUseFor,var floatingDateHolder: FloatingDateHolder? = null) {
+    //val con:Context = context
+    //var name:String? = username
     var textColorMineTheme: Int = 0
-    val adaptedcomms:arvdinterface = adapter
+    //val adaptedcomms:arvdinterface = adapter
     val and = AndDown()
     var selectedPos = -1
-    val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
+    val sharedpref : SharedPreferences = con.getSharedPreferences(CentralConstants.sharedprefname,0)
     var calcs: calendarcalculations = calendarcalculations()
     var key = sharedpref.getString(CentralConstants.key,null)
     //val globallist = ArrayList<Any>()
-    val adaptype = adpterType
-    var floatingDateHolder:FloatingDateHolder? = null
+    //val adaptype = adpterType
+    //var floatingDateHolder:FloatingDateHolder? = null
     var animatedVec : AnimatedVectorDrawableCompat? = null
     init {
-        floatingDateHolder = dateHolder
         if(name == null){
             name = sharedpref.getString(CentralConstants.username,null)
 
         }
         animatedVec = AnimatedVectorDrawableCompat.create(con,R.drawable.animated_loader)
         val attrs  = intArrayOf(R.attr.textColorMine)
-        val ta = context.obtainStyledAttributes(attrs)
+        val ta = con.obtainStyledAttributes(attrs)
         val textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
         ta.recycle()
         textColorMineTheme = ContextCompat.getColor(con, textColorMineThemeint)

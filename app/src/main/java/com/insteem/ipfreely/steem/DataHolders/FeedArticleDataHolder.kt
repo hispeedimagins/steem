@@ -72,7 +72,8 @@ class FeedArticleDataHolder {
                      followsYou= data.followsYou,
                      isBlog= data.isBlog,
                      saveTime = data.saveTime,
-                    displayImage = data.displayImage
+                    displayImage = data.displayImage,
+                    sDate = data.sDate
             )
 
         }
@@ -213,7 +214,8 @@ class FeedArticleDataHolder {
         var followsYou:Boolean = false,
         var isBlog:Boolean = false,
         var saveTime:Long = 0L,
-        var displayImage:String? = null
+        var displayImage:String? = null,
+        var sDate: String? = null
         )/*: Parcelable{
     constructor(parcel: Parcel) : this(
             parcel.createStringArrayList(),
@@ -376,7 +378,8 @@ class FeedArticleDataHolder {
             var followsYou:Boolean = false,
             var isBlog:Boolean = false,
             val saveTime:Long = 0L,
-            var displayImage:String? = null
+            var displayImage:String? = null,
+            var sDate: String? = null
     )
 
 
@@ -440,7 +443,8 @@ class FeedArticleDataHolder {
             var date:Date? = null,
             var followsYou:Boolean = false,
             val saveTime:Long = 0L,
-            var displayImage:String? = null
+            var displayImage:String? = null,
+            var sDate: String? = null
     )/*: Parcelable{
         constructor(parcel: Parcel) : this(
                 parcel.createStringArrayList(),
