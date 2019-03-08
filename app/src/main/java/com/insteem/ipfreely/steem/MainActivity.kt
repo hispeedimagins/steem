@@ -553,7 +553,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         if(result.user.reward_sbd_balance != "0.000 SBD" ||
                                 result.user.reward_steem_balance != "0.000 STEEM" ||
                                 result.user.reward_vesting_steem != "0.000 STEEM" ||
-                                result.user.reward_steem_balance != "0.000000 VESTS"){
+                                result.user.reward_vesting_balance != "0.000000 VESTS"){
                             openRewardAlert(result)
                         }
                         //val resultp = gson.fromJson<prof.profiledata>(result.user.json_metadata,prof.profiledata::class.java)
@@ -599,36 +599,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //if the user wishes to claim them then a request will be made
     fun openRewardAlert(profile:ProfileJsonSteemit){
         val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(this@MainActivity))
-        //val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)
         alertDialogBuilder.setTitle("Claim Rewards?")
-
-        val inflater = layoutInflater
-        val dialogView : View = inflater.inflate(R.layout.dialog_open_a_blog, null)
-
-        alertDialogBuilder.setView(dialogView)
-        val edittext = dialogView.findViewById<EditText>(R.id.name)
-        edittext.setText("${profile.user?.reward_sbd_balance} , ${profile.user?.reward_steem_balance} , ${profile.user?.reward_vesting_steem}")
-        edittext.isEnabled = false
-        alertDialogBuilder.setPositiveButton("ok") { diin, num ->
-            if(edittext.text != null){
-                var ms = MakeOperationsMine()
-                var ope = ms.claimRewards(AccountName(username),profile.user?.reward_sbd_balance,profile.user?.reward_steem_balance,profile.user?.reward_vesting_balance,profile.user?.reward_vesting_steem)
-                var opl = ArrayList<Operation>()
-                opl.add(ope)
-                var dy = GetDynamicAndBlock(this@MainActivity,null,0,opl,"Rewards claimed",MyOperationTypes.claim_reward_balance,null,null)
-                dy.GetDynamicGlobalProperties()
-                diin.dismiss()
-
-            }
-
+        alertDialogBuilder.setMessage("${profile.user?.reward_sbd_balance} , ${profile.user?.reward_steem_balance} , ${profile.user?.reward_vesting_balance}")
+        alertDialogBuilder.setPositiveButton("Ok") { diin, num ->
+            var ms = MakeOperationsMine()
+            var ope = ms.claimRewards(AccountName(username),profile.user?.reward_sbd_balance,profile.user?.reward_steem_balance,profile.user?.reward_vesting_balance,profile.user?.reward_vesting_steem)
+            var opl = ArrayList<Operation>()
+            opl.add(ope)
+            var dy = GetDynamicAndBlock(this@MainActivity,null,0,opl,"Rewards claimed",MyOperationTypes.claim_reward_balance,null,null)
+            dy.GetDynamicGlobalProperties()
+            diin.dismiss()
 
         }
-
-        alertDialogBuilder.setNegativeButton("No") { diin, num ->
-
-        }
+        alertDialogBuilder.setNegativeButton("No") { diin, num -> }
         val alertDialog = alertDialogBuilder.create()
-
         alertDialog.show()
     }
 

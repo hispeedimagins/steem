@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
-            android:textColor="?attr/textColorMine"
+            android:textColor="@color/white"
             android:textIsSelectable="false"
             android:background="?attr/colorPrimary"
             android:textAlignment="center"
@@ -38,7 +38,7 @@
 
         <TextView
             android:id="@+id/textview_sticky_header_section_2"
-            android:textColor="?attr/textColorMine"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="7dp"

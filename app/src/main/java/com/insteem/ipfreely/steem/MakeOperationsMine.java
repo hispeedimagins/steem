@@ -349,13 +349,8 @@ public class MakeOperationsMine {
         Asset steemReward = new Asset(steem);
         Asset sbdReward = new Asset(sbd);
         Asset vestingReward = new Asset(vesting);
-
         // Create claim operation based on available reward balances
-        ClaimRewardBalanceOperation claimOperation = new ClaimRewardBalanceOperation(accountName, steemReward,
-                sbdReward, vestingReward);
-
-
-        return claimOperation;
+        return new ClaimRewardBalanceOperation(accountName, steemReward, sbdReward, vestingReward);
     }
 
 
