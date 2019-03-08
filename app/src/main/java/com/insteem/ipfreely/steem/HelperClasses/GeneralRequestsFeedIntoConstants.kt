@@ -16,6 +16,7 @@ import com.insteem.ipfreely.steem.VolleyRequest
 import com.insteem.ipfreely.steem.jsonclasses.Block
 import com.insteem.ipfreely.steem.jsonclasses.prof
 import org.json.JSONObject
+import java.util.*
 
 /**
  * Created by boot on 3/12/2018.
@@ -76,7 +77,16 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                     val gson = Gson()
                     var parse : Block.DynamicGlobalProperties = gson.fromJson(response.toString(), Block.DynamicGlobalProperties::class.java)
                     if(parse != null && parse.result != null){
-                        CentralConstantsOfSteem.getInstance().dynamicglobalprops = parse.result
+                        //CentralConstantsOfSteem.getInstance().dynamicglobalprops = parse.result
+                        val votePowerReserveRate = parse.result.votePowerReserveRate
+                        val sps = SharedPrefrencesSingleton.getInstance(applicationContext)
+                        sps.put(CentralConstants.dynamicBlockVotePowerReserveRate,votePowerReserveRate)
+                        sps.put(CentralConstants.lastSaveTimeOfMedianandBase, Date().time)
+                        sps.commit()
+                        //CentralConstantsOfSteem.getInstance().resultfund = parse.result
+                        val ccsi = CentralConstantsOfSteem.getInstance()
+                        ccsi.dynamicVotePowerReserveRate = votePowerReserveRate
+
                     }
 
                 }, Response.ErrorListener {
@@ -104,7 +114,17 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                     val gson = Gson()
                     var parse : Block.rewardfund = gson.fromJson(response.toString(), Block.rewardfund::class.java)
                     if(parse != null && parse.result != null){
-                        CentralConstantsOfSteem.getInstance().resultfund = parse.result
+                        val recenClaims = parse.result.recentClaims.toLong()
+                        val rewardsFund = StaticMethodsMisc.convertRewardsToDouble(parse.result.rewardBalance)
+                        val sps = SharedPrefrencesSingleton.getInstance(applicationContext)
+                        sps.put(CentralConstants.resultFundRecentClaims,recenClaims)
+                        sps.put(CentralConstants.resultFundRewardsBalance,rewardsFund)
+                        sps.put(CentralConstants.lastSaveTimeOfMedianandBase, Date().time)
+                        sps.commit()
+                        //CentralConstantsOfSteem.getInstance().resultfund = parse.result
+                        val ccsi = CentralConstantsOfSteem.getInstance()
+                        ccsi.resultFundRecentClaims = recenClaims
+                        ccsi.resultFundRewards = rewardsFund
                     }
 
                 }, Response.ErrorListener {
@@ -131,9 +151,16 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                 Response.Listener { response ->
 
                     val gson = Gson()
-                    var parse : Block.FeedHistoryPrice = gson.fromJson(response.toString(), Block.FeedHistoryPrice::class.java)
+                    val parse : Block.FeedHistoryPrice = gson.fromJson(response.toString(), Block.FeedHistoryPrice::class.java)
                     if(parse != null && parse.result != null){
-                        CentralConstantsOfSteem.getInstance().currentMedianHistory = parse.result.currentMedianHistory
+                        val sps = SharedPrefrencesSingleton.getInstance(applicationContext)
+                        val median = StaticMethodsMisc.convertMerBaseToDouble(parse.result.currentMedianHistory.base)
+                        sps.put(CentralConstants.currentMedianHistoryBase,median)
+                        sps.put(CentralConstants.lastSaveTimeOfMedianandBase, Date().time)
+                        sps.commit()
+                        val ccsi = CentralConstantsOfSteem.getInstance()
+                        ccsi.currentMedianHistoryBase = median
+                        //CentralConstantsOfSteem.getInstance().currentMedianHistory = parse.result.currentMedianHistory
                     }
 
                 }, Response.ErrorListener {

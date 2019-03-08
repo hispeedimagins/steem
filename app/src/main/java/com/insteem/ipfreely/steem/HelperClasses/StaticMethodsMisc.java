@@ -288,10 +288,10 @@ public class StaticMethodsMisc {
     public static Double CalculateVotingValueRshares(Double rshare){
         CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
         //long rshare = Long.valueOf(rshares);
-        if(ins != null && ins.getResultfund() != null && ins.getResultfund().getRecentClaims() != null){
-            long recentclaims = Long.valueOf(ins.getResultfund().getRecentClaims());
+        if(ins != null && ins.getResultFundRecentClaims() != null){
+            long recentclaims = ins.getResultFundRecentClaims();
             Double rsharedivclaim = rshare/recentclaims;
-            Double rewardbalance = Double.valueOf(ins.getResultfund().getRewardBalance().replace("STEEM",""));
+            Double rewardbalance = ins.getResultFundRewards();
             Double shareSteem = rsharedivclaim * rewardbalance;
             return shareSteem;
         }
@@ -299,7 +299,19 @@ public class StaticMethodsMisc {
     }
 
     public static Double VotingValueSteemToSd(double share){
-        return Double.valueOf(CentralConstantsOfSteem.getInstance().getCurrentMedianHistory().getBase().replace("SBD","")) * share;
+        return VotingValueSteemToSd() * share;
+    }
+
+    public static Double VotingValueSteemToSd(){
+        return CentralConstantsOfSteem.getInstance().getCurrentMedianHistoryBase();
+    }
+
+    public static Double convertMerBaseToDouble(String value){
+        return Double.valueOf(value.replace("SBD",""));
+    }
+
+    public static Double convertRewardsToDouble(String value){
+        return Double.valueOf(value.replace("STEEM",""));
     }
 
     public static int CalculateWeightedVotingPower(int votingpower,int voteweight){
@@ -329,7 +341,7 @@ public class StaticMethodsMisc {
 
     public static int CalculateUsedVotingPower(int votingpower,int voteweight){
         CentralConstantsOfSteem ins = CentralConstantsOfSteem.getInstance();
-        int maxdenom = ins.getDynamicglobalprops().getVotePowerReserveRate() * 5;
+        int maxdenom = ins.getDynamicVotePowerReserveRate() * 5;
         int wvp = CalculateWeightedVotingPower(votingpower,voteweight);
         int usedvotingpower = (wvp + maxdenom - 1) / maxdenom;
         return usedvotingpower;

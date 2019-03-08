@@ -55,3 +55,7 @@ anddown/build/outputs/logs/manifest-merger-release-report.txt
 *.ser
 anddown/build/intermediates/incremental/debug-mergeJniLibs/merge-state
 anddown/build/intermediates/incremental/packageDebugResources/compile-file-map.properties
+.idea/caches/build_file_checksums.ser
+anddown/build/intermediates/incremental/debug-mergeJniLibs/merge-state
+anddown/build/intermediates/incremental/packageDebugResources/compile-file-map.properties
+app/release/output.json

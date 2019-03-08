@@ -238,7 +238,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //mysetup()
         if(username != null){
             runs = GeneralRequestsFeedIntoConstants(this@MainActivity,application)
-            runs.RunThemAll()
+            val s = SharedPrefrencesSingleton.getInstance(this)
+            val time = s.getLong(CentralConstants.lastSaveTimeOfMedianandBase)
+            if(time == 0L){
+                runs.RunThemAll()
+            } else if((Date().time - time) > 43200000){
+                runs.RunThemAll()
+            }
+
 
             GetProfile()
             //addAccount()

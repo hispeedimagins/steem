@@ -53,6 +53,7 @@ class SharedPrefrencesSingleton {
             is Int -> sharedPreferencesEdit!!.putInt(key,value)
             is Long -> sharedPreferencesEdit!!.putLong(key,value)
             is Float -> sharedPreferencesEdit!!.putFloat(key,value)
+            is Double-> sharedPreferencesEdit!!.putFloat(key,value.toFloat())
         }
         if(commit) commit()
     }
@@ -68,18 +69,18 @@ class SharedPrefrencesSingleton {
     }
 
     fun getBoolean(key:String):Boolean{
-        return sharedPreferences!!.getBoolean(key,false)!!
+        return sharedPreferences!!.getBoolean(key,false)
     }
 
     fun getInt(key:String):Int{
-        return sharedPreferences!!.getInt(key,0)!!
+        return sharedPreferences!!.getInt(key,0)
     }
 
     fun getLong(key:String):Long{
-        return sharedPreferences!!.getLong(key,0L)!!
+        return sharedPreferences!!.getLong(key,0L)
     }
 
     fun getFloat(key:String):Float{
-        return sharedPreferences!!.getFloat(key,0F)!!
+        return sharedPreferences!!.getFloat(key,0F)
     }
 }

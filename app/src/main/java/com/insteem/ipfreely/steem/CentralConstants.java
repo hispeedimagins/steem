@@ -19,6 +19,12 @@ public class CentralConstants {
     public static final String accountrep = "accountrep";
     public static final String followerCount = "follower_count_follower";
     public static final String followingCount = "following_count_follower";
+    
+    public static final String currentMedianHistoryBase = "currentMHBaseCon";
+    public static final String resultFundRecentClaims = "resultFundRecentClaims";
+    public static final String resultFundRewardsBalance = "resultFundRewardsBalance";
+    public static final String lastSaveTimeOfMedianandBase = "lastSaveTimeOMAB";
+    public static final String dynamicBlockVotePowerReserveRate = "dynamibBVPRR";
 
 
     public static final String baseUrl = "https://api.steemit.com/";

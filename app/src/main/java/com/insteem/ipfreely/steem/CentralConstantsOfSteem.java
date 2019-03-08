@@ -19,9 +19,13 @@ public class CentralConstantsOfSteem {
         return ourInstance;
     }
     private int currentvotingpower = 0;
-    private Block.Resultfund resultfund = null;
-    private Block.CurrentMedianHistory currentMedianHistory = null;
-    private Block.Result dynamicglobalprops = null;
+    //private Block.Resultfund resultfund = null;
+    private Double resultFundRewards = null;
+    private Long resultFundRecentClaims = null;
+    private Double currentMedianHistoryBase = null;
+    private Integer dynamicVotePowerReserveRate = null;
+    //private Block.CurrentMedianHistory currentMedianHistory = null;
+    //private Block.Result dynamicglobalprops = null;
     private prof.profile profile = null;
     private prof.Resultfo followcount = null;
     private JSONArray jsonArray = null;
@@ -40,24 +44,46 @@ public class CentralConstantsOfSteem {
     public int getCurrentvotingpower(){
         return this.currentvotingpower;
     }
-    public void setResultfund(Block.Resultfund fund){
-        this.resultfund = fund;
+
+
+    public void setCurrentMedianHistoryBase(Double currentMedianHistoryBase) {
+        this.currentMedianHistoryBase = currentMedianHistoryBase;
     }
-    public Block.Resultfund getResultfund(){
-        return this.resultfund;
+
+    public void setResultFundRecentClaims(Long resultFundRecentClaims) {
+        this.resultFundRecentClaims = resultFundRecentClaims;
     }
-    public void setCurrentMedianHistory(Block.CurrentMedianHistory history){
-        this.currentMedianHistory = history;
+
+    public void setResultFundRewards(Double resultFundRewards) {
+        this.resultFundRewards = resultFundRewards;
     }
-    public Block.CurrentMedianHistory getCurrentMedianHistory(){
-        return this.currentMedianHistory;
+
+    public void setDynamicVotePowerReserveRate(Integer dynamicVotePowerReserveRate) {
+        this.dynamicVotePowerReserveRate = dynamicVotePowerReserveRate;
     }
-    public void setDynamicglobalprops(Block.Result props){
-        this.dynamicglobalprops = props;
+
+    public Double getResultFundRewards() {
+        return resultFundRewards;
     }
-    public Block.Result getDynamicglobalprops(){
-        return this.dynamicglobalprops;
+
+    public Double getCurrentMedianHistoryBase() {
+        return currentMedianHistoryBase;
     }
+
+    public Long getResultFundRecentClaims() {
+        return resultFundRecentClaims;
+    }
+
+    public Integer getDynamicVotePowerReserveRate() {
+        return dynamicVotePowerReserveRate;
+    }
+
+    /*public void setDynamicglobalprops(Block.Result props){
+            this.dynamicglobalprops = props;
+        }
+        public Block.Result getDynamicglobalprops(){
+            return this.dynamicglobalprops;
+        }*/
     public void setProfile(prof.profile profi){
         this.profile = profi;
     }

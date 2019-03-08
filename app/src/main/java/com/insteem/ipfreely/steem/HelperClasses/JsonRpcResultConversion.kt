@@ -404,7 +404,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         if(result == null){
             return list
         }
-        val content : JSONObject = if(body?.has("content")) result.getJSONObject("content") else return list
+        val content : JSONObject = if(result?.has("content")) result.getJSONObject("content") else return list
 
         val com : JSONObject = content.getJSONObject(UserAndPermlinkWithDash)
         val article  = getprocessedfeed(com,true) //gson.fromJson<feed.Comment>(com.toString(),feed.Comment::class.java)
