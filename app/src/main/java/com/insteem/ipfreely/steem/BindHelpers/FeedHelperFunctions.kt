@@ -124,7 +124,9 @@ class FeedHelperFunctions(val con : Context,var name:String?,val adaptedcomms:ar
                 .circleCrop()
 
         //get the current relative date time
-        holder.article?.datespan = MiscConstants.dateToRelDate(holder.article?.date!!,con)
+        if(holder.article?.date != null)
+            holder.article?.datespan = MiscConstants.dateToRelDate(holder.article?.date!!,con)
+
         holder.article_date?.text = holder.article?.datespan
         Glide.with(con).load(CentralConstants.GetFeedImageUrl(holder.article?.author))
                 .apply(options)

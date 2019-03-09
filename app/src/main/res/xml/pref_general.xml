@@ -1,7 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
-
         android:defaultValue="true"
         android:key="example_switch"
         android:summary="@string/pref_Notifications_description"
@@ -12,6 +11,7 @@
     <EditTextPreference
         android:defaultValue="51"
         android:inputType="number"
+        android:maxLength="5"
         android:key="signing_nonce"
         android:maxLines="1"
         android:selectAllOnFocus="true"
