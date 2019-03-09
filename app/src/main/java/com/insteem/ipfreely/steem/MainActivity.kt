@@ -244,6 +244,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 runs.RunThemAll()
             } else if((Date().time - time) > 43200000){
                 runs.RunThemAll()
+            } else {
+                val sps = SharedPrefrencesSingleton.getInstance(applicationContext)
+                val ccsi = CentralConstantsOfSteem.getInstance()
+                ccsi.dynamicVotePowerReserveRate = sps.getInt(CentralConstants.dynamicBlockVotePowerReserveRate)
+                ccsi.resultFundRecentClaims = sps.getLong(CentralConstants.resultFundRecentClaims)
+                ccsi.resultFundRewards = sps.getFloat(CentralConstants.resultFundRewardsBalance).toDouble()
+                ccsi.currentMedianHistoryBase = sps.getFloat(CentralConstants.currentMedianHistoryBase).toDouble()
             }
 
 
