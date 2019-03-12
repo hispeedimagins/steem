@@ -71,7 +71,8 @@ class UserUpvoteActivity : AppCompatActivity() {
 
 
 
-    fun display(jsonArray : JSONArray){
+    fun display(jsonArray : JSONArray?){
+        if(jsonArray == null) return
         var con = FollowApiConstants.getInstance()
         var al = ArrayList<feed.avtiveVotes>()
         for(x in 0 until jsonArray.length()){
