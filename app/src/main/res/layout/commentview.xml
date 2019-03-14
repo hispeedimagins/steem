@@ -34,7 +34,7 @@
                 >
 
 
-                <TextView
+                <!--<TextView
 
                     android:padding="5dp"
                     android:layout_width="wrap_content"
@@ -60,9 +60,9 @@
                     android:drawablePadding="4dp"
 
                     android:textStyle="bold"
-                    />
+                    />-->
 
-                <TextView
+                <!--<TextView
                     android:paddingRight="5dp"
                     android:textStyle="bold"
 
@@ -73,7 +73,7 @@
                     android:layout_alignParentTop="true"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:drawableEnd="@drawable/ic_baseline_more_vert_24px"
-                    android:textAppearance="?android:textAppearanceLarge" />
+                    android:textAppearance="?android:textAppearanceLarge" />-->
                 <!--android:text="&#8942;"-->
             </LinearLayout>
 
@@ -131,7 +131,20 @@
                         />
 
                 </LinearLayout>
+
                 <TextView
+                    android:paddingRight="5dp"
+                    android:textStyle="bold"
+
+                    android:id="@+id/textViewOptions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:drawableEnd="@drawable/ic_baseline_more_vert_24px"
+                    android:textAppearance="?android:textAppearanceLarge" />
+                <!--<TextView
                     android:textColor="@color/colorAccent"
                     android:padding="5dp"
                     android:layout_width="wrap_content"
@@ -141,7 +154,7 @@
 
                     tools:fontFamily="@font/roboto_light"
                     android:textStyle="bold"
-                    />
+                    />-->
             </LinearLayout>
 
             <LinearLayout

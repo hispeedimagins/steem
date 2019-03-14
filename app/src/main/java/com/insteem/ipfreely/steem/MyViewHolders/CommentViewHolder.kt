@@ -17,11 +17,11 @@ import com.insteem.ipfreely.steem.R
 class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val mView: View = view
     var article: FeedArticleDataHolder.CommentHolder? = null
-    val article_resteemed_by : TextView? = view.findViewById(R.id.article_resteemed_by)
+    //val article_resteemed_by : TextView? = view.findViewById(R.id.article_resteemed_by)
     val article_pfp : ImageView? = view.findViewById(R.id.article_pfp)
     val article_name : TextView? = view.findViewById(R.id.article_name)
     val article_date : TextView? = view.findViewById(R.id.article_date)
-    val article_tag : TextView? = view.findViewById(R.id.article_tag)
+    //val article_tag : TextView? = view.findViewById(R.id.article_tag)
     val article_likes : TextView? = view.findViewById(R.id.article_likes)
     val article_edits : TextView? = view.findViewById(R.id.article_edits)
     val article_comments : TextView? = view.findViewById(R.id.article_comments)

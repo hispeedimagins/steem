@@ -44,6 +44,7 @@ import com.insteem.ipfreely.steem.HelperClasses.GetDynamicAndBlock
 import com.insteem.ipfreely.steem.HelperClasses.ImagePickersWithHelpers
 import com.insteem.ipfreely.steem.HelperClasses.ImagePickersWithHelpers.Companion.RC_CAMERA_STORAGE_PERMS
 import com.insteem.ipfreely.steem.HelperClasses.ImagePickersWithHelpers.Companion.REQUEST_IMAGE_CAPTURE
+import com.insteem.ipfreely.steem.HelperClasses.ImagePickersWithHelpers.Companion.uploadImage
 import com.insteem.ipfreely.steem.HelperClasses.swipecommonactionsclass
 import com.insteem.ipfreely.steem.Interfaces.BeneficiaryAddInterface
 import com.insteem.ipfreely.steem.Interfaces.GlobalInterface
@@ -100,6 +101,10 @@ ImagePickersWithHelpers.onTakePick{
 
     override fun getFabM(): FloatingActionMenu? {
         return fabmenu
+    }
+
+    override fun progress(visibility: Int) {
+        writePost?.progress(visibility)
     }
 
     //listener for changes
@@ -418,7 +423,7 @@ ImagePickersWithHelpers.onTakePick{
             } else if (requestCode == UCrop.REQUEST_CROP && data != null) {
                 //else we begin the upload dialog
                 imageUri = UCrop.getOutput(data)
-                uploadImage()
+                uploadImage(imageUri,this@Post,layoutInflater,username,key,writePost?.EditTextMainThree,this)
             }
 
         }
@@ -444,7 +449,7 @@ ImagePickersWithHelpers.onTakePick{
     }
 
 
-    fun uploadImage(){
+    /*fun uploadImage(){
         if(imageUri == null) return
         val picUri : Uri   = imageUri!! //data.data
 
@@ -489,6 +494,7 @@ ImagePickersWithHelpers.onTakePick{
                         val db = ImageUploadedUrls(applicationContext)
                         var ins = db.Insert(result)
                         writePost?.addtexturl(result,file.name)
+
                         writePost?.progress(View.GONE)
                     }
 
@@ -508,7 +514,7 @@ ImagePickersWithHelpers.onTakePick{
         alertDialog.show()
 
         //imageView.setImageURI(picUri)
-    }
+    }*/
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

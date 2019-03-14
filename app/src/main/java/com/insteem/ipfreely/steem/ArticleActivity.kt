@@ -1,9 +1,14 @@
 package com.insteem.ipfreely.steem
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
+import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -28,6 +33,9 @@ import com.insteem.ipfreely.steem.Enums.TypeOfRequest
 import com.insteem.ipfreely.steem.Fragments.ArticleFragment
 import com.insteem.ipfreely.steem.Fragments.CommentsFragment
 import com.insteem.ipfreely.steem.HelperClasses.GeneralRequestsFeedIntoConstants
+import com.insteem.ipfreely.steem.HelperClasses.ImagePickersWithHelpers
+import com.insteem.ipfreely.steem.HelperClasses.ImagePickersWithHelpers.Companion.PICK_IMAGE_REQUEST
+import com.insteem.ipfreely.steem.HelperClasses.ImagePickersWithHelpers.Companion.uploadImage
 import com.insteem.ipfreely.steem.HelperClasses.JsonRpcResultConversion
 import com.insteem.ipfreely.steem.HelperClasses.MakeJsonRpc
 import com.insteem.ipfreely.steem.Interfaces.ArticleActivityInterface
@@ -35,12 +43,40 @@ import com.insteem.ipfreely.steem.RoomDatabaseApp.RoomViewModels.ArticleRoomVM
 import com.insteem.ipfreely.steem.RoomDatabaseApp.RoomViewModels.WidgetVM
 import com.insteem.ipfreely.steem.jsonclasses.Block
 import com.insteem.ipfreely.steem.jsonclasses.feed
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_article.*
 
 
-class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
+class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePickersWithHelpers.onTakePick{
+    override fun startActivityForResults(takePictureIntent: Intent, requesT_IMAGE_CAPTURE: Int) {
+        startActivityForResult(takePictureIntent, requesT_IMAGE_CAPTURE)
+    }
+
+    override fun setURI(mCurrentPhotoUri: Uri?) {
+        imageUri = mCurrentPhotoUri
+    }
+
     override fun getFab(): FloatingActionButton? {
         return fab
+    }
+
+    override fun progress(visibility: Int) {
+        progressCom?.visibility = visibility
+    }
+
+    override fun imagePickerClicked(editText: EditText?,progressBar: ProgressBar?) {
+        editTextCom = editText
+        progressCom = progressBar
+        imageBrowse()
+    }
+
+    override fun imageProcessed(url: String) {
+
+    }
+
+    override fun imageProcessDoneClearVariables(url: String?) {
+        this.editTextCom = null
+        this.progressCom = null
     }
 
     //implements tag clicks
@@ -119,6 +155,9 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
     lateinit var widgetVm:WidgetVM
     private var res: FeedArticleDataHolder.FeedArticleHolder? = null
     var ani:AnimatedVectorDrawableCompat? = null
+    var imageUri:Uri? = null
+    var editTextCom:EditText? = null
+    var progressCom:ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyThemeArticle(this@ArticleActivity)
@@ -708,6 +747,54 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface {
         )
         //queue.add(s)
         volleyre.addToRequestQueue(s)
+    }
+
+
+
+    private fun imageBrowse() {
+        //we make a call to our common picker
+        ImagePickersWithHelpers.createImagePickDialog(applicationContext,this,this@ArticleActivity)
+    }
+
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        //check if activity result is ok
+        if (resultCode == Activity.RESULT_OK) {
+            //if pickimage request then we open the image editor
+            if (requestCode == PICK_IMAGE_REQUEST && data != null) {
+                //we create our own temp file
+                imageUri = Uri.fromFile(ImagePickersWithHelpers.createTempFile(this))
+                //pass data to ucrop
+                UCrop.of(data.data, imageUri!!)
+                        .withOptions(ImagePickersWithHelpers.getUcropOptions(this@ArticleActivity))
+                        .start(this)
+            } else if (requestCode == UCrop.REQUEST_CROP && data != null) {
+                //else we begin the upload dialog
+                imageUri = UCrop.getOutput(data)
+                uploadImage(imageUri,this@ArticleActivity,layoutInflater,username,key,editTextCom,this)
+            }
+
+        }
+
+        //check if it is a image click request code, then launch the editor again
+        if (requestCode == ImagePickersWithHelpers.REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            //pass data to ucrop
+            //pass data to ucrop
+            UCrop.of(imageUri!!, imageUri!!)
+                    .withOptions(ImagePickersWithHelpers.getUcropOptions(this@ArticleActivity))
+                    .start(this)
+        }
+        else if (resultCode == UCrop.RESULT_ERROR) {
+            if(data != null){
+                val cropError = UCrop.getError(data)
+                Log.d("ucrop erro",if(cropError?.message != null) cropError.message else "" )
+            }
+        }
+
+
+
+
     }
 
 }

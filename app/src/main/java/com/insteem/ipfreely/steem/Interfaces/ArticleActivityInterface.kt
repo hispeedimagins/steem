@@ -1,6 +1,8 @@
 package com.insteem.ipfreely.steem.Interfaces
 
 import android.content.Context
+import android.widget.EditText
+import android.widget.ProgressBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.insteem.ipfreely.steem.DataHolders.FeedArticleDataHolder
 
@@ -22,5 +24,6 @@ interface ArticleActivityInterface {
     fun getFab(): FloatingActionButton?
     fun getDbData(): FeedArticleDataHolder.FeedArticleHolder?
     fun loadDataNow(){}
+    fun imagePickerClicked(editText: EditText?,progressBar: ProgressBar?)
     //fun GetDisplayMetrics() : DisplayMetrics
 }

@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +30,7 @@ import com.insteem.ipfreely.steem.SteemBackend.Config.Models.Permlink;
 import com.insteem.ipfreely.steem.SteemBackend.Config.Operations.Operation;
 
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -42,12 +46,15 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
     CardView cardviewTwo;
     CardView cardviewThree;
     CardView cardviewFour;
+    CardView cardviewFive;
 
 
     EditText EditTextMainOne;
     EditText EditTextMainTwo;
     EditText EditTextMainThree;
     CheckBox CheckBoxMainOne;
+
+    ImageButton imageButtonPicker;
 
     TextInputLayoutErrorHandler EditTextMainOnehandler;
     TextInputLayoutErrorHandler EditTextMainTwohandler;
@@ -147,7 +154,8 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
         super.onCreateView(inflater,container,savedInstanceState);
         //int th = getTheme();
         view = inflater.inflate(R.layout.addaquestionbottom, container, false);
-
+        //set to adjust screen height automatically, when soft keyboard appears on screen
+        Objects.requireNonNull(getDialog().getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         //view = v;
 
         setUpCommons(view);
@@ -244,23 +252,6 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
             tags = articleViewHolder.getTags().toArray(tags); //tagsd.split(" ");
             MakeOperationsMine mine = new MakeOperationsMine();
             List<Operation> ops = mine.createComment(new AccountName(username),new AccountName(articleViewHolder.getAuthor()),new Permlink(articleViewHolder.getPermlink()),content,tags,CheckBoxMainOne.isChecked());
-            /*Gson gson = new Gson();
-            Gson gsons = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            String jsons = gsons.toJson(ops);
-            List<Object> obs = new ArrayList<>();
-            //String von = MyOperationTypes.comment_options.name().toString();
-            obs.add(MyOperationTypes.comment.name().toString());
-            obs.add(ops.get(0));
-
-            List<Object> obs2 = new ArrayList<>();
-            obs2.add(MyOperationTypes.comment_options.name().toString());
-            obs2.add(ops.get(1));
-            List<Object> obss = new ArrayList<>();
-            obss.add(obs);
-            obss.add(obs2);
-            String json = gsons.toJson(obss);*/
-
-            //String json = gson.toJson(ops);
             GetDynamicAndBlock block = new GetDynamicAndBlock(context,null,0,ops,"Commented on " +articleViewHolder.getAuthor() , MyOperationTypes.comment,progressBar,globalInterface);
             block.GetDynamicGlobalProperties();
 
@@ -334,9 +325,19 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
         dab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                globalInterface.imagePickerClicked(EditTextMainTwo,progressBar);
+
+            }
+        });
+
+        Button but = v.findViewById(R.id.comment_button);
+        but.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 FabIntermediary(view);
             }
         });
+
         activity = getActivity();
         context = activity.getApplicationContext();
 
@@ -355,6 +356,14 @@ public class ModalBottomSheetMy  extends BottomSheetDialogFragment {
         cardviewTwo = (CardView)v.findViewById(R.id.cardviewTwo);
         cardviewThree = (CardView)v.findViewById(R.id.cardviewThree);
         cardviewFour = (CardView)v.findViewById(R.id.cardviewFour);
+        /*imageButtonPicker = v.findViewById(R.id.imageButtonPicker);
+        imageButtonPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                globalInterface.imagePickerClicked(EditTextMainTwo);
+            }
+        });*/
+
     }
 
     public void setUpComments(){

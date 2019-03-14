@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -37,6 +39,11 @@ import java.util.*
  * create an instance of this fragment.
  */
 class CommentsFragment : Fragment(),GlobalInterface {
+
+    override fun imagePickerClicked(editText: EditText?,progressBar: ProgressBar?) {
+        articleActivityInterface?.imagePickerClicked(editText,progressBar)
+    }
+
     override fun notifyRequestMadeSuccess() {
         articleActivityInterface?.ReloadData()
     }

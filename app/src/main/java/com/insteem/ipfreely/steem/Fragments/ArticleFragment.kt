@@ -17,10 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -85,6 +82,10 @@ class ArticleFragment : Fragment() , GlobalInterface {
     override fun getActivityMine(): Activity {
         return getActivity() as Activity
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun imagePickerClicked(editText: EditText?,progressBar: ProgressBar?) {
+        articleActivityInterface?.imagePickerClicked(editText,progressBar)
     }
 
     // TODO: Rename and change types of parameters
@@ -315,6 +316,7 @@ class ArticleFragment : Fragment() , GlobalInterface {
         mod.showsDialog = true
         mod.setUsername(username)
         mod.setArticleViewHolder(holder?.article)
+        mod.setInterface(this)
         mod.context = context
         mod.setMyOperationTypes(MyOperationTypes.comment)
         //mod.makeCommentRequest()

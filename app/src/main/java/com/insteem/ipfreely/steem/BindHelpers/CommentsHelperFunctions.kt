@@ -153,14 +153,14 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
                 .into(holder.article_pfp as ImageView)
 
 
-        if(holder.article?.reblogBy == null || holder.article?.reblogBy?.isEmpty() as Boolean){
+        /*if(holder.article?.reblogBy == null || holder.article?.reblogBy?.isEmpty() as Boolean){
             holder.article_resteemed_by?.visibility = View.GONE
         }
         else{
             holder.article_resteemed_by?.visibility = View.VISIBLE
             holder.article_resteemed_by?.text = "by "+ holder.article?.reblogBy?.get(0)
-        }
-        holder.article_tag?.text = "in "+ holder.article?.category
+        }*/
+        /*holder.article_tag?.text = "in "+ holder.article?.category
         holder.article_tag?.setOnClickListener {
             var it = Intent(con,MainTags::class.java)
             it.putExtra(CentralConstants.MainRequest,"get_discussions_by_trending")
@@ -168,7 +168,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
             it.putExtra(CentralConstants.OriginalRequest,"trending")
             con.startActivity(it)
 
-        }
+        }*/
         //holder.article_title?.text = holder.article?.title
         /*Glide.with(con).load(holder.article?.image?.get(0))
                 .placeholder(R.drawable.common_full_open_on_phone)

@@ -16,14 +16,21 @@ import android.text.Editable
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.material.textfield.TextInputLayout
+import com.insteem.ipfreely.steem.Databases.ImageUploadedUrls
 import com.insteem.ipfreely.steem.MiscConstants
 import com.insteem.ipfreely.steem.R
+import com.insteem.ipfreely.steem.SteemBackend.Config.ImageUpload.SteemImageUpload
+import com.insteem.ipfreely.steem.SteemBackend.Config.Models.AccountName
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import pub.devrel.easypermissions.EasyPermissions
@@ -413,7 +420,87 @@ class ImagePickersWithHelpers{
         }
 
 
+        fun uploadImage(imageUri:Uri?,activity: Activity,inflater: LayoutInflater,username:String?,key:String?,editText: EditText?,comms:onTakePick){
+            if(imageUri == null) return
+            val picUri : Uri   = imageUri //data.data
+
+            val filePath = imageUri.path
+            val file = File(filePath)
+
+            //val alertDialogBuilder = android.support.v7.app.AlertDialog.Builder(this@Post)
+            val alertDialogBuilder = AlertDialog.Builder(MiscConstants.ApplyMyThemeRet(activity))
+            alertDialogBuilder.setTitle("Upload this image?")
+            val dialogView : View = inflater.inflate(R.layout.popup_image_upload, null)
+            alertDialogBuilder.setView(dialogView)
+            val imagev = dialogView.findViewById<ImageView>(R.id.image)
+            imagev.setImageURI(picUri)
+            //val edittext = dialogView.findViewById<EditText>(R.id.name)
+            alertDialogBuilder.setPositiveButton("ok") { diin, num ->
+                comms.progress(View.VISIBLE)
+                comms.imageOkClicked()
+
+
+                class someTask() : AsyncTask<Void, Void, String>() {
+                    override fun doInBackground(vararg params: Void?): String? {
+                        //catch errors while signing and uploading the image and display them
+                        try{
+                            val result = SteemImageUpload.uploadImage(AccountName(username),key,file,filePath )
+                            val db = ImageUploadedUrls(activity.applicationContext)
+                            db.Insert(result)
+                            return result
+                        } catch (ex:Exception){
+                            ex.printStackTrace()
+                            activity.runOnUiThread {
+                                Toast.makeText(activity.applicationContext,ex.message,Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        return null
+                    }
+
+                    override fun onPostExecute(result: String?) {
+
+
+                        //check if the reult is not null before adding it to the database
+                        if(result != null){
+                            if(editText == null)
+                                comms.imageProcessed(result)
+                            else
+                                addtexturl(editText,result,file.name)
+
+                            comms.progress(View.GONE)
+                        }
+                        comms.imageProcessDoneClearVariables(result)
+                        super.onPostExecute(result)
+                    }
+                }
+                someTask().execute()
+
+
+            }
+
+            alertDialogBuilder.setNegativeButton("No") { diin, num ->
+
+            }
+            val alertDialog = alertDialogBuilder.create()
+
+            alertDialog.show()
+
+            //imageView.setImageURI(picUri)
+        }
+
+        fun addtexturl(editText: EditText?, url:String, name:String){
+            if(editText == null) return
+            val image = "![$name]($url)"
+            val start = Math.max(editText.selectionStart, 0)
+            val end = Math.max(editText.selectionEnd, 0)
+            editText.text.replace(Math.min(start, end), Math.max(start, end),
+                    image, 0, image.length)
+        }
+
+
     }
+
+
 
     interface onTakePick {
         /**
@@ -428,5 +515,11 @@ class ImagePickersWithHelpers{
          * @param mCurrentPhotoUri the uri to deliver the the master activity
          */
         fun setURI(mCurrentPhotoUri: Uri?)
+
+        fun progress(visibility:Int)
+
+        fun imageOkClicked(){}
+        fun imageProcessed(url:String){}
+        fun imageProcessDoneClearVariables(url:String?){}
     }
 }

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 
 import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ProgressBar
 import com.github.clans.fab.FloatingActionMenu
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -77,6 +79,6 @@ interface GlobalInterface {
 
     fun objectClicked(data:Any?){}
 
-
+    fun imagePickerClicked(editText: EditText?,progressBar: ProgressBar?){}
     //fun AddItemDivider()
 }
