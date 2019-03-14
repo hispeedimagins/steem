@@ -248,7 +248,11 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                     followRepo?.insert(parse.result !!,true)
                     gotTillNow += parse.result!!.size
                     //callback the ui for updating the number of people
-                    globalInterface?.followerProgress(gotTillNow,followcount?.result?.followerCount!!)
+
+                    if(gotTillNow != 0 && followcount?.result?.followerCount != 0){
+                        globalInterface?.followerProgress(gotTillNow,followcount?.result?.followerCount!!)
+                    }
+
                 }
                 if(followers.size == followcount?.result?.followerCount){
                     //globalInterface?.notifyRequestMadeSuccess()
@@ -309,7 +313,10 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                     followRepo?.insert(parse.result !!,false)
                     gotTillNow += parse.result!!.size
                     //callback so ui updates with the number
-                    globalInterface?.followingProgress(gotTillNow,followcount?.result?.followingCount!!)
+                    if(gotTillNow != 0 && followcount?.result?.followingCount != 0){
+                        globalInterface?.followingProgress(gotTillNow,followcount?.result?.followingCount!!)
+                    }
+
                 }
                 if(following.size == followcount?.result?.followingCount){
                     //globalInterface?.notifyRequestMadeSuccess()
