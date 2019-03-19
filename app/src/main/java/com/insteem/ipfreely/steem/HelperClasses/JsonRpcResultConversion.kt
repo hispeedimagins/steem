@@ -19,8 +19,6 @@ import com.insteem.ipfreely.steem.jsonclasses.feed
 import com.insteem.ipfreely.steem.jsonclasses.prof
 import org.json.JSONArray
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.regex.Pattern
 
 
@@ -216,7 +214,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         followingDatabase?.close()
     }
 
-    fun ParseJsonBlogMore(checkforbots:Boolean = false) : ArrayList<FeedArticleDataHolder.FeedArticleHolder>{
+    fun ParseJsonBlogMore(checkforbots:Boolean = false,comms:JsonRpcResultInterface? = null) : ArrayList<FeedArticleDataHolder.FeedArticleHolder>{
 
         //val body = gson.fromJson(json, JsonObject::class.java)
         val body = json
@@ -225,7 +223,15 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         if(!(body!!.has("result"))){
             return ArrayList()
         }
-        val result: JSONArray? = body?.getJSONArray("result") ?: return ArrayList()
+
+        //we have to check for errors in the new api. result will be an object rather than an array
+        //hence check accordingly and parse the error
+        val res = body.get("result")
+        if(res is JSONObject){
+            comms?.errorWhileParsing(res.getJSONObject("error").getString("message"))
+            return ArrayList()
+        }
+        val result: JSONArray? = res as JSONArray
 
         val returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList()
         //val arr = user.get(getthis)?.asJsonArray

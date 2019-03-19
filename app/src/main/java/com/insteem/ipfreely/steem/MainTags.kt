@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -15,8 +16,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.insteem.ipfreely.steem.DataHolders.FeedArticleDataHolder
 import com.insteem.ipfreely.steem.Enums.AdapterToUseFor
 import com.insteem.ipfreely.steem.Enums.TypeOfRequest
@@ -24,13 +23,24 @@ import com.insteem.ipfreely.steem.HelperClasses.JsonRpcResultConversion
 import com.insteem.ipfreely.steem.HelperClasses.MakeJsonRpc
 import com.insteem.ipfreely.steem.HelperClasses.TagRequestHelper
 import com.insteem.ipfreely.steem.HelperClasses.swipecommonactionsclass
+import com.insteem.ipfreely.steem.Interfaces.JsonRpcResultInterface
 import com.insteem.ipfreely.steem.Interfaces.TagsInterface
-import com.insteem.ipfreely.steem.jsonclasses.feed
 import kotlinx.android.synthetic.main.activity_main_tags.*
 import kotlinx.android.synthetic.main.content_main_tags.*
 import java.util.*
 
-class MainTags : AppCompatActivity(), TagsInterface {
+/**
+ * Class used to display the tag search results
+ */
+class MainTags : AppCompatActivity(), TagsInterface,JsonRpcResultInterface {
+
+
+    override fun errorWhileParsing(error: String) {
+        Toast.makeText(this,error,Toast.LENGTH_LONG).show()
+        swipecommonactionsclass?.makeswipestop()
+    }
+
+
     override fun okclicked(originalval: String, tag: String, limit: String, request: String) {
         adapter?.clear()
         adapter?.notifyDataSetChanged()
@@ -101,14 +111,6 @@ class MainTags : AppCompatActivity(), TagsInterface {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                /*if(dy > 0){
-
-                        dab.hide();
-                    }
-                    else {
-                        dab.show();
-                    }*/
-
                 if (dy > 0) {
                     visibleItemCount = list.childCount
                     totalItemCount = adapter?.getItemCount() as Int
@@ -162,28 +164,23 @@ class MainTags : AppCompatActivity(), TagsInterface {
 
     }
 
+    /**
+     * Called when the content has to be refreshed
+     */
     private fun refreshcontent() {
         tokenisrefreshingholdon = false
         swipecommonactionsclass?.makeswipestop()
         adapter?.clear()
         adapter?.notifyDataSetChanged()
-        /*adapter = new MyquestionslistRecyclerViewAdapter(new ArrayList<ForReturningQuestionsLite>(), mListener);
-        recyclerView.setAdapter(adapter);*/
-        //getQuestionsNow(false)
-
         GetFeed()
     }
 
 
+    /**
+     * called when we have to display a list of the tag results
+     */
     fun displayMessageFeddArticle(result: List<FeedArticleDataHolder.FeedArticleHolder>) {
-
-
         loading = false
-
-        /*for (a in result){
-
-            displayMessage(a)
-        }*/
         adapter?.feedHelperFunctions?.add(result)
         if(result.isNotEmpty()){
             var lc = result[result.size - 1]
@@ -206,6 +203,9 @@ class MainTags : AppCompatActivity(), TagsInterface {
 
     }
 
+    /**
+     * inital call, loads all the tag results
+     */
     fun GetFeed(){
         //val queue = Volley.newRequestQueue(context)
 
@@ -226,68 +226,15 @@ class MainTags : AppCompatActivity(), TagsInterface {
         if(otherguy != null){
             nametouse = otherguy as String
         }
-        //val j = d.feed //g.fromJson(d.feed, JSONObject::class.java)
-        //val jj = d.getFeed(true)
-        /*val gs = GsonRequest(url,null,null,j,jj,
-
-                Response.Listener<String> { response ->
-                    // Display the first 500 characters of the response string.
-                    //mTextView.setText("Response is: "+ response.substring(0,500));
-                    //swipecommonactionsclassT.makeswipestop()
-                    *//*val gson = Gson()
-                    val result = gson.fromJson<JsonTenorResultTrending>(response, JsonTenorResultTrending::class.java!!)
-                    for (s in result.results) {
-                        tenoradapter.add(s.media.get(0))
-                    }*//*
-                    val gson = Gson()
-                    val collectionType = object : TypeToken<List<feed.FeedData>>() {
-
-                    }.type
-                    val con = JsonRpcResultConversion(response.toString(),username as String,TypeOfRequest.feed)
-                    con.ParseJsonBlog()
-                    val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
-                    if(result != null && !result.isEmpty()){
-
-
-                        displayMessage(result)
-                    }
-
-                }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
-        }
-
-                )*/
         val s = JsonObjectRequest(Request.Method.POST,url,d.getTagQuery(mainrequest,maintag,"20"),
                 Response.Listener { response ->
-                    // Display the first 500 characters of the response string.
-                    //mTextView.setText("Response is: "+ response.substring(0,500));
-                    //swipecommonactionsclassT.makeswipestop()
-                    /*val gson = Gson()
-                    val result = gson.fromJson<JsonTenorResultTrending>(response, JsonTenorResultTrending::class.java!!)
-                    for (s in result.results) {
-                        tenoradapter.add(s.media.get(0))
-                    }*/
-                    //var res : Int = response
-                    val gson = Gson()
-                    val collectionType = object : TypeToken<List<feed.FeedData>>() {
-
-                    }.type
-                    val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.feed,applicationContext)
-                    //con.ParseJsonBlog()
-                    //val result = con.ParseJsonBlog()
-                    val result = con.ParseJsonBlogMore()
-                    //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
-                    if(result != null && !result.isEmpty()){
-
-                        /*adapter?.feedHelperFunctions.add(result)*/
-                        //displayMessage(result)
+                    val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.feed,applicationContext)
+                    val result = con.ParseJsonBlogMore(false,this)
+                    if(!result.isEmpty()){
                         displayMessageFeddArticle(result)
                     }
 
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
@@ -295,6 +242,9 @@ class MainTags : AppCompatActivity(), TagsInterface {
         volleyre.addToRequestQueue(s)
     }
 
+    /**
+     * fetches more tag items
+     */
     fun GetMoreItems(){
         //val queue = Volley.newRequestQueue(context)
 
@@ -311,18 +261,9 @@ class MainTags : AppCompatActivity(), TagsInterface {
         val s = JsonObjectRequest(Request.Method.POST,url,d.getMoreItems(startAuthor,startPermlink,maintag,mainrequest),
                 Response.Listener { response ->
                     loading = false
-                    /*val gson = Gson()
-                    val collectionType = object : TypeToken<List<feed.Comment>>() {
-
-                    }.type*/
-                    //val con = JsonRpcResultConversion(response.toString(),username as String,TypeOfRequest.feed)
-                    //con.ParseJsonBlog()
-                    //val result = con.ParseJsonBlog()
                     val con = JsonRpcResultConversion(response,nametouse as String, TypeOfRequest.blog,applicationContext)
-                    //con.ParseJsonBlog()
-                    val result = con.ParseJsonBlogMore()
-                    //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
-                    if(result != null && !result.isEmpty()){
+                    val result = con.ParseJsonBlogMore(false,this)
+                    if(!result.isEmpty()){
 
 
                         displayMessageFeddArticle(result)
@@ -330,20 +271,11 @@ class MainTags : AppCompatActivity(), TagsInterface {
                     else{
                         displayMessageFeddArticle(ArrayList<FeedArticleDataHolder.FeedArticleHolder>())
                     }
-                    /*val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
-                    if(result != null && !result.comment.isEmpty()){
-
-
-                        displayMessage(result.comment)
-                    }*/
 
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
-        //queue.add(s)
         volleyre.addToRequestQueue(s)
     }
 
@@ -371,13 +303,7 @@ class MainTags : AppCompatActivity(), TagsInterface {
             else -> return super.onOptionsItemSelected(item)
         }
     }
-
-
-        /*fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }*/
-    }
+}
 
 
 

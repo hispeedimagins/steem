@@ -52,4 +52,6 @@ interface JsonRpcResultInterface {
     fun deleDone(){
 
     }
+
+    fun errorWhileParsing(error:String){}
 }
