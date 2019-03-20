@@ -315,30 +315,31 @@ class CommentNotificationsSteemitFragment : Fragment() {
         return nametouse
     }
 
+    fun getMyContext():Context?{
+        var con = context
+        if(con == null){
+            con = activity
+        }
+        return con
+    }
+
     fun addItems(response: JSONObject, nametouse:String){
-        val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.comments,context as Context)
+        val contextMy = getMyContext() ?: return
+        val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.comments,contextMy)
         //con.ParseJsonBlog()
         val result = con.ParseJsonBlog()
         //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
-        if(result != null && !result.isEmpty()){
+        if(!result.isEmpty()){
 
             displayMessageFeddArticle(result)
         }
     }
 
     fun GetMoreItems(){
-        //val queue = Volley.newRequestQueue(context)
-
         swipecommonactionsclass?.makeswiperun()
-
         val volleyre : VolleyRequest = VolleyRequest.getInstance(context)
-
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
-        /*var nametouse : String = username as String
-        if(otherguy != null){
-            nametouse = otherguy as String
-        }*/
         var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getMoreItems(startAuthor,startPermlink,startTag,"get_discussions_by_comments"),
                 Response.Listener { response ->
@@ -352,31 +353,18 @@ class CommentNotificationsSteemitFragment : Fragment() {
                         }
                     }
                     addMoreItems(response,nametouse)
-                    /*val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
-                    if(result != null && !result.comment.isEmpty()){
-
-
-                        displayMessage(result.comment)
-                    }*/
-
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
-        //queue.add(s)
         volleyre.addToRequestQueue(s)
     }
 
     fun addMoreItems(response:JSONObject,nametouse:String){
-        val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.comments,context as Context)
-        //con.ParseJsonBlog()
+        val contextMy = getMyContext() ?: return
+        val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.comments,contextMy)
         val result = con.ParseJsonBlogMore()
-        //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
-        if(result != null && !result.isEmpty()){
-
-
+        if(!result.isEmpty()){
             displayMessageFeddArticle(result)
         }
         else{
@@ -391,7 +379,7 @@ class CommentNotificationsSteemitFragment : Fragment() {
         if (context is OnListFragmentInteractionListener) {
             listener = context
         } else {
-            //throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
+
         }
     }
 

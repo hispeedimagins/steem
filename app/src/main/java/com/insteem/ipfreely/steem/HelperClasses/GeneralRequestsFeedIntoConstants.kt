@@ -45,10 +45,9 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
         followcount = followcounts
     }
 
-    /*init {
-        globalInterface  = if(context is GlobalInterface) context else null
-        followlistinterface  = if(context is GetFollowListsBack) context else null
-    }*/
+    /**
+     * called when all the contants have to be loaded
+     */
     fun RunThemAll(){
         GetDynamicGlobalProperties()
         GetRewardFund()
@@ -56,18 +55,11 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
     }
 
 
-
-
-
-
-
+    /**
+     * fetches the dynamic global properties to use for calculations
+     */
     fun GetDynamicGlobalProperties(){
-        //val queue = Volley.newRequestQueue(context)
-
-        //swipecommonactionsclass?.makeswiperun()
-        //Toast.makeText(applicationContext,"Processing. Please wait....", Toast.LENGTH_LONG).show()
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
 
@@ -86,12 +78,8 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                         //CentralConstantsOfSteem.getInstance().resultfund = parse.result
                         val ccsi = CentralConstantsOfSteem.getInstance()
                         ccsi.dynamicVotePowerReserveRate = votePowerReserveRate
-
                     }
-
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
@@ -99,21 +87,17 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
         volleyre.addToRequestQueue(s)
     }
 
+    /**
+     * make a request to fetch the reward fund for likes calculations
+     */
     fun GetRewardFund(){
-        //val queue = Volley.newRequestQueue(context)
-        //swipecommonactionsclass?.makeswiperun()
-        //Toast.makeText(applicationContext,"Processing. Please wait....", Toast.LENGTH_LONG).show()
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
-
         val s = JsonObjectRequest(Request.Method.POST,url,d.rewardFund,
                 Response.Listener { response ->
-
-                    val gson = Gson()
-                    var parse : Block.rewardfund = gson.fromJson(response.toString(), Block.rewardfund::class.java)
-                    if(parse != null && parse.result != null){
+                    val parse : Block.rewardfund = Gson().fromJson(response.toString(), Block.rewardfund::class.java)
+                    if(parse?.result != null){
                         val recenClaims = parse.result.recentClaims.toLong()
                         val rewardsFund = StaticMethodsMisc.convertRewardsToDouble(parse.result.rewardBalance)
                         val sps = SharedPrefrencesSingleton.getInstance(applicationContext)
@@ -126,24 +110,19 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                         ccsi.resultFundRecentClaims = recenClaims
                         ccsi.resultFundRewards = rewardsFund
                     }
-
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
-        //queue.add(s)
         volleyre.addToRequestQueue(s)
     }
 
-    fun GetPriceFeed(){
-        //val queue = Volley.newRequestQueue(context)
 
-        //swipecommonactionsclass?.makeswiperun()
-        //Toast.makeText(applicationContext,"Processing. Please wait....", Toast.LENGTH_LONG).show()
+    /**
+     * fetches the price feed from steem for calculations
+     */
+    fun GetPriceFeed(){
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
 
@@ -152,7 +131,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
 
                     val gson = Gson()
                     val parse : Block.FeedHistoryPrice = gson.fromJson(response.toString(), Block.FeedHistoryPrice::class.java)
-                    if(parse != null && parse.result != null){
+                    if(parse?.result != null){
                         val sps = SharedPrefrencesSingleton.getInstance(applicationContext)
                         val median = StaticMethodsMisc.convertMerBaseToDouble(parse.result.currentMedianHistory.base)
                         sps.put(CentralConstants.currentMedianHistoryBase,median)
@@ -164,12 +143,9 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
                     }
 
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
-        //queue.add(s)
         volleyre.addToRequestQueue(s)
     }
 
@@ -207,13 +183,18 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
         GetFollowers(currRequestName,"",null)
     }
 
+    /**
+     * fetches the number of followers and following a user has
+     * @param name the user for whom to fetch
+     * @param followcountlistener the listener to which results will be sent to or passed ahead for callbacks (nullable)
+     * @param listener the lister which will listen to the result or passed ahead for callbacks (nullable)
+     * @param followerlistener the listener to which results will be passed to or it is passed ahead for callbacks (nullable)
+     */
     fun GetFollowCount(name:String, followcountlistener: Response.Listener<JSONObject>?  ,listener: Response.Listener<JSONObject>?,followerlistener: Response.Listener<JSONObject>?){
         currRequestName = name
         var listenerm: Response.Listener<JSONObject> =  Response.Listener { response ->
-
-            val gson = Gson()
-            var parse = gson.fromJson(response.toString(), prof.FollowCount::class.java)
-            if(parse != null && parse.result != null){
+            val parse = Gson().fromJson(response.toString(), prof.FollowCount::class.java)
+            if(parse?.result != null){
                 this.followcount = parse
                 followRepo?.getCount(this)
             }
@@ -225,21 +206,27 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         val url = CentralConstants.baseUrl
         val d = MakeJsonRpc.getInstance()
-
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFollowCount(name),
                 listenerm, Response.ErrorListener {})
         volleyre.addToRequestQueue(s)
     }
 
 
+    /**
+     * fetches the followers for a user
+     * @param name username of the user
+     * @param start the user from where to start
+     * @param listener the listener to which to deliver the result to (nullable)
+     */
     fun GetFollowers(name:String,start:String,listener: Response.Listener<JSONObject>?){
-        //val queue = Volley.newRequestQueue(context)
         var listenerm: Response.Listener<JSONObject> =  Response.Listener { response ->
-
-            val gson = Gson()
-            var parse = gson.fromJson(response.toString(), prof.FollowNames::class.java)
-            if(parse != null && parse.result != null){
-
+            var parse:prof.FollowNames? = null
+            try {
+                parse = Gson().fromJson(response.toString(), prof.FollowNames::class.java)
+            } catch (ex:Exception){
+                ex.printStackTrace()
+            }
+            if(parse?.result != null){
                 followers.addAll(parse.result!! )
                 if(!useDbCode){
                     followlistinterface?.GetFollowersList(parse.result as List<prof.Resultfp>)
@@ -297,20 +284,29 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
     }
 
 
+    /**
+     * fetch users a user is following
+     * @param name the username
+     * @param start the user from whom to start from
+     * @param listener the listener to which the result will be delivered to (nullable)
+     */
     fun GetFollowing(name:String,start:String,listener: Response.Listener<JSONObject>?){
-        //val queue = Volley.newRequestQueue(context)
         var listenerm: Response.Listener<JSONObject> =  Response.Listener { response ->
 
-            val gson = Gson()
-            var parse = gson.fromJson(response.toString(), prof.FollowNames::class.java)
-            if(parse != null && parse.result != null){
+            var parse:prof.FollowNames? = null
+            try {
+                parse = Gson().fromJson(response.toString(), prof.FollowNames::class.java)
+            } catch (ex:Exception){
+                ex.printStackTrace()
+            }
+            if(parse?.result != null){
 
-                following.addAll (parse.result !!)
+                following.addAll (parse.result!!)
                 if(!useDbCode){
-                    followlistinterface?.GetFollowingList(parse.result !!)
+                    followlistinterface?.GetFollowingList(parse.result!!)
                 } else {
                     //update the db
-                    followRepo?.insert(parse.result !!,false)
+                    followRepo?.insert(parse.result!!,false)
                     gotTillNow += parse.result!!.size
                     //callback so ui updates with the number
                     if(gotTillNow != 0 && followcount?.result?.followingCount != 0){

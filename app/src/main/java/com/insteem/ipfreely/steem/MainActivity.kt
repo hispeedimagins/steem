@@ -147,6 +147,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     internal var viewPagerAdapteradapter: ViewPagerAdapter? = null
     lateinit var runs: GeneralRequestsFeedIntoConstants
     var animatedVec : AnimatedVectorDrawableCompat? = null
+    val twelveHoursInMilliSec = 43200000
+
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyTheme(this@MainActivity)
 
@@ -242,9 +244,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val time = s.getLong(CentralConstants.lastSaveTimeOfMedianandBase)
             if(time == 0L){
                 runs.RunThemAll()
-            } else if((Date().time - time) > 43200000){
-                runs.RunThemAll()
             } else {
+                if((Date().time - time) > twelveHoursInMilliSec){
+                    runs.RunThemAll()
+                }
+
                 val sps = SharedPrefrencesSingleton.getInstance(applicationContext)
                 val ccsi = CentralConstantsOfSteem.getInstance()
                 ccsi.dynamicVotePowerReserveRate = sps.getInt(CentralConstants.dynamicBlockVotePowerReserveRate)
@@ -252,6 +256,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 ccsi.resultFundRewards = sps.getFloat(CentralConstants.resultFundRewardsBalance).toDouble()
                 ccsi.currentMedianHistoryBase = sps.getFloat(CentralConstants.currentMedianHistoryBase).toDouble()
             }
+
+
+
 
 
             GetProfile()

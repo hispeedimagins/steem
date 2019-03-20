@@ -188,15 +188,9 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
     }
 
     private fun parseJsonBlogGetUser():JSONArray?{
-        val result = parseJsonBlogGetMain()
-        if(result == null){
-            return null
-        }
+        val result = parseJsonBlogGetMain() ?: return null
         val accounts = result.getJSONObject("accounts")
-        val user = if(accounts.has(username)) accounts.getJSONObject(username) else null
-        if(user == null){
-            return null
-        }
+        val user = (if(accounts.has(username)) accounts.getJSONObject(username) else null) ?: return null
         var getthis = "feed"
         if(requestType == TypeOfRequest.blog){
             getthis = "blog"
@@ -387,12 +381,12 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
     private fun _getString(str:String,commstr : JSONObject,noNull:Boolean = false):String?{
         if(commstr.has(str)) return commstr.getString(str)
-        if(noNull) return "" else return null
+        return if(noNull) "" else null
     }
 
     private fun _getInt(str:String,commstr : JSONObject,noNull:Boolean = false):Int?{
         if(commstr.has(str)) return commstr.getInt(str)
-        if(noNull) return 0 else return null
+        return if(noNull) 0 else null
     }
 
     private fun _getNetVotes(commstr : JSONObject):Int{
@@ -406,10 +400,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         val list = ArrayList<Any>()
         //val body = gson.fromJson(json, JsonObject::class.java)
         val body = json
-        val result = if(body?.has("result") as Boolean) body?.getJSONObject("result") else null
-        if(result == null){
-            return list
-        }
+        val result = (if(body?.has("result") as Boolean) body?.getJSONObject("result") else null)
+                ?: return list
         val content : JSONObject = if(result?.has("content")) result.getJSONObject("content") else return list
 
         val com : JSONObject = content.getJSONObject(UserAndPermlinkWithDash)
@@ -419,7 +411,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         list.add(article!!)
         //set wid to zero
         val wid = 0
-        if(article != null && article.replies != null){
+        if(article?.replies != null){
             for(x in 0 until article.replies!!.length()){
                 val comstr = content.getJSONObject(article.replies!!.getString(x))
                 //var reply = gson.fromJson<feed.Comment>(comstr.toString(),feed.Comment::class.java)
@@ -691,54 +683,4 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
     private data class ResultPasser(val times:Int,val
     list:List<FeedArticleDataHolder.FeedArticleHolder>)
-    /*private class deleteTaskAllBooleanAsync internal
-    constructor(commstr : JSONObject,
-                bodyasis : Boolean = false,
-                checkforbots:Boolean = false,
-                val content: JSONObject?,
-                val arr:JSONArray?,
-                private val jni:JsonRpcResultInterface?):
-            AsyncTask<Void, Void, Void>(){
-        override fun doInBackground(vararg params: Void): Void? {
-            if(arr != null){
-                var runTimes = 0
-                var returndata : ArrayList<FeedArticleDataHolder.FeedArticleHolder> = ArrayList()
-                for (x in 0 until arr.length()){
-
-                    //var st = x.toString()
-                    try{
-                        val ss = arr.getString(x)
-                        if(ss != null){
-                            val commstr : JSONObject? = content?.getJSONObject(ss)
-
-                            //if jni is not null we do a callback for saving to db,
-                            //else accumulate in the list and return
-                            if(commstr != null){
-                                if(jni != null){
-                                    jni?.insert(getprocessedfeed(commstr)!!)
-                                } else {
-                                    returndata.add(getprocessedfeed(commstr)!!)
-                                }
-                                runTimes++
-                            }
-
-
-                        }
-                    }
-                    catch (ex : Exception){
-                        ex.message
-                    }
-                }
-                jni?.processingDone(runTimes)
-                return returndata
-            }
-
-            return null
-        }
-
-        override fun onPostExecute(result: Void?) {
-            jni?.deleDone()
-            super.onPostExecute(result)
-        }
-    }*/
 }
