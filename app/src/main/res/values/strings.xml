@@ -45,6 +45,7 @@
     </string>
 
     <string name="pref_title_display_name">Signing nonce</string>
+    <string name="pref_title_main_api_url">Api Node</string>
     <string name="pref_default_display_name">John Smith</string>
 
     <string name="pref_theme_title">Theme</string>
@@ -170,4 +171,7 @@
     <string name="download_request_made">Downloading…</string>
     <string name="beneficiaries">Beneficiaries</string>
     <string name="profile_image">Profile Image</string>
+
+
+    <string name="main_api_url">"https://api.steemit.com/"</string>
 </resources>

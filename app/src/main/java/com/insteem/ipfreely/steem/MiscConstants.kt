@@ -102,6 +102,17 @@ class MiscConstants{
         }
 
 
+        /**
+         * fetches the url set either by the user or by default
+         * @param context used to access the strings file
+         */
+        fun getMainApiUrl(context: Context):String{
+            val conMain = context.getString(R.string.main_api_url)
+            return PreferenceManager.getDefaultSharedPreferences(context).
+                    getString("main_api_url",conMain) ?: conMain
+        }
+
+
         //new function to match users in a post
         /**
          * @param value value in which to find and replace users

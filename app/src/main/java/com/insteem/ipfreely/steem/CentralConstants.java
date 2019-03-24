@@ -1,5 +1,7 @@
 package com.insteem.ipfreely.steem;
 
+import android.content.Context;
+
 /**
  * Created by boot on 2/3/2018.
  */
@@ -27,7 +29,19 @@ public class CentralConstants {
     public static final String dynamicBlockVotePowerReserveRate = "dynamibBVPRR";
 
 
-    public static final String baseUrl = "https://api.steemit.com/";
+    //public static String baseUrl = "https://api.steemit.com/";
+
+    /**
+     * routes the call from one central place to the misc contants method to get the main api url
+     * @param context application context to access the strings file
+     * @return the main api url to fetch
+     */
+    public static String baseUrl(Context context){
+        return MiscConstants.Companion.getMainApiUrl(context);
+    }
+    /*public static void getBaseUrl(String url){
+        baseUrl = url;
+    }*/
     public static final String baseUrlView = "https://steemit.com/";
 
 
@@ -81,6 +95,4 @@ public class CentralConstants {
     public final static String passerArticleTitle = "aTitle";
     public final static String passerArticleDefImg = "aImage";
     public final static String passerArticleaDate = "aDate";
-
-    //public static final String imageurl = "https://steemitimages.com/u/niharikalove/avatar/small";
 }

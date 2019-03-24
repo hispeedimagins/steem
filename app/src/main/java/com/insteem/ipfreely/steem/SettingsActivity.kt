@@ -117,7 +117,12 @@ class SettingsActivity : AppCompatPreferenceActivity(), SharedPreferences.OnShar
             // updated to reflect the new value, per the Android Design
             // guidelines.
             //bindPreferenceSummaryToValue(findPreference("example_text"))
-            bindPreferenceSummaryToValue(findPreference("theme_list"))
+            for(item in getMySummaryNames()){
+                bindPreferenceSummaryToValue(findPreference(item))
+            }
+            //bindPreferenceSummaryToValue(findPreference("theme_list"))
+            //bindPreferenceSummaryToValue(findPreference("signing_nonce"))
+            //bindPreferenceSummaryToValue(findPreference("main_api_url"))
         }
 
 
@@ -137,6 +142,8 @@ class SettingsActivity : AppCompatPreferenceActivity(), SharedPreferences.OnShar
             return super.onOptionsItemSelected(item)
         }
     }
+
+
 
     /**
      * This fragment shows notification preferences only. It is used when the
@@ -275,6 +282,15 @@ class SettingsActivity : AppCompatPreferenceActivity(), SharedPreferences.OnShar
                     PreferenceManager
                             .getDefaultSharedPreferences(preference.context)
                             .getString(preference.key, ""))
+        }
+
+        fun getMySummaryNames():List<String>{
+            val arrayL = ArrayList<String>()
+
+            arrayL.add("theme_list")
+            arrayL.add("signing_nonce")
+            arrayL.add("main_api_url")
+            return arrayL
         }
     }
 }

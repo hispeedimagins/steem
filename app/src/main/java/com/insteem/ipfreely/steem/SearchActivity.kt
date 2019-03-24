@@ -300,7 +300,7 @@ class SearchActivity : AppCompatActivity() {
 
     fun GetUsers(query:String,num:Int = 20){
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        val url = "https://api.steemit.com/"
+        val url = CentralConstants.baseUrl(this)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.GetAccountRepsAndSearch(query,num),

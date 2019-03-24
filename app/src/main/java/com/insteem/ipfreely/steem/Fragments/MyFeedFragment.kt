@@ -295,7 +295,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
             username = sharedPreferences?.getString(CentralConstants.username, null)
             key = sharedPreferences?.getString(CentralConstants.key, null)
         }
-        val url = "https://api.steemit.com/"
+        val url = CentralConstants.baseUrl(context)
         val d = MakeJsonRpc.getInstance()
         val g = Gson()
         var nametouse = GetNameToUse()
@@ -327,7 +327,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(activity)
 
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(context)
         val d = MakeJsonRpc.getInstance()
         var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getMoreItems(startAuthor,startPermlink,startTag,true),
@@ -350,7 +350,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
                 if(context != null) context as Context else this.activity?.applicationContext!!,
                 if(GetNameToUseOtherGuy())this else null,true)
         val result = con.ParseJsonBlogMore()
-        if(result != null && !result.isEmpty()){
+        if(!result.isEmpty()){
             displayMessageFeddArticle(result)
         }
         else{
@@ -371,7 +371,7 @@ class MyFeedFragment : Fragment() , JsonRpcResultInterface {
                 if(context != null) context as Context else this.activity?.applicationContext!!,
                 if(GetNameToUseOtherGuy())this else null,true)
         val result = con.ParseJsonBlog()
-        if(result != null && !result.isEmpty()){
+        if(!result.isEmpty()){
             displayMessageFeddArticle(result)
         }
     }

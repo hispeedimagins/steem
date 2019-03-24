@@ -251,7 +251,7 @@ class LgAppWidget : AppWidgetProvider() {
 
             val volleyre : VolleyRequest = VolleyRequest.getInstance(mContext)
             //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-            val url = "https://api.steemit.com/"
+            val url = CentralConstants.baseUrl(mContext)
             val d = MakeJsonRpc.getInstance()
             //val g = Gson()
             var nametouse : String = if(username != null)  username as String else ""
@@ -290,7 +290,7 @@ class LgAppWidget : AppWidgetProvider() {
 
             val volleyre : VolleyRequest = VolleyRequest.getInstance(mContext)
             //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-            val url = "https://api.steemit.com/"
+            val url = CentralConstants.baseUrl(mContext)
             val d = MakeJsonRpc.getInstance()
 
             var nametouse = username

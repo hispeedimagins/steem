@@ -295,7 +295,7 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(context)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = "https://api.steemit.com/"
+        val url = CentralConstants.baseUrl(context)
         val d = MakeJsonRpc.getInstance()
 
         var nametouse = GetNameToUse()
@@ -321,7 +321,7 @@ class FeedFragment : Fragment(),JsonRpcResultInterface  {
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(context)
 
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(context)
         val d = MakeJsonRpc.getInstance()
         var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getMoreItems(startAuthor,startPermlink,startTag,false),

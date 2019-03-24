@@ -44,9 +44,6 @@ class RepliesNotificationsFragment : Fragment() {
 
     private var adapter: AllRecyclerViewAdapter? = null
     private var activity: Context? = null
-    //internal var view: View? = null
-    //internal var swipeRefreshLayout: SwipeRefreshLayout? = null
-    //internal var recyclerView: RecyclerView? = null
     private var loading = false
     internal var pastVisiblesItems: Int = 0
     internal var visibleItemCount:Int = 0
@@ -97,15 +94,6 @@ class RepliesNotificationsFragment : Fragment() {
         recy.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
-                /*if(dy > 0){
-
-                        dab.hide();
-                    }
-                    else {
-                        dab.show();
-                    }*/
-
                 if (dy > 0) {
                     visibleItemCount = recyclerView.childCount
                     totalItemCount = adapter?.getItemCount() as Int
@@ -149,10 +137,6 @@ class RepliesNotificationsFragment : Fragment() {
 
         swipecommonactionsclass = swipecommonactionsclass(swipeRefreshLayout)
         fragmentActivity = getActivity()
-
-        /*val sharedPreferences = context?.getSharedPreferences(CentralConstants.sharedprefname, 0)
-        username = sharedPreferences?.getString(CentralConstants.username, null)
-        key = sharedPreferences?.getString(CentralConstants.key, null)*/
 
         if (!tokenisrefreshingholdon) {
             //getQuestionsNow(false);
@@ -229,14 +213,7 @@ class RepliesNotificationsFragment : Fragment() {
 
 
     fun displayMessageFeddArticle(result: List<FeedArticleDataHolder.FeedArticleHolder>) {
-
-
         loading = false
-
-        /*for (a in result){
-
-            displayMessage(a)
-        }*/
         adapter?.commentNotiHelperFunctions?.add(result)
         if(result.isNotEmpty()){
             var lc = result[result.size - 1]
@@ -252,13 +229,9 @@ class RepliesNotificationsFragment : Fragment() {
         }
 
         swipecommonactionsclass?.makeswipestop()
-        //adapter.questionListFunctions.add(questionsList)
-
     }
 
     fun GetFeed(){
-        //val queue = Volley.newRequestQueue(context)
-
         swipecommonactionsclass?.makeswiperun()
 
         if(username == null){
@@ -269,23 +242,11 @@ class RepliesNotificationsFragment : Fragment() {
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(context)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = "https://api.steemit.com/"
+        val url = CentralConstants.baseUrl(context)
         val d = MakeJsonRpc.getInstance()
-        //val g = Gson()
-        /*var nametouse : String =  if(username != null) username as String else ""
-        if(otherguy != null){
-            nametouse = otherguy as String
-        }*/
         var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFeedJ(nametouse,"recent-replies"),
                 Response.Listener { response ->
-
-                    /*val gson = Gson()
-                    val collectionType = object : TypeToken<List<feed.FeedData>>() {
-
-                    }.type*/
-
-                    //save to db, id goes to
                     if(context != null){
                         val req = RequestsDatabase(context!!)
                         var ad = req.Insert(com.insteem.ipfreely.steem.DataHolders.Request(json = response.toString() ,dateLong = Date().time, typeOfRequest = TypeOfRequest.replies.name,otherInfo = "repliesfirst"))
@@ -293,15 +254,6 @@ class RepliesNotificationsFragment : Fragment() {
                             dblist.add(ad)
                         }
                     }
-
-                    /*val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.replies,context as Context)
-                    //con.ParseJsonBlog()
-                    val result = con.ParseJsonBlog()
-                    //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
-                    if(result != null && !result.isEmpty()){
-
-                        displayMessageFeddArticle(result)
-                    }*/
                     addItems(response,nametouse)
 
                 }, Response.ErrorListener {
@@ -327,54 +279,19 @@ class RepliesNotificationsFragment : Fragment() {
         //con.ParseJsonBlog()
         val result = con.ParseJsonBlog()
         //val result = gson.fromJson<List<feed.FeedData>>(response.toString(),collectionType)
-        if(result != null && !result.isEmpty()){
-
-            displayMessageFeddArticle(result)
-        }
+        displayMessageFeddArticle(result)
     }
 
     fun GetMoreItems(){
-        //val queue = Volley.newRequestQueue(context)
-
         swipecommonactionsclass?.makeswiperun()
-
         val volleyre : VolleyRequest = VolleyRequest.getInstance(context)
-
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(context)
         val d = MakeJsonRpc.getInstance()
-        /*var nametouse : String = username as String
-        if(otherguy != null){
-            nametouse = otherguy as String
-        }*/
         var nametouse = GetNameToUse()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getMoreItems(startAuthor,startPermlink,startTag,"get_replies_by_last_update"),
                 Response.Listener { response ->
                     loading = false
-                    /*val gson = Gson()
-                    val collectionType = object : TypeToken<List<feed.Comment>>() {
 
-                    }.type*/
-                    //val con = JsonRpcResultConversion(response.toString(),username as String,TypeOfRequest.feed)
-                    //con.ParseJsonBlog()
-                    //val result = con.ParseJsonBlog()
-                    /*val con = JsonRpcResultConversion(response,nametouse, TypeOfRequest.replies,context as Context)
-                    //con.ParseJsonBlog()
-                    val result = con.ParseJsonBlogMore()
-                    //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
-                    if(result != null && !result.isEmpty()){
-
-
-                        displayMessageFeddArticle(result)
-                    }
-                    else{
-                        displayMessageFeddArticle(java.util.ArrayList<FeedArticleDataHolder.FeedArticleHolder>())
-                    }*/
-                    /*val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
-                    if(result != null && !result.comment.isEmpty()){
-
-
-                        displayMessage(result.comment)
-                    }*/
                     //save to db, id goes to state
                     if(context != null){
                         val req = RequestsDatabase(context!!)
@@ -386,8 +303,6 @@ class RepliesNotificationsFragment : Fragment() {
                     addMoreItems(response,nametouse)
 
                 }, Response.ErrorListener {
-            //swipecommonactionsclassT.makeswipestop()
-            //mTextView.setText("That didn't work!");
         }
 
         )
@@ -400,14 +315,7 @@ class RepliesNotificationsFragment : Fragment() {
         //con.ParseJsonBlog()
         val result = con.ParseJsonBlogMore()
         //val result = gson.fromJson<feed.FeedMoreItems>(response.toString(),feed.FeedMoreItems::class.java)
-        if(result != null && !result.isEmpty()){
-
-
-            displayMessageFeddArticle(result)
-        }
-        else{
-            displayMessageFeddArticle(java.util.ArrayList<FeedArticleDataHolder.FeedArticleHolder>())
-        }
+        displayMessageFeddArticle(result)
     }
 
     override fun onAttach(context: Context) {

@@ -82,7 +82,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
         }
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.globalProperties,
@@ -111,7 +111,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getBlock(blocknumber),
@@ -177,7 +177,7 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
         //var re1j : JSONObject? = getOperations(vop[0],signedtra)
         var re1j : JSONObject? = null

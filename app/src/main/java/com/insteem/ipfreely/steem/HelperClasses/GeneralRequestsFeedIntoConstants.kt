@@ -60,7 +60,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
      */
     fun GetDynamicGlobalProperties(){
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.globalProperties,
@@ -92,7 +92,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
      */
     fun GetRewardFund(){
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
         val s = JsonObjectRequest(Request.Method.POST,url,d.rewardFund,
                 Response.Listener { response ->
@@ -123,7 +123,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
      */
     fun GetPriceFeed(){
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.priceFeed,
@@ -204,7 +204,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
             listenerm = followcountlistener
         }
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFollowCount(name),
                 listenerm, Response.ErrorListener {})
@@ -275,7 +275,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
             listenerm = listener
         }
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFollowers(name,start),
@@ -351,7 +351,7 @@ class GeneralRequestsFeedIntoConstants(context: Context):JsonRpcResultInterface 
             listenerm = listener
         }
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(applicationContext)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getFollowing(name,start),

@@ -215,7 +215,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
 
     fun GetFeed(mainrequest:String,maintag:String){
         val volleyre : VolleyRequest = VolleyRequest.getInstance(mContext)
-        val url = "https://api.steemit.com/"
+        val url = CentralConstants.baseUrl(mContext)
         val d = MakeJsonRpc.getInstance()
         var nametouse : String = if(username != null)  username as String else ""
 
@@ -252,7 +252,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context, intent: In
         }
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(mContext)
-        val url = "https://api.steemit.com/"
+        val url = CentralConstants.baseUrl(mContext)
         val d = MakeJsonRpc.getInstance()
 
         var nametouse = username
