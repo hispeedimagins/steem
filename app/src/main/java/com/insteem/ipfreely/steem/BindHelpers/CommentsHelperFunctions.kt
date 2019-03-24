@@ -47,6 +47,8 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
     var selectedPos = -1
     var floatingDateHolder = dateHolder
     var animatedVec : AnimatedVectorDrawableCompat? = null
+    var textInternalMargin = 5
+
     init {
         if(name == null){
             val sharedpref : SharedPreferences = context.getSharedPreferences(CentralConstants.sharedprefname,0)
@@ -57,6 +59,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
         var ta = context.obtainStyledAttributes(attrs)
         var textColorMineThemeint = ta.getResourceId(0, android.R.color.black)
         ta.recycle()
+        textInternalMargin = GetPx(5F)
         textColorMineTheme = ContextCompat.getColor(con, textColorMineThemeint)
     }
 
@@ -242,7 +245,7 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
         val articlepop = ArticlePopUpMenu(con,mholder.shareTextView,"${CentralConstants.baseUrlView}@${holder?.article?.author}","${CentralConstants.baseUrlView}${holder?.article?.category}/@${holder?.article?.author}/${holder?.article?.permlink}",holder?.article?.useFollow,name,holder?.article?.author,adaptedcomms,position,holder?.progressbar,null,holder?.article?.activeVotes)
 
 
-        var bod = holder.article?.body //StaticMethodsMisc.CorrectMarkDown(holder.article?.body,holder.article?.image)
+        /*var bod = holder.article?.body //StaticMethodsMisc.CorrectMarkDown(holder.article?.body,holder.article?.image)
 
         var s : String = ""
         if(holder.article?.format == "html"){
@@ -256,17 +259,17 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
         //added new username catcher
         s = MiscConstants.CorrectUsernamesK(s)
         s = StaticMethodsMisc.CorrectNewLine(s)
-        //GenerateCommentViews(s,holder)
+        //GenerateCommentViews(s,holder)*/
         holder?.openarticle?.removeAllViews()
-        var objects = StaticMethodsMisc.ConvertTextToList(s,holder?.article?.image)
-        if(objects.size > 0){
+        var objects = holder?.article?.lBody //StaticMethodsMisc.ConvertTextToList(s,holder?.article?.image)
+        if(objects?.size != null && objects.isNotEmpty()){
             val lparams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             for(x in objects){
                 if(x is String){
                     var tx = TextView(con)
                     //tx.setTextColor(ContextCompat.getColor(con,R.color.black))
-                    lparams.setMargins(GetPx(5f),0,GetPx(5f),0)
+                    lparams.setMargins(textInternalMargin,0,textInternalMargin,0)
                     tx.layoutParams = lparams
                     tx.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.0f)
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {

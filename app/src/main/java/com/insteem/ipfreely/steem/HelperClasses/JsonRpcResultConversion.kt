@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.util.DisplayMetrics
 import android.util.Log
+import com.commonsware.cwac.anddown.AndDown
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -32,6 +33,7 @@ import java.util.regex.Pattern
 class JsonRpcResultConversion(val json :JSONObject?,var username :String, val requestType: TypeOfRequest?){
     var contex : Context? = null
     var displayMet:DisplayMetrics? = null
+    var mAndDown:AndDown? = null
     constructor(json :JSONObject?,username :String,requestType : TypeOfRequest?,context: Context) : this(json,username,requestType){
         contex = context
         followersDatabase = FollowersDatabase(context)
@@ -40,6 +42,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
     constructor(json :JSONObject?,username :String,requestType : TypeOfRequest?,context: Context,metrics: DisplayMetrics) : this(json,username,requestType,context){
         displayMet = metrics
+        mAndDown = AndDown()
     }
 
     constructor(json :JSONObject?,username :String, requestType: TypeOfRequest?,context: Context,jInterface:JsonRpcResultInterface?,blogData:Boolean): this(json,username,requestType,context){
@@ -511,7 +514,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 entryId = if(commstr.has("entry_id")) commstr.getInt("entry_id") else 0 ,
                 active = _getString("active",commstr,true)!!,
                 author = author,
-                body = bod,
+                body = if(username == author) bod else "",
+                lBody = convertCommentBodyToList(bod,jsonMetadata?.format,jsonMetadata?.image),
                 cashoutTime = _getString("cashout_time",commstr,true)!!,
                 category = _getString("category",commstr,true)!!,
                 children = commstr.getInt("children"),
@@ -519,7 +523,7 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 createdcon = dd.toString(),
                 date = dd,
                 depth = commstr.getInt("depth"),
-                id = commstr.getInt("post_id"),
+                id = commstr.getLong("post_id"),
                 lastPayout = _getString("last_payout",commstr,true)!!,
                 lastUpdate = _getString("last_update",commstr,true)!!,
                 netVotes = _getNetVotes(commstr),
@@ -558,6 +562,22 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
         //adapter?.add(fd)
         return fd
 
+    }
+
+    fun convertCommentBodyToList(body:String?,format:String?,images:List<String>?):List<Any>{
+        var s : String? = ""
+        s = if(format == "html"){
+            if(body != null) body else ""
+        }
+        else{
+            mAndDown?.markdownToHtml(body, AndDown.HOEDOWN_EXT_AUTOLINK, AndDown.HOEDOWN_HTML_SKIP_HTML)
+        }
+        s = StaticMethodsMisc.CorrectAfterMainImages(s)
+        //s = StaticMethodsMisc.CorrectMarkDownUsers(s,holder.article?.users)
+        //added new username catcher
+        s = MiscConstants.CorrectUsernamesK(s)
+        s = StaticMethodsMisc.CorrectNewLine(s)
+        return StaticMethodsMisc.ConvertTextToList(s,images)
     }
 
 

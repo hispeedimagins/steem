@@ -160,6 +160,8 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
     var editTextCom:EditText? = null
     var progressCom:ProgressBar? = null
     var displayMet: DisplayMetrics = DisplayMetrics()
+    var autoLoadOnce = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyThemeArticle(this@ArticleActivity)
         super.onCreate(savedInstanceState)
@@ -279,73 +281,14 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
                 }
             }
         }
-        else{
-
-            /*if(savedInstanceState != null){
-                //initiate all variables form save state
-                articleuser = savedInstanceState.getString("articleuser")
-                articlepermlink = savedInstanceState.getString("articlepermlink")
-                articletag = savedInstanceState.getString("articletag")
-                articleTitle = savedInstanceState.getString(CentralConstants.passerArticleTitle,"")
-                articleCovImg = savedInstanceState.getString(CentralConstants.passerArticleDefImg,"")
-                articleDate = savedInstanceState.getString(CentralConstants.passerArticleaDate,"")
-                permlinkToFind = savedInstanceState.getString("permlinkToFind")
-                blockNumberToFind = savedInstanceState.getInt("blockNumberToFind")
-                usernameToState = savedInstanceState.getString("usernameToState")
-                var not = savedInstanceState.getString("notifitype",null)
-                if(not != null){
-                    notifitype = NotificationType.valueOf(not)
-                }
-
-                var lar = savedInstanceState.getLongArray("dbitems")
-                dblist.addAll(lar.toList())
-
-
-            }*/ //else {
-                /*if(dbId != -1){
-                    if(fromWidget){
-                        //if from a widget we load from the widget vm
-                        widgetVm = ViewModelProviders.of(this@ArticleActivity).get(WidgetVM::class.java)
-                        widgetVm.getFetchedItem(dbId).observe(this@ArticleActivity, Observer {
-                            if(it != null) {
-                                res = it
-                                articleFragment?.displayMessage(it)
-                                //setMainImage(it.displayImage)
-                            }
-                        })
-                    } else {
-                        articleVm = ViewModelProviders.of(this@ArticleActivity).get(ArticleRoomVM::class.java)
-                        articleVm.getFetchedItem(dbId).observe(this@ArticleActivity,Observer {
-                            if(it != null) {
-                                res = it
-                                articleFragment?.displayMessage(it)
-                                //setMainImage(it.displayImage)
-                            }
-                        })
-
-
-                    }
-
-                } else {
-                    GetFeed(articletag as String,articleuser as String,articlepermlink as String)
-                //}
-                //GetFeed(articletag as String,articleuser as String,articlepermlink as String)
-            }*/
-            //GetFeed(articletag as String,articleuser as String,articlepermlink as String)
-
-        }
-        /*if(blockNumberToFind == 0){
-            GetFeed(articletag as String,articleuser as String,articlepermlink as String)
-        }
-        else{
-            GetBlock(blockNumberToFind)
-        }*/
-
         setCollImage(articleuser!!)
         setMainImage(articleCovImg)
     }
 
 
+    /**
+     * called when the article fragment is ready, then we fetch the article either from the database or from the network
+     */
     fun fetchArticle(){
         if(dbId != -1){
             if(fromWidget){
@@ -378,6 +321,10 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
         }
     }
 
+    /**
+     * sets the header user image
+     * @param username the author of the application
+     */
     fun setCollImage(username:String){
         //val ani = AnimatedVectorDrawableCompat.create(this,R.drawable.animated_loader)
         val options = RequestOptions()
@@ -393,6 +340,10 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
     }
 
 
+    /**
+     * Sets the header image of the article
+     * @param url the url of the image
+     */
     fun setMainImage(url:String?){
         val urlF = if(!TextUtils.isEmpty(url)) url else MiscConstants.getRandDrawable(this)
        // val ani = AnimatedVectorDrawableCompat.create(this,R.drawable.animated_loader)
@@ -429,19 +380,9 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
     }
 
 
-    /*override fun onStop() {
-        super.onStop()
-        finish()
-    }*/
-
-    /*fun firstinit() {
-        val headv = nav_view.getHeaderView(0)
-
-        mysetup()
-        // GetProfile()
-    }*/
-
-
+    /**
+     * called when tab related ui has to be setup
+     */
     fun mysetup() {
         if (viewPager == null) viewPager = findViewById(R.id.pager)
 
@@ -450,7 +391,23 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
         tabLayout?.setupWithViewPager(viewPager)
 
 
+        val lis = object : TabLayout.OnTabSelectedListener{
+            override fun onTabReselected(p0: TabLayout.Tab?) {
 
+            }
+
+            override fun onTabSelected(p0: TabLayout.Tab?) {
+                if(p0?.position == 1 && !autoLoadOnce){
+                    GetFeed(articletag as String,articleuser as String,articlepermlink as String,false)
+                }
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+
+            }
+        }
+
+        tabLayout?.addOnTabSelectedListener(lis)
 
         setTabViewItems()
         if(permlinkToFind != null && permlinkToFind != ""){
@@ -555,7 +512,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
     fun GetContent(username:String,permlink:String){
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(this)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getContent(username,permlink),
@@ -589,7 +546,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(this)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getBlock(blocknumber),
@@ -651,7 +608,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
 
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = CentralConstants.baseUrl
+        val url = CentralConstants.baseUrl(this)
         val d = MakeJsonRpc.getInstance()
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getState(page),
@@ -696,11 +653,12 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
      * @param articlepermlink the permlink of the article
      * @param articletag the tag of the article
      * @param articleusername the username of the article
+     * @param updateArticle if article has to be updated or not
      */
-    fun GetFeed(articletag : String,articleusername : String,articlepermlink : String){
+    fun GetFeed(articletag : String,articleusername : String,articlepermlink : String,updateArticle:Boolean = true){
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
-        val url = "https://api.steemit.com/"
+        val url = MiscConstants.getMainApiUrl(this)
         val d = MakeJsonRpc.getInstance()
         val g = Gson()
 
@@ -708,22 +666,18 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
                 Response.Listener { response ->
                     val con = JsonRpcResultConversion(response,username as String, TypeOfRequest.feed,applicationContext,displayMet)
                     //con.ParseJsonBlog()
-
+                    autoLoadOnce = true
                     val result = con.ParseReplies(articleusername+"/"+articlepermlink)
-                    if(result != null && !result.isEmpty()){
+                    if(!result.isEmpty()){
                         commentsFragment?.clear()
                         commentsFragment?.setPermlinkToFind(permlinkToFind as String)
                         //send true for fragment to save json
-                        val art = result[0] as FeedArticleDataHolder.FeedArticleHolder
-                        articleFragment?.displayMessage(art,true)
-                        //setMainImage(art.image?.firstOrNull())
-                        //set the articles title as the activity header
-                        supportActionBar?.title = art.title
-                        activity_article_title.text = art.title
-                        /*if(result[0].active_voted != null){
-                            upvoteFragment?.display(result[0].active_voted as List<feed.avtiveVotes>)
-                        }*/
-
+                        if(updateArticle){
+                            val art = result[0] as FeedArticleDataHolder.FeedArticleHolder
+                            articleFragment?.displayMessage(art,true)
+                            supportActionBar?.title = art.title
+                            activity_article_title.text = art.title
+                        }
                         if(result.size > 2){
                             //var si = result.size - 1
                             val sb = result.subList(1,result.size)
