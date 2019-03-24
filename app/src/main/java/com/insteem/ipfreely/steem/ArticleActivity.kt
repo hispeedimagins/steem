@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.util.Log
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -158,7 +159,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
     var imageUri:Uri? = null
     var editTextCom:EditText? = null
     var progressCom:ProgressBar? = null
-
+    var displayMet: DisplayMetrics = DisplayMetrics()
     override fun onCreate(savedInstanceState: Bundle?) {
         MiscConstants.ApplyMyThemeArticle(this@ArticleActivity)
         super.onCreate(savedInstanceState)
@@ -174,7 +175,7 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
 
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        windowManager.defaultDisplay.getMetrics(displayMet)
         if(savedInstanceState != null){
             //initiate all variables form save state
             articleuser = savedInstanceState.getString("articleuser")
@@ -705,8 +706,9 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
 
         val s = JsonObjectRequest(Request.Method.POST,url,d.getArticle(articletag,articleusername,articlepermlink),
                 Response.Listener { response ->
-                    val con = JsonRpcResultConversion(response,username as String, TypeOfRequest.feed,applicationContext)
+                    val con = JsonRpcResultConversion(response,username as String, TypeOfRequest.feed,applicationContext,displayMet)
                     //con.ParseJsonBlog()
+
                     val result = con.ParseReplies(articleusername+"/"+articlepermlink)
                     if(result != null && !result.isEmpty()){
                         commentsFragment?.clear()

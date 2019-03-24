@@ -2,6 +2,7 @@ package com.insteem.ipfreely.steem.HelperClasses
 
 import android.content.Context
 import android.os.AsyncTask
+import android.util.DisplayMetrics
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -14,6 +15,7 @@ import com.insteem.ipfreely.steem.Databases.FollowingDatabase
 import com.insteem.ipfreely.steem.Enums.TypeOfRequest
 import com.insteem.ipfreely.steem.Interfaces.JsonRpcResultInterface
 import com.insteem.ipfreely.steem.MiscConstants
+import com.insteem.ipfreely.steem.R
 import com.insteem.ipfreely.steem.SteemBackend.Config.Enums.MyOperationTypes
 import com.insteem.ipfreely.steem.jsonclasses.feed
 import com.insteem.ipfreely.steem.jsonclasses.prof
@@ -29,10 +31,15 @@ import java.util.regex.Pattern
 
 class JsonRpcResultConversion(val json :JSONObject?,var username :String, val requestType: TypeOfRequest?){
     var contex : Context? = null
+    var displayMet:DisplayMetrics? = null
     constructor(json :JSONObject?,username :String,requestType : TypeOfRequest?,context: Context) : this(json,username,requestType){
         contex = context
         followersDatabase = FollowersDatabase(context)
         followingDatabase = FollowingDatabase(context)
+    }
+
+    constructor(json :JSONObject?,username :String,requestType : TypeOfRequest?,context: Context,metrics: DisplayMetrics) : this(json,username,requestType,context){
+        displayMet = metrics
     }
 
     constructor(json :JSONObject?,username :String, requestType: TypeOfRequest?,context: Context,jInterface:JsonRpcResultInterface?,blogData:Boolean): this(json,username,requestType,context){
@@ -110,20 +117,14 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
 
     fun ParseJsonBlog() : ArrayList<FeedArticleDataHolder.FeedArticleHolder>{
         val body = json
-        val result = if(body?.has("result")!!) body?.getJSONObject("result") else null
-        if(result == null){
-            return ArrayList<FeedArticleDataHolder.FeedArticleHolder>()
-        }
-        if(result?.has("tag_idx")!!){
+        val result = (if(body?.has("result")!!) body?.getJSONObject("result") else null) ?: return ArrayList()
+        if(result.has("tag_idx")){
             GetTrendingTags()
         }
 
-        val content = result.getJSONObject("content")
+        val content = (if(result.has("content")) result.getJSONObject("content") else null) ?: return ArrayList()
         val accounts = result.getJSONObject("accounts")
-        val user = if(accounts.has(username)) accounts.getJSONObject(username) else null
-        if(user == null){
-            return ArrayList()
-        }
+        val user = (if(accounts.has(username)) accounts.getJSONObject(username) else null) ?: return ArrayList()
         var getthis = "feed"
         if(requestType == TypeOfRequest.blog){
             getthis = "blog"
@@ -540,6 +541,8 @@ class JsonRpcResultConversion(val json :JSONObject?,var username :String, val re
                 //summary = null,
                 datespan = du,
                 width = wid,
+                widthPx = ImagePickersWithHelpers.GetPx(wid.toFloat(),displayMet),
+                defaultWidth = contex?.resources?.getDimension(R.dimen.default_comment_margin_sides)?.toInt() ?: 0,
                 activeVotes = commstr.getJSONArray("active_votes"),
                 replies = replies,
                 useFollow = fol,

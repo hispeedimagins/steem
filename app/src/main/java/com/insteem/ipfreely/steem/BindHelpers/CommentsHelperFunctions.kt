@@ -117,8 +117,10 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
             pay = holder.article?.already_paid
         }
 
-        if(holder.article?.width != 0){
-            holder.cardviewchat?.layoutParams = GetLayourParamsMargin(GetPx(holder.article?.width?.toFloat()!!))
+        holder.cardviewchat?.layoutParams = if(holder.article?.width != 0){
+            GetLayourParamsMargin(holder.article?.widthPx ?: holder.article?.defaultWidth ?: 0)
+        } else {
+            GetLayourParamsMargin(holder.article?.defaultWidth ?: 0)
         }
 
 
@@ -297,64 +299,6 @@ class CommentsHelperFunctions(context : Context,username:String?,adapter: arvdin
                 }
             }
         }
-        /*s += "<style>*{max-width:100%}</style>"
-        s += "<script type=\"text/javascript\">\n" +
-                "    function UserClicked(user) {\n" +
-                "        Android.UserClicked(user);\n" +
-                "    }\n" +
-                "</script>"*/
-        //and = AndDown()
-        //val s : String = and.markdownToHtml(bod, AndDown.HOEDOWN_EXT_AUTOLINK, 0)
-        /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            // tvDocument.setText(Html.fromHtml(bodyData,Html.FROM_HTML_MODE_LEGACY))
-            //holder.article_summary?.text = Html.fromHtml(s, Html.FROM_HTML_MODE_LEGACY)
-            holder.article_webview?.loadDataWithBaseURL("",holder.article?.body,null,"UTF-8",null)
-        } else {
-            //tvDocument.setText(Html.fromHtml(bodyData))
-           // holder.article_summary?.text = Html.fromHtml(s)
-            holder.article_webview?.loadDataWithBaseURL("",holder.article?.body,null,"UTF-8",null)
-        }*/
     }
-
-
-    /*fun GenerateCommentViews(s : String,holder : CommentViewHolder){
-        var objects = StaticMethodsMisc.ConvertTextToList(s,holder?.article?.image)
-        if(objects != null){
-            val lparams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            for(x in objects){
-                if(x is String){
-                    var tx = TextView(con)
-                    tx.layoutParams = lparams
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                        // tvDocument.setText(Html.fromHtml(bodyData,Html.FROM_HTML_MODE_LEGACY))
-                        tx.text = Html.fromHtml(x,Html.FROM_HTML_MODE_LEGACY)
-                        //webview?.loadDataWithBaseURL("",s,null,"UTF-8",null)
-                    } else {
-                        //tvDocument.setText(Html.fromHtml(bodyData))
-                        tx.text = Html.fromHtml(s)
-                        //webview?.loadDataWithBaseURL("",s,null,"UTF-8",null)
-                    }
-                    holder?.openarticle?.addView(tx)
-                }
-                else if(x is Int){
-                    var iamge = ImageView(con)
-                    iamge.layoutParams = lparams
-                    iamge.adjustViewBounds = true
-                    val options = RequestOptions()
-
-                            .placeholder(R.drawable.ic_all_inclusive_black_24px)
-                            //.error(R.drawable.error)
-                            .priority(Priority.HIGH)
-                    holder?.openarticle?.addView(iamge)
-                    var url = holder?.article?.image!![x]
-                    Glide.with(con).load(CentralConstants.GetFeedImageUrl(url)).apply(options)
-                            // .placeholder(R.drawable.common_full_open_on_phone)
-                            .into(iamge)
-
-                }
-            }
-        }
-    }*/
 
 }

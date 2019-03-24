@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
@@ -14,9 +15,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import androidx.viewpager.widget.ViewPager
 import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -78,11 +81,12 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
     internal var articletag = ""
     internal var articlepermlink = ""
     internal var blogFragment :MyFeedFragment? = null
-
     var articlepop : ArticlePopUpMenu? = null
     var followCount: prof.FollowCount? = null
     var followers: List<prof.Resultfp> = ArrayList()
     var following: MutableList<prof.Resultfp> = ArrayList()
+    var animatedVec : AnimatedVectorDrawableCompat? = null
+
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
      * fragments for each of the sections. We use a
@@ -100,7 +104,7 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-
+        animatedVec = AnimatedVectorDrawableCompat.create(this@OpenOtherGuyBlog,R.drawable.animated_loader)
         toolbar_layout.title =  ""
         toolbar.title = ""
         val sharedPreferences = applicationContext.getSharedPreferences(CentralConstants.sharedprefname, 0)
@@ -484,28 +488,12 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
     fun GetProfile(){
         val pfp : ImageView? = findViewById(R.id.profileFullImage)
         val pfpr : ImageView? = findViewById(R.id.pfp)
-        /*val headv = nav_view.getHeaderView(0)
-        val pfp : ImageView? = headv.findViewById(R.id.pfp) as? ImageView
-        val name:TextView? = headv.findViewById(R.id.name) as? TextView
-        val status:TextView? = headv.findViewById(R.id.status) as? TextView*/
         val url = CentralConstants.GetProfileUrl(otherguy)
-        val stringRequest = StringRequest(Request.Method.GET, url,
+        val stringRequest = JsonObjectRequest(Request.Method.GET, url,null,
                 Response.Listener { response ->
-                    // Display the first 500 characters of the response string.
-                    //mTextView.setText("Response is: "+ response.substring(0,500));
-                    //swipecommonactionsclassT.makeswipestop()
-                    /*val gson = Gson()
-                    val result = gson.fromJson<JsonTenorResultTrending>(response, JsonTenorResultTrending::class.java!!)
-                    for (s in result.results) {
-                        tenoradapter.add(s.media.get(0))
-                    }*/
-                    val gson = Gson()
 
-
-
-
-                    val result = gson.fromJson<ProfileJsonSteemit>(response, ProfileJsonSteemit::class.java)
-                    if(result != null){
+                    if(response.has("statue") && response.getInt("status") == 200){
+                        val result = Gson().fromJson<ProfileJsonSteemit>(response.toString(), ProfileJsonSteemit::class.java)
                         if(result.user != null){
                             //CentralConstantsOfSteem.getInstance().profile = resulto
                             var nam = "${result.user.name} (${StaticMethodsMisc.CalculateRepScore(result.user.reputation)})"
@@ -530,7 +518,7 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
                                 if(!TextUtils.isEmpty(result.user.json_metadata.profile.location)) activity_location.text = result.user.json_metadata.profile.location
                                 activity_website.movementMethod = LinkMovementMethod.getInstance()
                                 if(result.user.json_metadata.profile.website == null) cardviewsix.visibility = View.GONE
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
                                     activity_website.text = Html.fromHtml("<a href=\"${result.user.json_metadata.profile.website}\" >${result.user.json_metadata.profile.website}</a>", Html.FROM_HTML_MODE_LEGACY)
                                 }
                                 else {
@@ -541,16 +529,16 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
                                 activity_motto.text = result.user.json_metadata.profile.about
                                 val options = RequestOptions()
                                         .centerCrop()
-                                        .placeholder(R.drawable.ic_person_white_24px)
+                                        .placeholder(animatedVec)
                                         //.error(R.drawable.error)
                                         .priority(Priority.HIGH)
                                         .circleCrop()
                                 val optionss = RequestOptions()
                                         .centerCrop()
-                                        .placeholder(R.drawable.ic_all_inclusive_black_24px)
+                                        .placeholder(animatedVec)
                                         //.error(R.drawable.error)
                                         .priority(Priority.HIGH)
-
+                                animatedVec?.start()
                                 //status?.text = resultp.profile.about
                                 Glide.with(applicationContext).load(result.user.json_metadata.profile.cover_image).apply(optionss)
                                         //.placeholder(R.drawable.common_full_open_on_phone)
@@ -590,74 +578,6 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
 
     }
 
-
-
-    /*fun listeners(){
-
-        var followerlistener: Response.Listener<JSONObject> =  Response.Listener { response ->
-
-            val gson = Gson()
-            var parse = gson.fromJson(response.toString(), prof.FollowNames::class.java)
-            if(parse != null && parse.result != null){
-
-                followers += (parse.result as List<prof.Resultfp>)
-                if(followers.size == followCount.result.followerCount){
-                    
-                    followersisdone = true
-                    allDone()
-                }
-
-            }
-
-        }
-
-
-        var followinglistener: Response.Listener<JSONObject> =  Response.Listener { response ->
-
-            val gson = Gson()
-            var parse = gson.fromJson(response.toString(), prof.FollowNames::class.java)
-            if(parse != null && parse.result != null){
-
-                FollowApiConstants.getInstance().following.addAll(parse.result as List<prof.Resultfp>)
-                if(FollowApiConstants.getInstance().following.size == FollowApiConstants.getInstance().followCount.result.followingCount){
-                    var fold = FollowingDatabase(applicationContext)
-                    var alldbpeople = fold.GetAllQuestions()
-                    for(x in FollowApiConstants.getInstance().following){
-                        if(fold.Insert(x)){
-
-                        } else {
-                            alldbpeople.remove(x)
-                        }
-                    }
-                    for(x in alldbpeople){
-                        fold.deleteContact(x.following)
-                    }
-                    followingisdone = true
-                    allDone()
-                }
-
-            }
-
-        }
-
-        StaticMethodsMisc.MakeFollowRequests(parse,applicationContext,followinglistener)
-        StaticMethodsMisc.MakeFollowRequestsFollowers(parse,applicationContext,followerlistener)
-        *//*var followcountlistener: Response.Listener<JSONObject> =  Response.Listener { response ->
-
-            val gson = Gson()
-            var parse = gson.fromJson(response.toString(), prof.FollowCount::class.java)
-            if(parse != null && parse.result != null){
-                FollowApiConstants.getInstance().followCount = parse
-                StaticMethodsMisc.MakeFollowRequests(parse,applicationContext,followinglistener)
-                StaticMethodsMisc.MakeFollowRequestsFollowers(parse,applicationContext,followerlistener)
-            }
-
-        }
-        var gens = GeneralRequestsFeedIntoConstants(applicationContext)
-        gens.GetFollowCount(emailStr,followcountlistener,followinglistener,followerlistener)*//*
-    }*/
-
-
     fun getFollowCount(){
         var followcountlistener: Response.Listener<JSONObject> =  Response.Listener { response ->
 
@@ -667,12 +587,12 @@ class OpenOtherGuyBlog : AppCompatActivity() ,GlobalInterface {
                 followCount = parse
                 activity_followers.text = "${parse.result.followerCount.toString()} followers"
                 activity_following.text = "${parse.result.followingCount.toString()} following"
-                activity_following.setOnClickListener({v ->
+                activity_following.setOnClickListener { v ->
                     startfollows()
-                })
-                activity_followers.setOnClickListener({v ->
+                }
+                activity_followers.setOnClickListener { v ->
                     startfollows()
-                })
+                }
                 /*StaticMethodsMisc.MakeFollowRequests(parse,applicationContext,followinglistener)
                 StaticMethodsMisc.MakeFollowRequestsFollowers(parse,applicationContext,followerlistener)*/
             }

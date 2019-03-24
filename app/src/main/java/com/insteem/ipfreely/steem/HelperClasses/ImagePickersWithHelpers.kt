@@ -123,7 +123,7 @@ class ImagePickersWithHelpers{
 
 
 
-        fun GetPx(dp : Float,metrics: DisplayMetrics) : Int{
+        fun GetPx(dp : Float,metrics: DisplayMetrics?) : Int{
 
             return TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,

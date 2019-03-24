@@ -106,4 +106,7 @@ Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
+
+
+    <dimen name="default_comment_margin_sides">1dp</dimen>
 </resources>

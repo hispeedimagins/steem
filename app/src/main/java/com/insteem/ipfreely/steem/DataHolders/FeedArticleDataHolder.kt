@@ -428,6 +428,8 @@ class FeedArticleDataHolder {
             val promoted : String?,
             val already_paid : String?,
             var width : Int = 0,
+            var widthPx:Int = 0,
+            var defaultWidth:Int = 0,
             var useFollow : MyOperationTypes = MyOperationTypes.follow,
             var replies : JSONArray? = null,
             var activeVotes: JSONArray? = null,
