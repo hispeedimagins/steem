@@ -40,7 +40,9 @@ import java.util.concurrent.ExecutionException
 /**
  * Created by boot on 2/25/2018.
  */
-class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : Int, ops : List<Operation>, toastString: String, myOperationTypes: MyOperationTypes) {
+class GetDynamicAndBlock(val applicationContext: Context, val adaptedcomms: arvdinterface?,
+                         val position : Int,val ops : List<Operation>,
+                         val toastString: String,val myOperationTypes: MyOperationTypes) {
 
 
     var progressbars:ProgressBar? = null
@@ -57,18 +59,18 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
     }
     /*val articleHolder = mholder
     val commentHolder = commentHolder*/
-    val myOperationTypes = myOperationTypes
-    val ops = ops
-    val adaptedcomms: arvdinterface? = adapter
-    val position = position
-    val applicationContext : Context = context
+    //val myOperationTypes = myOperationTypes
+    //val ops = ops
+    //val adaptedcomms: arvdinterface? = adapter
+    //val position = position
+    //val applicationContext : Context = context
     val sharedpref : SharedPreferences = applicationContext.getSharedPreferences(CentralConstants.sharedprefname,0)
     //var username = sharedpref.getString(CentralConstants.username,null)
     var key = sharedpref.getString(CentralConstants.key,null)
-    var signingnonce = PreferenceManager.getDefaultSharedPreferences(context).getString("signing_nonce","51").toInt()
+    var signingnonce = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("signing_nonce","51").toInt()
     //var accountrep = if(CentralConstantsOfSteem.getInstance() != null && CentralConstantsOfSteem.getInstance().profile != null) CentralConstantsOfSteem.getInstance()?.profile?.reputation else sharedpref.getString(CentralConstants.accountrep,null)
     /*val listner = listner*/
-    val toastString = toastString
+    //val toastString = toastString
     val votefullper = 2
 
 
@@ -76,9 +78,15 @@ class GetDynamicAndBlock(context: Context, adapter: arvdinterface?, position : I
         //val queue = Volley.newRequestQueue(context)
 
         //swipecommonactionsclass?.makeswiperun()
-        Toast.makeText(applicationContext,"Processing. Please wait....", Toast.LENGTH_LONG).show()
-        if(progressbars != null){
-            progressbars?.visibility = VISIBLE
+
+
+        try{
+            Toast.makeText(applicationContext,"Processing. Please wait....", Toast.LENGTH_LONG).show()
+            if(progressbars != null){
+                progressbars?.visibility = VISIBLE
+            }
+        } catch (ex:Exception){
+            ex.printStackTrace()
         }
         val volleyre : VolleyRequest = VolleyRequest.getInstance(applicationContext)
         //val url = "https://api.steemjs.com/get_feed?account=$username&limit=10"
