@@ -147,4 +147,3 @@ app/release/output.json
 .idea/caches/build_file_checksums.ser
 .idea/misc.xml
 anddown/build/intermediates/incremental/packageDebugResources/compile-file-map.properties
-app/google-services.json
