@@ -174,4 +174,8 @@
 
 
     <string name="main_api_url">"https://api.steemit.com/"</string>
+    <string name="fcm_app_update_title">App Update</string>
+    <string name="fcm_app_update_channelId">app_update</string>
+    <string name="fcm_steem_announcement_title">Steem Announcements</string>
+    <string name="fcm_steem_notifications_local">Steem Notifications</string>
 </resources>

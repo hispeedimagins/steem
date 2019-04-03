@@ -29,6 +29,12 @@ public class CentralConstants {
     public static final String dynamicBlockVotePowerReserveRate = "dynamibBVPRR";
 
 
+
+    public static final String fcmDataIsAppUpdate = "isAppUpdate";
+    public static final String fcmDataAppUpdateUrl = "appUpdateUrl";
+    public static final String fcmDataPermlink = "permlink";
+    public static final String fcmDataTag = "tag";
+    public static final String fcmDataUsername = "username";
     //public static String baseUrl = "https://api.steemit.com/";
 
     /**

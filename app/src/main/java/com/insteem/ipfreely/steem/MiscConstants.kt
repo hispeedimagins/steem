@@ -1,10 +1,12 @@
 package com.insteem.ipfreely.steem
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.preference.PreferenceManager
 import android.text.format.DateUtils
 import android.util.Log
@@ -343,6 +345,18 @@ class MiscConstants{
                 2 -> ContextCompat.getDrawable(context,R.drawable.default_image_one)
                 else -> ContextCompat.getDrawable(context,R.drawable.default_image_one)
             }
+        }
+
+
+        /**
+         * Converts a url string to a browser intent
+         * @param url the url to send to
+         * @return Intent which redirects to the browser
+         */
+        infix fun getBrowserIntent(url:String?):Intent{
+            val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            i.addCategory(Intent.CATEGORY_BROWSABLE)
+            return i
         }
     }
 }

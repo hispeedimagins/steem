@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -49,6 +50,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import com.splunk.mint.Mint
 import com.insteem.ipfreely.steem.CentralConstants.GetProfileUrl
+import com.insteem.ipfreely.steem.HelperClasses.FcmHelpers.Companion.subscribeToAll
 import com.insteem.ipfreely.steem.jsonclasses.ProfileJsonSteemit
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
@@ -211,7 +213,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             shae.apply()
         }
 
-
+        FcmHelpers subscribeToAll this
         if(username.isNullOrEmpty() or key.isNullOrEmpty()){
 
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
@@ -222,8 +224,35 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         }
 
+        //processNotifications()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        processNotifications()
+    }
 
 
+
+    /**
+     * this processed the fcm notifications got from the server.
+     * It opens the appropriate page after processing or does nothing
+     */
+    fun processNotifications(){
+        intent.extras?.let {
+            //Log.d("bundle",it.toString())
+            //Log.d("bundle",it.get(CentralConstants.fcmDataIsAppUpdate)?.toString())
+            if(it.getString(CentralConstants.fcmDataIsAppUpdate) == "true"){
+                startActivity(MiscConstants getBrowserIntent it.getString(CentralConstants.fcmDataAppUpdateUrl))
+            } else{
+                val myIntent = Intent(this, ArticleActivity::class.java)
+                myIntent.putExtra("username", it.getString(CentralConstants.fcmDataUsername))
+                myIntent.putExtra("tag", it.getString(CentralConstants.fcmDataTag))
+                myIntent.putExtra("permlink", it.getString(CentralConstants.fcmDataPermlink))
+                startActivity(myIntent)
+            }
+        }
     }
 
 
@@ -306,9 +335,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //then start the article activity
     fun openLink(lis:List<String>){
         val myIntent = Intent(this, ArticleActivity::class.java)
-        myIntent.putExtra("username", lis[2].removePrefix("@"))
-        myIntent.putExtra("tag", lis[1])
-        var sl = lis[3]
+        myIntent.putExtra("username", (if(lis.size > 3) lis[2] else lis[1]).removePrefix("@"))
+        myIntent.putExtra("tag", (if(lis.size > 3) lis[1] else lis[0]))
+        var sl = if(lis.size > 3) lis[3] else lis[2]
         if(sl.contains("#")){
             sl = sl.split("#").first()
         }

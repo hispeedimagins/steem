@@ -182,7 +182,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
                 0,
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val summary  = NotificationCompat.Builder(appcon,"Summary")
+        val summary  = NotificationCompat.Builder(appcon,FcmHelpers.steemNotifications_local)
                 //.setDefaults(Notification.DEFAULT_ALL)
                 .setSmallIcon(R.drawable.ic_steemerggsv)
                 .setContentTitle("New notifications" )
@@ -226,7 +226,7 @@ class NotificationsWebSocketListener(username:String?,context:Context?) : WebSoc
 
 
             //build individual notifications here
-            val mBuilder  = NotificationCompat.Builder(appcon,x.type?.name!!)
+            val mBuilder  = NotificationCompat.Builder(appcon,FcmHelpers.steemNotifications_local/*x.type?.name!!*/)
                     //.setDefaults(Notification.DEFAULT_ALL)
                     .setSmallIcon(R.drawable.ic_steemerggsv)
                     .setContentTitle(x.title )

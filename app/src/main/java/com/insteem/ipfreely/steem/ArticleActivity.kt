@@ -669,6 +669,9 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
                     autoLoadOnce = true
                     val result = con.ParseReplies(articleusername+"/"+articlepermlink)
                     if(!result.isEmpty()){
+
+
+
                         commentsFragment?.clear()
                         commentsFragment?.setPermlinkToFind(permlinkToFind as String)
                         //send true for fragment to save json
@@ -677,6 +680,16 @@ class   ArticleActivity : AppCompatActivity(),ArticleActivityInterface , ImagePi
                             articleFragment?.displayMessage(art,true)
                             supportActionBar?.title = art.title
                             activity_article_title.text = art.title
+
+                            if(TextUtils.isEmpty(articleCovImg)){
+                                articleCovImg = art.displayImage
+                                setMainImage(articleCovImg)
+                            }
+
+                            if(TextUtils.isEmpty(articleDate)){
+                                articleDate = art.datespan
+                                activity_date.text = articleDate
+                            }
                         }
                         if(result.size > 2){
                             //var si = result.size - 1

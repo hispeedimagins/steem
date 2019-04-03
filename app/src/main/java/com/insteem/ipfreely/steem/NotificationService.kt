@@ -24,12 +24,12 @@ class NotificationService : JobService() {
     private var context : Context? = null
     private var client: OkHttpClient? = null
 
-    override fun onStopJob(job: JobParameters?): Boolean {
+    override fun onStopJob(job: JobParameters): Boolean {
         client = null
         return true
     }
 
-    override fun onStartJob(job: JobParameters?): Boolean {
+    override fun onStartJob(job: JobParameters): Boolean {
         var se = this.getSharedPreferences(CentralConstants.sharedprefname,0)
         username = se.getString(CentralConstants.username,null)
         context = this
